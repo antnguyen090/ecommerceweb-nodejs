@@ -1,0 +1,34 @@
+<% 
+    showOptionBox = (id, dailydeals, fearturedproduct) => {
+        let isChecked = (param) =>{
+            if (param == true) return 'checked'
+            return
+        }
+        let html = ''
+        if(id !== undefined){
+            html = `
+            <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" name="dailydeals-${id}" id="dailydeals-${id}" value="true" ${isChecked(dailydeals)}>
+                <label for="dailydeals-${id}" class="custom-control-label">Show Daily Deals</label>
+                </div>
+            <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" name="fearturedproduct-${id}" id="fearturedproduct-${id}" value="true" ${isChecked(fearturedproduct)}>
+                <label for="fearturedproduct-${id}" class="custom-control-label">Show Feartured Product</label>
+            </div>
+            `
+        } else{
+            html = `
+            <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" name="dailydeals" id="dailydeals" value="true" >
+                <label for="dailydeals" class="custom-control-label">Show Daily Deals</label>
+                </div>
+            <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" name="fearturedproduct" id="fearturedproduct" value="true" >
+                <label for="fearturedproduct" class="custom-control-label">Show Feartured Product</label>
+            </div>
+            `
+        }
+       
+        return html; 
+    }
+%>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- header icluder -->
+  <%- include('./elements/header'); -%>
+</head>
+<body>
+    <div id="pageWrapper">
+      <%- include('./elements/mainheader'); -%>
+      <main>
+        <%- body %>
+      </main>
+          <!-- Back to Top -->
+      <a href="#" class="btn btn-primary btn-square back-to-top"><i class="fa fa-arrow-up"></i></a>
+      <%- include('./elements/mainfooter'); -%>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <%- include('./elements/footerscript'); -%>
+
+</body>
+
+</html>

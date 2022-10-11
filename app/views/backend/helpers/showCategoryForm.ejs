@@ -1,0 +1,14 @@
+<% 
+    showCategoryList = (collection, item) => {
+        if (collection.length == 0) {
+            return;
+        } else {
+            let html =""
+            collection.forEach( (category, index) => {
+                let isSelect = (item == category.id) ? 'selected' : ''
+                html += `<option value="${category._id}" ${isSelect}>${category.name}</option>`
+            })
+            return html
+        }
+    }
+%>
