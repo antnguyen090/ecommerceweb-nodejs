@@ -28,9 +28,9 @@ let uploadFile = (field, folderDes = 'users', fileNameLength = 10, fileSizeMb = 
 			if(mimetype && extname){
 				return cb(null,true);
 			}
-			// else {
-			// 	cb(notify.ERROR_FILE_EXTENSION);
-			// }	
+			else {
+				cb(notify.ERROR_FILE_EXTENSION);
+			}	
 			return cb(null,false);		
 		}
 	}).single(field);
@@ -97,7 +97,6 @@ let removeFileSetting = (folder, fileName, mainname) => {
 }
 
 let uploadFileMulti = (field, folderDes = 'users', fileNameLength = 10, fileSizeMb = 1, fileExtension = 'jpeg|jpg|png|gif') => {
-	const subFolder = randomstring.generate(fileNameLength) + Date.now()
 	const storage = multer.diskStorage({
 		destination: (req, file, cb) => {
 			cb(null, __path_uploads + folderDes + '/')
@@ -122,13 +121,12 @@ const upload = multer({
 			return cb(null,true);
 		}
 		else {
-			cb(notify.ERROR_FILE_EXTENSION);
-		}	
-		return cb(null,false);		
+			 cb(new Error(notify.ERROR_FILE_EXTENSION));
+		}
 	}
 }).array(field);
-
 return upload;
+
 }
 
 module.exports = {

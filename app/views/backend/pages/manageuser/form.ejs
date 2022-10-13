@@ -19,7 +19,7 @@
                     <input type="text" id="name-input-form" name="name" value="<%= item.name %>" class="form-control form-control-sm"></div>
                 </div>
                 <div class="form-group row">
-                    <label for="categoryId" class="col-sm-2 col-form-label text-sm-right required">Category</label>
+                    <label for="group" class="col-sm-2 col-form-label text-sm-right required">Group</label>
                     <div class="col-xs-12 col-sm-8">
                         <select name="group" id="input-category" class="form-control form-control-sm">
                             <%- showCategoryList(main.categoryList) %>
@@ -48,12 +48,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label for="option" class="col-sm-2 col-form-label text-sm-right required">Option</label>
-                                <div class="col-xs-12 col-sm-8">
-									<%- showOptionBox(item.id, item.slider, item.toppost, item.breakingnews, item.fearture)  %>
-                                </div>
-                            </div>
                             <div class="form-group row uploadImage">
                                 <label for="thumb" class="col-sm-2 col-form-label text-sm-right">Upload Image</label>
                                 <div class="col-xs-12 col-sm-8">
@@ -69,7 +63,7 @@
                                 <%}  %>
                             </div>
                             <div class="form-group row ckeditor">
-                                <label for="description" class="col-sm-2 col-form-label text-sm-right">Description</label>
+                                <label for="description" class="col-sm-2 col-form-label text-sm-right">Content</label>
                                 <textarea id="summernote" name="editordata">
                                 </textarea>
                             </div>

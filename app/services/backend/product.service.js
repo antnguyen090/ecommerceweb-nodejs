@@ -60,12 +60,8 @@ module.exports = {
         let data = await modelProduct.updateOne({_id: id}, {category: newCategory})
         return
     },
-    checkDuplicatedName: async (val) =>{
-        let data = await modelProduct.find({name: val})
-        return data
-    },
-    checkDuplicatedSlug: async (val) =>{
-        let data = await modelProduct.find({slug: val})
+    checkDuplicated: async (val) =>{
+        let data = await modelProduct.find(val)
         return data
     },
     countItem: async (objWhere) =>{

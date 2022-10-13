@@ -10,8 +10,8 @@ const pageTitle = `Menu Bar Management`
 const folderView = __path_views_backend + `/pages/${mainName}/`;
 const systemConfig = require(__path_configs + 'system');
 const linkIndex = '/' + systemConfig.prefixAdmin + '/' + mainName;
-const modelMenuBar = require(__path_model_backend + mainName);
-const schemaMenuBar = require(__path_schemas_backend + mainName);
+const serviceMenubar = require(__path_services_backend + `${mainName}.service`);
+
 const layout = __path_views_backend + 'backend';
 
 const UtilsHelpers = require(__path_helpers + 'utils');
@@ -19,12 +19,12 @@ const ParamsHelpers = require(__path_helpers + 'params');
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
 	try {
-		let parentMenuList = await schemaMenuBar.find({parentMenu : "parentmenu"})
+		let parentMenuList = await serviceMenubar.getRootList({parentMenu : "parentmenu"})
     let inform = req.flash()
     let objWhere = {};
     let keyword = ParamsHelpers.getParam(req.query, 'keyword', '');
     let currentStatus = ParamsHelpers.getParam(req.params, 'status', 'all');
-    let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus, mainName);
+    let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus, `${mainName}.model`);
     let pagination = {
         totalItems: 1,
         totalItemsPerPage: 10,
@@ -34,10 +34,8 @@ router.get('(/status/:status)?', async (req, res, next) => {
 
     if (currentStatus !== 'all') objWhere.status = currentStatus;
     if (keyword !== '') objWhere.name = new RegExp(keyword, 'i');
-    await schemaMenuBar.count(objWhere).then((data) => {
-        pagination.totalItems = data;
-    });
-			let data = await modelMenuBar.listItems(objWhere, 
+		pagination.totalItems = await serviceMenubar.countItem(objWhere);
+			let data = await serviceMenubar.listItems(objWhere, 
 				pagination.currentPage,
 				pagination.totalItemsPerPage,
 				{updatedAt: 'desc'},
@@ -63,24 +61,17 @@ router.get('(/status/:status)?', async (req, res, next) => {
 router.get('/form/(:id)?',  async function (req, res, next) {
 	try {
 		let inform = req.flash()
-		let parentMenuList = await schemaMenuBar.find({parentMenu : "parentmenu"})
+		let parentMenuList = await serviceMenubar.getRootList({parentMenu : "parentmenu"})
 		let main = {pageTitle: pageTitle,
 			inform: inform,
 			parentMenuList,}
 		if (req.params.id != undefined) {
-			schemaMenuBar.countDocuments({_id: req.params.id}, async function (err, count){ 
-				if(count>0){
-					let item = await modelMenuBar.getItemByID(req.params.id)
-					//document exists });
-					res.render(`${folderView}form`, {
-						main: main,
-						item: item[0],
-						layout,
-					});
-				} else {
-					res.redirect(linkIndex);
-				}
-			});   
+			let item = await serviceMenubar.getItemByID(req.params.id)
+			res.render(`${folderView}form`, {
+				main: main,
+				item: item,
+				layout,
+			});  
 			} else {
 					res.render(`${folderView}form`, {
 				main: main,
@@ -99,47 +90,45 @@ router.post('/save/(:id)?',
 			.isLength({min: 5, max: 100})
 			.withMessage(util.format(notify.ERROR_NAME,5,100))
 			.custom(async (val, {req}) => {
-			let paramId = (req.params.id != undefined) ? req.params.id : 0
-			return await schemaMenuBar.find({name: val}).then(async user => {
-				let length = user.length
-				user.forEach((value, index) => {
+				let paramId = await(req.params.id != undefined) ? req.params.id : 0
+				let data		= await serviceMenubar.checkDuplicated({name: val})
+				let length = data.length
+				data.forEach((value, index) => {
 					if (value.id == paramId) 
 						length = length - 1;
-					
 				})
 				if (length > 0) {
-					return Promise.reject(notify.ERROR_NAME_DUPLICATED)
+						return Promise.reject(notify.ERROR_NAME_DUPLICATED)
 				}
 				return
-		})}),
+		}),
 	body('slug')
 		.isSlug()
 		.withMessage(notify.ERROR_SLUG)
 		.custom(async (val, {req}) => {
-			let paramId = (req.params.id != undefined) ? req.params.id : 0
-			return await schemaMenuBar.find({slug: val}).then(async user => {
-				let length = user.length
-				user.forEach((value, index) => {
-					if (value.id == paramId) 
-						length = length - 1;
-					
-				})
+			let paramId = await(req.params.id != undefined) ? req.params.id : 0
+			let data		= await serviceMenubar.checkDuplicated({slug: val})
+			let length = data.length
+			data.forEach((value, index) => {
+				if (value.id == paramId) 
+					length = length - 1;
+			})
 				if (length > 0) {
 					return Promise.reject(notify.ERROR_SLUG_DUPLICATED)
 				}
 				return
-	})}),
+			}),
 	body('ordering')
 		.isInt({min: 0, max: 99})
 		.withMessage(util.format(notify.ERROR_ORDERING,0,99)),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
 	async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
 		try {
-			let parentMenuList = await schemaMenuBar.find({parentMenu : "parentmenu"})
+			let parentMenuList = await serviceMenubar.getRootList({parentMenu : "parentmenu"})
 			let item = req.body;
-			let itemData = [{}]
+			let itemData
 			if(req.params.id != undefined){
-				itemData = await schemaMenuBar.find({_id: req.params.id})
+				itemData = await serviceMenubar.getItemByID(req.params.id)
 			}
 			let errors = validationResult(req)
 			if(!errors.isEmpty()) {
@@ -151,7 +140,7 @@ router.post('/save/(:id)?',
 				if (req.params.id !== undefined){
 						res.render(`${folderView}form`, {
 							main: main,
-							item: itemData[0],
+							item: itemData,
 							id: req.params.id,
 							layout,
 						})
@@ -165,11 +154,11 @@ router.post('/save/(:id)?',
 				return
 			}
 				if (req.params.id !== undefined) {
-					let data = await modelMenuBar.editItem(req.params.id, item)
+					let data = await serviceMenubar.editItem(req.params.id, item)
 					req.flash('success', notify.EDIT_SUCCESS);
 					res.redirect(linkIndex);
 				} else {
-					let data = await modelMenuBar.saveItems(item);
+					let data = await serviceMenubar.saveItems(item);
 					req.flash('success', notify.ADD_SUCCESS);
 					res.redirect(linkIndex);
 				}
@@ -185,11 +174,11 @@ router.post('/delete/(:status)?', async (req, res, next) => {
 	try {
 		if (req.params.status === 'multi') {
 			let arrId = req.body.id.split(",")
-			let data = await modelMenuBar.deleteItemsMulti(arrId);
+			let data = await serviceMenubar.deleteItemsMulti(arrId);
 			res.send({success: true})
 	} else {
 			let id = req.body.id
-			let data = await modelMenuBar.deleteItem(id);
+			let data = await serviceMenubar.deleteItem(id);
 			res.send({success: true})
 	}
 	} catch (error) {
@@ -203,12 +192,12 @@ router.post('/change-status/(:status)?', async (req, res, next) => {
 		if (req.params.status === 'multi') {
 			let arrId = req.body.id.split(",")
 			let status = req.body.status
-			let data = await modelMenuBar.changeStatusItemsMulti(arrId, status);
+			let data = await serviceMenubar.changeStatusItemsMulti(arrId, status);
 			res.send({success: true})
 	} else {
 			let {status, id} = req.body
 			status = (status == 'active') ? 'inactive' : 'active'
-			let changeStatus = await modelMenuBar.changeStatus(id, status)
+			let changeStatus = await serviceMenubar.changeStatus(id, status)
 			res.send({success: true})
 	}
 	} catch (error) {
@@ -229,7 +218,7 @@ router.post('/change-ordering',
 				return
 			}
 			let {ordering, id} = req.body
-			let changeStatus = await modelMenuBar.changeOrdering(id, ordering)
+			let changeStatus = await serviceMenubar.changeOrdering(id, ordering)
 			res.send({success: true})
 		} catch (error) {
 			console.log(error)
@@ -240,23 +229,20 @@ router.post('/change-ordering',
 router.post('/changeparentmenu',
 	body('id')
 				.custom(async (val, {req}) => {
-				return await schemaMenuBar.findOne({_id: val}).then(async user => {
-					console.log(user)
-					if (!user) {
+					let data = await serviceMenubar.getItemByID(val)
+					if (!data) {
 						return Promise.reject(notify.ERROR_NOT_EXITS)
 					}
 					return
-				})}),
+				}),
 	body('newParent')
 				.custom(async (val, {req}) => {
-				if(val == 'parentmenu') return
-				return await schemaMenuBar.findOne({_id: val}).then(async user => {
-					console.log(user)
-					if (!user) {
+					let data = await serviceMenubar.getItemByID(val)
+					if (!data) {
 						return Promise.reject(notify.ERROR_NOT_EXITS)
 					}
 					return
-				})}),
+				}),
 	async (req, res, next) => {
 		try {
 			const errors = validationResult(req);
@@ -265,7 +251,7 @@ router.post('/changeparentmenu',
 				return
 			} else{
 				let {newParent, id} = req.body
-				let changeStatus = await modelMenuBar.changeParent(id, newParent)
+				let changeStatus = await serviceMenubar.changeParent(id, newParent)
 				res.send({success: true})
 			}
 		} catch (error) {

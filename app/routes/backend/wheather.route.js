@@ -9,8 +9,7 @@ const mainName = "wheather"
 const pageTitle = `Wheather Management`
 const systemConfig = require(__path_configs + 'system');
 const linkIndex = '/' + systemConfig.prefixAdmin + '/' + mainName;
-const modelWheather = require(__path_model_backend + mainName);
-const schemaWheather = require(__path_schemas_backend + mainName);
+const serviceWheather = require(__path_services_backend + `${mainName}.service`);
 const notify = require(__path_configs + 'notify');
 const layout = __path_views_backend + 'backend';
 
@@ -18,8 +17,7 @@ const UtilsHelpers = require(__path_helpers + 'utils');
 const ParamsHelpers = require(__path_helpers + 'params');
 const folderView = __path_views_backend + `/pages/${mainName}/`;
 const FileHelpers = require(__path_helpers + 'file');
-const uploadThumb	 = FileHelpers.upload('thumb', `${mainName}`);
-const upWheather         = 'public/wheatherfile/'
+const upWheather   = 'public/wheatherfile/'
 
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
@@ -28,7 +26,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
     let objWhere = {};
     let keyword = ParamsHelpers.getParam(req.query, 'keyword', '');
     let currentStatus = ParamsHelpers.getParam(req.params, 'status', 'all');
-    let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus, mainName);
+    let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus, `${mainName}.model`);
     let pagination = {
         totalItems: 1,
         totalItemsPerPage: 10,
@@ -38,10 +36,8 @@ router.get('(/status/:status)?', async (req, res, next) => {
 
     if (currentStatus !== 'all') objWhere.status = currentStatus;
     if (keyword !== '') objWhere.name = new RegExp(keyword, 'i');
-    await schemaWheather.count(objWhere).then((data) => {
-        pagination.totalItems = data;
-    });
-			let data = await modelWheather.listItems(objWhere, 
+		pagination.totalItems = await serviceWheather.countItem(objWhere);
+			let data = await serviceWheather.listItems(objWhere, 
 				pagination.currentPage,
 				pagination.totalItemsPerPage,
 				{updatedAt: 'desc'},
@@ -64,26 +60,19 @@ router.get('(/status/:status)?', async (req, res, next) => {
 })
 
 // access FORM
-router.get('/form/(:id)?',  function (req, res, next) {
+router.get('/form/(:id)?', async function (req, res, next) {
 	try {
 		let inform = req.flash()
 	let main = {pageTitle: pageTitle,
 							inform: inform
 	}
 	if (req.params.id != undefined) {
-		schemaWheather.countDocuments({_id: req.params.id}, async function (err, count){ 
-			if(count>0){
-				let item = await modelWheather.getItemByID(req.params.id)
-				//document exists });
-				res.render(`${folderView}form`, {
-					main: main,
-					item: item[0],
-					layout,
-				});
-			} else {
-				res.redirect(linkIndex);
-			}
-		});   
+		let item = await serviceWheather.getItemByID(req.params.id)
+		res.render(`${folderView}form`, {
+			main: main,
+			item: item,
+			layout,
+		});
     } else {
         res.render(`${folderView}form`, {
 			main: main,
@@ -103,20 +92,19 @@ router.post('/save/(:id)?',
 			.isEmpty()
 			.withMessage(notify.ERROR_NAME_EMPTY)
 			.custom(async (val, {req}) => {
-			let paramId = (req.params.id != undefined) ? req.params.id : 0
-			return await schemaWheather.find({name: val}).then(async user => {
-				let length = user.length
-				user.forEach((value, index) => {
+				let paramId = await(req.params.id != undefined) ? req.params.id : 0
+				let data		= await serviceWheather.checkDuplicated({name: val})
+				let length = data.length
+				data.forEach((value, index) => {
 					if (value.id == paramId) 
 						length = length - 1;
-					
 				})
 				if (length > 0) {
-					return Promise.reject(notify.ERROR_NAME_DUPLICATED)
+						return Promise.reject(notify.ERROR_NAME_DUPLICATED)
 				}
 				return
-})}),
-		body('name')
+		}),
+		body('api')
 		.not()
 		.isEmpty()
 		.withMessage(notify.ERROR_API_EMPTY),
@@ -128,7 +116,7 @@ router.post('/save/(:id)?',
 			let item = req.body;
 			let itemData = [{}]
 			if(req.params.id != undefined){
-				itemData = await schemaWheather.find({_id: req.params.id})
+				itemData = await serviceWheather.getItemByID(req.params.id)
 			}
 			let errors = await validationResult(req)
 			if(!errors.isEmpty()) {
@@ -154,11 +142,11 @@ router.post('/save/(:id)?',
             item.api = item.api.replaceAll("-","%20")
 			try {
 				if (req.params.id !== undefined) {
-					let data = await modelWheather.editItem(req.params.id, item)
+					let data = await serviceWheather.editItem(req.params.id, item)
 					req.flash('success', notify.EDIT_SUCCESS);
 					res.redirect(linkIndex);
 				} else {
-					let data = await modelWheather.saveItems(item);
+					let data = await serviceWheather.saveItems(item);
 					req.flash('success', notify.ADD_SUCCESS);
 					res.redirect(linkIndex);
 				}
@@ -174,7 +162,7 @@ router.post('/delete/(:status)?', async (req, res, next) => {
 	try {
 		if (req.params.status === 'multi') {
 			let arrId = req.body.id.split(",")
-			let data = await modelWheather.deleteItemsMulti(arrId);
+			let data = await serviceWheather.deleteItemsMulti(arrId);
 		let deleteWheatherFiles = await arrId.forEach((value)=>{
 		try {
 			fs.unlinkSync(`${upWheather}${value}`)
@@ -192,7 +180,7 @@ router.post('/delete/(:status)?', async (req, res, next) => {
 	} catch(err) {
 		console.error(err)
 	}
-			let data = await modelWheather.deleteItem(id);
+			let data = await serviceWheather.deleteItem(id);
 			res.send({success: true})
 	}
 	} catch (error) {
@@ -205,12 +193,12 @@ router.post('/change-status/(:status)?', async (req, res, next) => {
 		if (req.params.status === 'multi') {
 			let arrId = req.body.id.split(",")
 			let status = req.body.status
-			let data = await modelWheather.changeStatusItemsMulti(arrId, status);
+			let data = await serviceWheather.changeStatusItemsMulti(arrId, status);
 			res.send({success: true})
 	} else {
 			let {status, id} = req.body
 			status = (status == 'active') ? 'inactive' : 'active'
-			let changeStatus = await modelWheather.changeStatus(id, status)
+			let changeStatus = await serviceWheather.changeStatus(id, status)
 			res.send({success: true})
 	}
 	} catch (error) {
@@ -230,7 +218,7 @@ router.post('/change-ordering',
 				return
 			}
 			let {ordering, id} = req.body
-			let changeStatus = await modelWheather.changeOrdering(id, ordering)
+			let changeStatus = await serviceWheather.changeOrdering(id, ordering)
 			res.send({success: true})
 		} catch (error) {
 			console.log(error)

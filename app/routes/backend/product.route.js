@@ -108,7 +108,7 @@ router.post('/save/(:id)?',
 			.withMessage(util.format(notify.ERROR_NAME,5,100))
 			.custom(async (val, {req}) => {
 				let paramId = await(req.params.id != undefined) ? req.params.id : 0
-				let data		= await serviceProduct.checkDuplicatedName(val)
+				let data		= await serviceProduct.checkDuplicated({name: val})
 				let length = data.length
 				data.forEach((value, index) => {
 					if (value.id == paramId) 
@@ -124,7 +124,7 @@ router.post('/save/(:id)?',
 		.withMessage(notify.ERROR_SLUG)
 		.custom(async (val, {req}) => {
 			let paramId = await(req.params.id != undefined) ? req.params.id : 0
-			let data		= await serviceProduct.checkDuplicatedSlug(val)
+			let data		= await serviceProduct.checkDuplicated({slug: val})
 			let length = data.length
 			data.forEach((value, index) => {
 				if (value.id == paramId) 

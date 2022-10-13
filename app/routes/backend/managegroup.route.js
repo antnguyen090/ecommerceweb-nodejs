@@ -8,8 +8,7 @@ const mainName = "managegroup"
 const pageTitle = `Group Management`
 const systemConfig = require(__path_configs + 'system');
 const linkIndex = '/' + systemConfig.prefixAdmin + '/' + mainName;
-const modelGroup = require(__path_model_backend + mainName);
-const schemaGroup = require(__path_schemas_backend + mainName);
+const serviceManageGroup = require(__path_services_backend + `${mainName}.service`);
 const notify = require(__path_configs + 'notify');
 const layout = __path_views_backend + 'backend';
 
@@ -24,7 +23,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
     let objWhere = {};
     let keyword = ParamsHelpers.getParam(req.query, 'keyword', '');
     let currentStatus = ParamsHelpers.getParam(req.params, 'status', 'all');
-    let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus, mainName);
+    let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus, `${mainName}.model`);
     let pagination = {
         totalItems: 1,
         totalItemsPerPage: 10,
@@ -34,10 +33,8 @@ router.get('(/status/:status)?', async (req, res, next) => {
 
     if (currentStatus !== 'all') objWhere.status = currentStatus;
     if (keyword !== '') objWhere.name = new RegExp(keyword, 'i');
-    await schemaGroup.count(objWhere).then((data) => {
-        pagination.totalItems = data;
-    });
-			let data = await modelGroup.listItems(objWhere, 
+		pagination.totalItems = await serviceManageGroup.countItem(objWhere);
+			let data = await serviceManageGroup.listItems(objWhere, 
 				pagination.currentPage,
 				pagination.totalItemsPerPage,
 				{updatedAt: 'desc'},
@@ -60,26 +57,19 @@ router.get('(/status/:status)?', async (req, res, next) => {
 })
 
 // access FORM
-router.get('/form/(:id)?',  function (req, res, next) {
+router.get('/form/(:id)?',  async function (req, res, next) {
 	try {
 		let inform = req.flash()
 		let main = {pageTitle: pageTitle,
 			inform: inform
 		}
 		if (req.params.id != undefined) {
-			schemaGroup.countDocuments({_id: req.params.id}, async function (err, count){ 
-				if(count>0){
-					let item = await modelGroup.getItemByID(req.params.id)
-					//document exists });
-					res.render(`${folderView}form`, {
-						main: main,
-						item: item[0],
-						layout,
-					});
-				} else {
-					res.redirect(linkIndex);
-				}
-			});   
+			let item = await serviceManageGroup.getItemByID(req.params.id)
+			res.render(`${folderView}form`, {
+				main: main,
+				item: item,
+				layout,
+			});s
 			} else {
 					res.render(`${folderView}form`, {
 				main: main,
@@ -99,18 +89,17 @@ router.post('/save/(:id)?',
 		.withMessage(util.format(notify.ERROR_NAME,5,100))
 		.custom(async (val, {req}) => {
 			let paramId = await(req.params.id != undefined) ? req.params.id : 0
-			return await schemaGroup.find({name: val}).then(async user => {
-				let length = user.length
-				user.forEach((value, index) => {
-					if (value.id == paramId) 
-						length = length - 1;
-					
-				})
-				if (length > 0) {
+			let data		= await serviceManageGroup.checkDuplicated({name: val})
+			let length = data.length
+			data.forEach((value, index) => {
+				if (value.id == paramId) 
+					length = length - 1;
+			})
+			if (length > 0) {
 					return Promise.reject(notify.ERROR_NAME_DUPLICATED)
-				}
-				return
-		})}),
+			}
+			return
+	}),
 	body('ordering')
 		.isInt({min: 0, max: 99})
 		.withMessage(util.format(notify.ERROR_ORDERING,0,99)),
@@ -118,9 +107,9 @@ router.post('/save/(:id)?',
 	async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
 			try {
 				let item = req.body;
-			let itemData = [{}]
+			let itemData
 			if(req.params.id != undefined){
-				itemData = await schemaGroup.find({_id: req.params.id})
+				itemData = await serviceManageGroup.getItemByID(req.params.id)
 			}
 			let errors = await validationResult(req)
 			if(!errors.isEmpty()) {
@@ -130,7 +119,7 @@ router.post('/save/(:id)?',
 				if (req.params.id !== undefined){
 						res.render(`${folderView}form`, {
 							main: main,
-							item: itemData[0],
+							item: itemData,
 							id: req.params.id,
 							layout,
 						})
@@ -145,11 +134,11 @@ router.post('/save/(:id)?',
 			}
 
 				if (req.params.id !== undefined) {
-					let data = await modelGroup.editItem(req.params.id, item)
+					let data = await serviceManageGroup.editItem(req.params.id, item)
 					req.flash('success', notify.EDIT_SUCCESS);
 					res.redirect(linkIndex);
 				} else {
-					let data = await modelGroup.saveItems(item);
+					let data = await serviceManageGroup.saveItems(item);
 					req.flash('success', notify.ADD_SUCCESS);
 					res.redirect(linkIndex);
 				}
@@ -165,11 +154,11 @@ router.post('/delete/(:status)?', async (req, res, next) => {
 	try {
 		if (req.params.status === 'multi') {
 			let arrId = req.body.id.split(",")
-			let data = await modelGroup.deleteItemsMulti(arrId);
+			let data = await serviceManageGroup.deleteItemsMulti(arrId);
 			res.send({success: true})
 	} else {
 			let id = req.body.id
-			let data = await modelGroup.deleteItem(id);
+			let data = await serviceManageGroup.deleteItem(id);
 			res.send({success: true})
 	}
 	} catch (error) {
@@ -183,12 +172,12 @@ router.post('/change-status/(:status)?', async (req, res, next) => {
         let arrId = req.body.id.split(",")
         let status = req.body.status
         console.log(status)
-        let data = await modelGroup.changeStatusItemsMulti(arrId, status);
+        let data = await serviceManageGroup.changeStatusItemsMulti(arrId, status);
         res.send({success: true})
     } else {
         let {status, id} = req.body
         status = (status == 'active') ? 'inactive' : 'active'
-        let changeStatus = await modelGroup.changeStatus(id, status)
+        let changeStatus = await serviceManageGroup.changeStatus(id, status)
         res.send({success: true})
     }
 		} catch (error) {
@@ -208,7 +197,7 @@ router.post('/change-ordering',
 				return
 			}
 			let {ordering, id} = req.body
-			let changeStatus = await modelGroup.changeOrdering(id, ordering)
+			let changeStatus = await serviceManageGroup.changeOrdering(id, ordering)
 			res.send({success: true})
 		} catch (error) {
 			console.log(error)

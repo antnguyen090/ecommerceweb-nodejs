@@ -11,13 +11,9 @@ const pageTitle = `Setting Management`
 const folderView = __path_views_backend + `/pages/${mainName}/`;
 const systemConfig = require(__path_configs + 'system');
 const linkIndex = '/' + systemConfig.prefixAdmin + '/' + mainName;
-const modelSetting = require(__path_model_backend + mainName);
-const schemaSetting = require(__path_schemas_backend + mainName);
-const schemaCategory = require(__path_schemas_backend + 'category');
+const serviceSetting = require(__path_services_backend + `${mainName}.service`);
 const layout = __path_views_backend + 'backend';
 
-const UtilsHelpers = require(__path_helpers + 'utils');
-const ParamsHelpers = require(__path_helpers + 'params');
 const FileHelpers = require(__path_helpers + 'file');
 const uploadThumb = FileHelpers.uploadFileSetting([
   {
@@ -39,22 +35,22 @@ const uploadThumb = FileHelpers.uploadFileSetting([
 router.get('/', async function (req, res, next) {
 	try {
 				let inform = req.flash()
-				let settingObj = await schemaSetting.findOne({})
+				let settingObj = await serviceSetting.getOne()
 				let main = {
 					inform: inform,
 					pageTitle: pageTitle,
 				}
-				if (settingObj.id != undefined) { // document exists });
-							res.render(`${folderView}form`, {
-								main: main,
-								settingObj,
-								item: JSON.parse(settingObj.setting),
-								layout
-							});
+				if (settingObj === null) { // document exists });
+						console.log('settingObj')
+						res.render(`${folderView}form`, {
+						main: main,
+						item: [],
+						layout
+					})
 					} else {
 						res.render(`${folderView}form`, {
 							main: main,
-							item: [],
+							item: JSON.parse(settingObj.setting),
 							layout
 						});
 					}
@@ -141,13 +137,17 @@ router.post('/save/(:id)?',
 	})
 	, async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
   try {
-    let settingObj = await schemaSetting.findOne({})
-    let settingData = JSON.parse(settingObj.setting)
+		let settingObj = await serviceSetting.getOne()
     let item = req.body;
+		let settingData
+		if(settingObj != null){
+			settingData = JSON.parse(settingObj.setting)
+			item.logosmall = (settingData.logosmall!=undefined) ? settingData.logosmall : undefined
+			item.logolarge = (settingData.logolarge!=undefined) ? settingData.logolarge : undefined
+			item.logotitle = (settingData.logotitle!=undefined) ? settingData.logotitle : undefined
+			item.logobanner = (settingData.logobanner!=undefined) ? settingData.logobanner : undefined
+		}
     let errors = validationResult(req)
-		item.logosmall = (settingData.logosmall!=undefined) ? settingData.logosmall : undefined
-		item.logolarge = (settingData.logolarge!=undefined) ? settingData.logolarge : undefined
-		item.logotitle = (settingData.logotitle!=undefined) ? settingData.logotitle : undefined
     if (! errors.isEmpty()) {
       let main = {
         pageTitle: pageTitle,
@@ -166,21 +166,35 @@ router.post('/save/(:id)?',
       });
       return
     } else {
-					for (const [key, value] of Object.entries(req.files)) {
-								let key = value[0].filename.split(".")[0]
-								FileHelpers.remove(`public/uploads/${mainName}/`, `${settingData[key]}`)
+					if(settingObj === null){
+						for (const [key, value] of Object.entries(req.files)) {
+							let key = value[0].filename
+							item[key.split(".")[0]] = "uploaded" + key;
+							fs.renameSync(`public/uploads/${mainName}/${key}`, `public/uploads/${mainName}/uploaded${
+								value[0].filename
+							}`);
+						}
+						item = JSON.stringify(item)
+						let saveData = await serviceSetting.saveItems({setting: item})
+						req.flash('success', notify.SUCCESS_SETTING_SAVE);
+						res.redirect(linkIndex);
+					} else{
+						for (const [key, value] of Object.entries(req.files)) {
+							let key = value[0].filename.split(".")[0]
+							FileHelpers.remove(`public/uploads/${mainName}/`, `${settingData[key]}`)
+						}
+						for (const [key, value] of Object.entries(req.files)) {
+							let key = value[0].filename
+							item[key.split(".")[0]] = "uploaded" + key;
+							fs.renameSync(`public/uploads/${mainName}/${key}`, `public/uploads/${mainName}/uploaded${
+								value[0].filename
+							}`);
+						}
+						item = JSON.stringify(item)
+						let editData = await serviceSetting.editItem(settingObj.id, {setting: item})
+						req.flash('success', notify.SUCCESS_SETTING_SAVE);
+						res.redirect(linkIndex);
 					}
-					for (const [key, value] of Object.entries(req.files)) {
-						let key = value[0].filename
-						item[key.split(".")[0]] = "uploaded" + key;
-						fs.renameSync(`public/uploads/${mainName}/${key}`, `public/uploads/${mainName}/uploaded${
-							value[0].filename
-						}`);
-					}
-					item = JSON.stringify(item)
-					let saveData = await modelSetting.editItem(settingObj.id, {setting: item})
-					req.flash('success', notify.SUCCESS_SETTING_SAVE);
-					res.redirect(linkIndex);
       }
   } catch (error) {
     console.log(error)
@@ -189,3 +203,5 @@ router.post('/save/(:id)?',
 
 
 module.exports = router;
+
+

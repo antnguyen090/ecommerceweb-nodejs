@@ -8,16 +8,14 @@ const mainName = "contact"
 const pageTitle = `Contact Management`
 const systemConfig = require(__path_configs + 'system');
 const linkIndex = '/' + systemConfig.prefixAdmin + '/' + mainName;
-const modelContact = require(__path_model_backend + mainName);
-const schemaContact = require(__path_schemas_backend + mainName);
+const serviceContact = require(__path_services_backend + `${mainName}.service`);
 const notify = require(__path_configs + 'notify');
 const layout = __path_views_backend + 'backend';
 
 const UtilsHelpers = require(__path_helpers + 'utils');
 const ParamsHelpers = require(__path_helpers + 'params');
 const folderView = __path_views_backend + `/pages/${mainName}/`;
-const FileHelpers = require(__path_helpers + 'file');
-const uploadThumb	 = FileHelpers.upload('thumb', `${mainName}`);
+
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
 	try {
@@ -25,7 +23,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
     let objWhere = {};
     let keyword = ParamsHelpers.getParam(req.query, 'keyword', '');
     let currentStatus = ParamsHelpers.getParam(req.params, 'status', 'all');
-    let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus, mainName);
+    let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus, `${mainName}.model`);
     let pagination = {
         totalItems: 1,
         totalItemsPerPage: 10,
@@ -35,10 +33,9 @@ router.get('(/status/:status)?', async (req, res, next) => {
 
     if (currentStatus !== 'all') objWhere.status = currentStatus;
     if (keyword !== '') objWhere.name = new RegExp(keyword, 'i');
-    await schemaContact.count(objWhere).then((data) => {
-        pagination.totalItems = data;
-    });
-			let data = await modelContact.listItems(objWhere, 
+    pagination.totalItems = await serviceContact.countItem(objWhere);
+
+			let data = await serviceContact.listItems(objWhere, 
 				pagination.currentPage,
 				pagination.totalItemsPerPage,
 				{updatedAt: 'desc'},
@@ -61,26 +58,19 @@ router.get('(/status/:status)?', async (req, res, next) => {
 })
 
 // access FORM
-router.get('/form/(:id)?',  function (req, res, next) {
+router.get('/form/(:id)?', async function (req, res, next) {
 	try {
 		let inform = req.flash()
 		let main = {pageTitle: pageTitle,
 		inform: inform
 		}
 	if (req.params.id != undefined) {
-		schemaContact.countDocuments({_id: req.params.id}, async function (err, count){ 
-			if(count>0){
-				let item = await modelContact.getItemByID(req.params.id)
-				//document exists });
-				res.render(`${folderView}form`, {
-					main: main,
-					item: item[0],
-					layout,
-				});
-			} else {
-				res.redirect(linkIndex);
-			}
-		});   
+		let item = await serviceContact.getItemByID(req.params.id)
+			res.render(`${folderView}form`, {
+				main: main,
+				item: item,
+				layout,
+			});
     } else {
         res.render(`${folderView}form`, {
 			main: main,
@@ -96,8 +86,8 @@ router.get('/form/(:id)?',  function (req, res, next) {
 
 router.post('/save/(:id)?',
 	body('name')
-		.isLength({min: 5, max: 100})
-		.withMessage(util.format(notify.ERROR_NAME,5,100)),
+		.isLength({min: 2, max: 100})
+		.withMessage(util.format(notify.ERROR_NAME,2,100)),
 	body('ordering')
 		.isInt({min: 0, max: 99})
 		.withMessage(util.format(notify.ERROR_ORDERING,0,99)),
@@ -110,14 +100,14 @@ router.post('/save/(:id)?',
 		.isEmail()
 		.withMessage(notify.ERROR_EMAIL),
 		body('message')
-		.isEmail()
+		.not()
+		.isEmpty()
 		.withMessage(notify.ERROR_MESSAGE),
 	async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
-			console.log(req.body)
 			let item = req.body;
 			let itemData = [{}]
 			if(req.params.id != undefined){
-				itemData = await schemaContact.find({_id: req.params.id})
+				itemData = await serviceContact.getItemByID(req.params.id)
 			}
 			let errors = await validationResult(req)
 			if(!errors.isEmpty()) {
@@ -127,7 +117,7 @@ router.post('/save/(:id)?',
 				if (req.params.id !== undefined){
 						res.render(`${folderView}form`, {
 							main: main,
-							item: itemData[0],
+							item: itemData,
 							id: req.params.id,
 							layout
 						})
@@ -143,11 +133,11 @@ router.post('/save/(:id)?',
 
 			try {
 				if (req.params.id !== undefined) {
-					let data = await modelContact.editItem(req.params.id, item)
+					let data = await serviceContact.editItem(req.params.id, item)
 					req.flash('success', notify.EDIT_SUCCESS);
 					res.redirect(linkIndex);
 				} else {
-					let data = await modelContact.saveItems(item);
+					let data = await serviceContact.saveItems(item);
 					req.flash('success', notify.ADD_SUCCESS);
 					res.redirect(linkIndex);
 				}
@@ -159,30 +149,28 @@ router.post('/save/(:id)?',
 
 
 // Delete
-router.post('/delete/(:status)?', async (req, res, next) => {
-    console.log(req.params.status)
-    if (req.params.status === 'multi') {
-        let arrId = req.body.id.split(",")
-        let data = await modelContact.deleteItemsMulti(arrId);
-        res.send({success: true})
-    } else {
-        let id = req.body.id
-        let data = await modelContact.deleteItem(id);
-        res.send({success: true})
-    }
-});
+// router.post('/delete/(:status)?', async (req, res, next) => {
+//     if (req.params.status === 'multi') {
+//         let arrId = req.body.id.split(",")
+//         let data = await serviceContact.deleteItemsMulti(arrId);
+//         res.send({success: true})
+//     } else {
+//         let id = req.body.id
+//         let data = await serviceContact.deleteItem(id);
+//         res.send({success: true})
+//     }
+// });
 
 router.post('/change-status/(:status)?', async (req, res, next) => {
     if (req.params.status === 'multi') {
         let arrId = req.body.id.split(",")
         let status = req.body.status
-        console.log(status)
-        let data = await modelContact.changeStatusItemsMulti(arrId, status);
+        let data = await serviceContact.changeStatusItemsMulti(arrId, status);
         res.send({success: true})
     } else {
         let {status, id} = req.body
         status = (status == 'active') ? 'inactive' : 'active'
-        let changeStatus = await modelContact.changeStatus(id, status)
+        let changeStatus = await serviceContact.changeStatus(id, status)
         res.send({success: true})
     }
 });
@@ -198,7 +186,7 @@ router.post('/change-ordering',
 			return
 		}
 		let {ordering, id} = req.body
-		let changeStatus = await modelContact.changeOrdering(id, ordering)
+		let changeStatus = await serviceContact.changeOrdering(id, ordering)
 		res.send({success: true})
 });
 
