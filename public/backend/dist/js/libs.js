@@ -18,6 +18,8 @@ listNotify = () => {
     CHANGE_ORDERING_ERROR: 'Change Ordering UnsuccessfulLy',
     CHANGE_STATUS_SUCCESS: 'Change Status SuccessfulLy',
     CHANGE_STATUS_ERROR: 'Change Status UnsuccessfulLy',
+    CHANGE_LINK_ERROR: 'Change Link UnsuccessfulLy',
+    CHANGE_LINK_SUCCESS: 'Change Link SuccessfulLy'
   }
 }
 

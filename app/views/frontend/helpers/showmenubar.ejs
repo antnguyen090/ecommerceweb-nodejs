@@ -1,0 +1,59 @@
+<%
+    showMenuBar = (menu) =>{
+        let isChild = []
+        let xhtml=''
+        let xhtmlChild=''
+        let xhtmll =''
+        let hadChild
+        function idExists(id, arr){
+            return arr.some(function(el) {
+              return el.parentMenu === id;
+            }); 
+        }
+        menu.map((item) => {
+            if(item.parentMenu != '0'){isChild.push(item)} 
+        })
+        
+        let callRoot = (data, parentId = 0, stt = 0) =>{
+            for (const parent of data) {
+                    if (parent.parentMenu == parentId){
+                        let id = parent.id
+                        hadChild = idExists(id, isChild)
+                        let level = (stt <= 0) ? '' : 'menu-level-2'
+                        let classChild = (stt > 0) ? "d-block mx-0 dropdown" : "nav-item dropdown"
+                        console.log(hadChild)
+                        if(hadChild == true){
+                            xhtml += `
+                            <li class="${classChild}">
+                                <a class="dropdown-toggle d-block" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="${parent.slug}">
+                                    ${parent.name}
+                                </a>
+                                <ul class="list-unstyled text-capitalize border-right border-bottom border-left dropdown-menu mt-0 py-0 ${level}">`
+                             callRoot(data, id, stt+1)
+                            xhtml += ` </ul>
+                                        </li>
+                            `
+                        } else {
+                                if(stt > 0){
+                                xhtml += `
+                                    <li class="d-block mx-0">
+                                        <a class="d-block" href="${parent.slug}">${parent.name}</a>
+                                    </li>
+                                    `
+                                } else{
+                                    xhtml += `
+                                    <li class="nav-item">
+                                        <a class="d-block" href="${parent.slug}">${parent.name}</a>
+                                    </li>
+                                    `
+                                }
+
+                        }
+                    } 
+            }
+          return xhtml
+          }
+          xhtml = callRoot(menu)
+          return xhtml
+    }
+%>

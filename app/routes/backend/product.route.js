@@ -139,7 +139,7 @@ router.post('/save/(:id)?',
 		.not()
 		.isEmpty()
 		.withMessage(notify.ERROR_DESCRIPTION),
-	body('detail')
+	body('content')
 		.not()
 		.isEmpty()
 		.withMessage(notify.ERROR_DETAIL),
@@ -159,6 +159,12 @@ router.post('/save/(:id)?',
 	body('ordering')
 		.isInt({min: 0, max: 99})
 		.withMessage(util.format(notify.ERROR_ORDERING,0,99)),
+	body('quantity')
+		.isInt({min: 0})
+		.withMessage(util.format(notify.ERROR_QUANITY,0)),
+	body('price')
+		.isInt({min: 500})
+		.withMessage(util.format(notify.ERROR_QUANITY,500)),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
 	body('thumb').custom((value,{req}) => {
 		const {image_uploaded , image_old} = req.body;
@@ -220,12 +226,12 @@ router.post('/save/(:id)?',
 					}
 				}
 			}
+				item.category = req.body.categoryId
 				if (req.params.id !== undefined) {
 					await serviceProduct.editItem(req.params.id, item)
 					req.flash('success', notify.EDIT_SUCCESS);
 					res.redirect(linkIndex);
 				} else {
-					item.category = req.body.categoryId
 					let data = await serviceProduct.saveItems(item)
 					req.flash('success', notify.ADD_SUCCESS);
 					res.redirect(linkIndex);
@@ -278,6 +284,7 @@ router.post('/change-status/(:status)?', async (req, res, next) => {
 						res.send({success: true})
 				}
 	} catch (error) {
+		res.send({success: false})
 		console.log(error)
 	}
 });
@@ -288,7 +295,7 @@ router.post('/change-ordering',
 		.withMessage(util.format(notify.ERROR_ORDERING,0,99)), 
 	async (req, res, next) => {
 		try {
-			const errors = validationResult(req);
+		const errors = validationResult(req);
 		if (! errors.isEmpty()) {
 			res.send({success: false, errors: errors})
 			return
@@ -297,6 +304,7 @@ router.post('/change-ordering',
 		let changeStatus = await serviceProduct.changeOrdering(id, ordering)
 		res.send({success: true})
 		} catch (error) {
+			res.send({success: false})
 			console.log(error)
 		}
 });
@@ -337,6 +345,7 @@ router.post('/changecategory',
 				res.send({success: true})
 			}
 	} catch (error) {
+		res.send({success: false})
 		console.log(error)
 	}
 });

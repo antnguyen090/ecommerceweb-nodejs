@@ -42,7 +42,7 @@ let getDataWheather = async (path, data, delay) => {
   }))
   .catch((error) => {
     console.error(error.message)
-    return error
+    return Promise.reject()
   });
     dataWheather.sort((a,b)=> a.ordering - b.ordering)
     return dataWheather

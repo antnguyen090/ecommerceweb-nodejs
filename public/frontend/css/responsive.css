@@ -603,3 +603,15 @@
   .introBlock .imgHolder2,
   .introBlock .imgHolder3 {
     display: none; } }
+
+@media (min-width: 991px){
+  .logocenter {
+    display: block;
+  }
+}
+
+@media (max-width: 991px){
+  .logocenter {
+    display: none;
+  }
+}

@@ -86,3 +86,8 @@ table td div.option {
     top: -10px;
   right: -11px;
   }
+
+  .nav.nav-treeview {
+    margin-left: 20px;
+    font-size: 13px;
+  }

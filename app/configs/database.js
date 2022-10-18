@@ -9,4 +9,8 @@ module.exports = {
     col_wheather:"wheather",
     col_manageuser: 'manageuser',
     col_managegroup: 'managegroup',
+    col_blogarticle: "blogarticle",
+    col_blogcategory: "blogcategory",
+    col_slider: "slider",
+    col_discount: 'discount',
 };

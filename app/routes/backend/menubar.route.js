@@ -19,7 +19,7 @@ const ParamsHelpers = require(__path_helpers + 'params');
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
 	try {
-		let parentMenuList = await serviceMenubar.getRootList({parentMenu : "parentmenu"})
+		let parentMenuList = await serviceMenubar.getRootList({status:'active'})
     let inform = req.flash()
     let objWhere = {};
     let keyword = ParamsHelpers.getParam(req.query, 'keyword', '');
@@ -61,7 +61,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
 router.get('/form/(:id)?',  async function (req, res, next) {
 	try {
 		let inform = req.flash()
-		let parentMenuList = await serviceMenubar.getRootList({parentMenu : "parentmenu"})
+		let parentMenuList = await serviceMenubar.getRootList({status:'active'})
 		let main = {pageTitle: pageTitle,
 			inform: inform,
 			parentMenuList,}
@@ -124,7 +124,7 @@ router.post('/save/(:id)?',
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
 	async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
 		try {
-			let parentMenuList = await serviceMenubar.getRootList({parentMenu : "parentmenu"})
+			let parentMenuList = await serviceMenubar.getRootList({status:'active'})
 			let item = req.body;
 			let itemData
 			if(req.params.id != undefined){
@@ -237,6 +237,7 @@ router.post('/changeparentmenu',
 				}),
 	body('newParent')
 				.custom(async (val, {req}) => {
+					if (val == 0) return
 					let data = await serviceMenubar.getItemByID(val)
 					if (!data) {
 						return Promise.reject(notify.ERROR_NOT_EXITS)

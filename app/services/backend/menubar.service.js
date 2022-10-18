@@ -63,7 +63,10 @@ module.exports = {
         let data = await modelMenuBar.find(val)
         return data
     },
-
+    getMenuBar:  async (status, sort) =>{
+        let data = await modelMenuBar.find({status: status}).sort({ordering: sort })
+        return data
+    },
 }
 
 

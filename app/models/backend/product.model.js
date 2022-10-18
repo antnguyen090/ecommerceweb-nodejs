@@ -5,20 +5,11 @@ const databaseConfig = require(__path_configs + 'database');
 var schema = new mongoose.Schema({ 
     name: String,
     price: Number,
-    discountProduct: Number,
+    discountProduct: [
+        { type: Schema.Types.ObjectId, ref: 'discount' }
+    ],
     description: String,
-    comments: [{
-        userId: String,
-        comment_content: String,
-        comment_time: String
-    }],
-    stock: Number,
-    views: Number,
-    rating: [{
-        userId: String,
-        rate: Number,
-        rate_time: String
-    }],
+    quantity: Number,
     slug: String,
     status: String,
     ordering: Number,
@@ -31,7 +22,7 @@ var schema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    detail: String,
+    content: String,
     category: { type: Schema.Types.ObjectId, ref: 'category' },
 },
 { timestamps: true }

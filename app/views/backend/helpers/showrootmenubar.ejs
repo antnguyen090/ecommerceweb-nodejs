@@ -1,0 +1,20 @@
+<% 
+  showRootMenuBar = (data, currentMenu, valueParent) =>{
+    let xhtml = '<option value="0">Parent Menu</option>'
+      let callRoot = (data, parentId = 0, char = '', child) =>{
+        for (const parent of data) {
+          let selected = (parent.id == currentMenu) ? 'selected disabled' : '';
+          let bg = (parent.id == currentMenu) ? 'style="color: white; background-color: #28a745;"' : '';
+          let child = (currentMenu == parent.id) ? 1 : 0
+          let disabled = (child == 1 ) ? 'disabled' : ''
+          if (parent.parentMenu == parentId){
+            xhtml += `<option ${bg} value="${parent.id}" ${selected} ${disabled}> ${char}${parent.name} </option>`
+            callRoot(data, parent.id, char + '|---', child);
+          } 
+        }
+        return xhtml
+      }
+      xhtml = callRoot(data)
+      return xhtml
+  } 
+%>

@@ -23,11 +23,27 @@ module.exports = {
                         return data;
     },
     deleteItem: async (id) =>{
-        let data = await modelProduct.deleteOne({_id: id})
+        let removeObject = await modelProduct.findOne({_id: id}).then( async (obj)=>{
+            let productArr = await modelCategory.findById({_id: obj.category})
+            productArr.productList.remove(id)
+            await modelCategory(productArr).save()
+            let data = await modelProduct.deleteOne({_id: id})
+        })
         return
     },
     deleteItemsMulti: async (arrId) =>{
-        let data = await modelProduct.deleteMany({_id: {$in: arrId}})
+        await Promise.all(arrId.map(async (id,index) => {
+            let removeObject = await modelProduct.findOne({_id: id}).then( async (obj)=>{
+            let productArr = await modelCategory.findById({_id: obj.category})
+            productArr.productList.remove(id)
+            await modelCategory(productArr).save()
+            let data = await modelProduct.deleteOne({_id: id})
+            })
+             }))
+            .catch((error) => {
+                console.error(error.message)
+                return Promise.reject()
+            });
         return
     }
     ,
@@ -68,6 +84,20 @@ module.exports = {
         let data = await modelProduct.count(objWhere)
         return data
     },
+    checkExit: async (val) =>{
+        if ( typeof val == 'string'){
+            let data = await modelProduct.exists({ _id: val })
+            return data
+        } else{
+            await Promise.all(val.map(async (id,index) => {
+                    let data = await modelProduct.exists({ _id: id })
+                    return data
+                 }))
+                .catch((error) => {
+                    return Promise.reject()
+        });
+        }
+    }
 }
 
 

@@ -19,10 +19,7 @@
                 <label for="parentMenu" class="col-sm-2 col-form-label text-sm-right">Sub Menu</label>
                 <div class="col-xs-12 col-sm-8">
                     <select id="parentMenu" name="parentMenu" class="custom-select custom-select-sm">
-                        <option value="parentmenu">Parent Menu</option>
-                        <% main.parentMenuList.forEach( (parent, index) => { %>
-                            <option value="<%= parent._id %>"><%= parent.name %></option>
-                            <% }) %>
+                        <%- showRootMenuBar(main.parentMenuList, item.id) %>
                     </select>
                 </div>
             </div>

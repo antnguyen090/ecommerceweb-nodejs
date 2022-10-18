@@ -1,8 +1,16 @@
 <%  
     let arrMenu = [
         {parent: false, name: 'Dashboard', icon: 'fa-solid fa-gauge', link: `${systemConfig.prefixAdmin}/dashboard`},
-        {parent: false, name: 'Category', icon: 'fa-solid fa-list-alt', link: `${systemConfig.prefixAdmin}/category`},
-        {parent: false, name: 'Product', icon: 'fa-solid fa-newspaper', link: `${systemConfig.prefixAdmin}/product`},
+        {parent: true, child: [
+          { name: 'Product Category', icon: 'fa-solid fa-list-alt', link: `category`},
+          { name: 'Product List', icon: 'fa-solid fa-user', link: `product`},
+          { name: 'Product Discount', icon: 'fa-solid fa-user', link: `discount`},
+        ], name: 'Manage Product', icon: 'fa-solid fa-users', link: `/${systemConfig.prefixAdmin}/`},
+        {parent: true, child: [
+          { name: 'Blog Category', icon: 'fa-solid fa-list-alt', link: `blogcategory`},
+          { name: 'Blog Article', icon: 'fa-solid fa-user', link: `blogarticle`},
+        ], name: 'Manage Blog', icon: 'fa-solid fa-users', link: `/${systemConfig.prefixAdmin}/`},
+        {parent: false, name: 'Slider', icon: 'fa-solid fa-image', link: `${systemConfig.prefixAdmin}/slider`},
         {parent: false, name: 'Menu Bar', icon: 'fa-solid fa-align-justify', link: `${systemConfig.prefixAdmin}/menubar`},
         {parent: false, name: 'Wheather', icon: 'fa-solid fa-cloud', link: `${systemConfig.prefixAdmin}/wheather`},
         {parent: false, name: 'Contact', icon: 'fa-solid fa-envelopes-bulk', link: `${systemConfig.prefixAdmin}/contact`},
