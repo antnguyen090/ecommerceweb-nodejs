@@ -40,7 +40,13 @@ router.get('(/status/:status)?', async (req, res, next) => {
 				pagination.totalItemsPerPage,
 				{updatedAt: 'desc'},
 				)
-
+			statusFilter.map( item =>{
+				if(item.class == "danger"){
+					item.name = "Incomplete"
+				} else if(item.class == "success"){
+					item.name = "Complete"
+				}
+			})
 			res.render(`${folderView}list`, {
 				pageTitle: pageTitle,
 				countItemsActive: data.filter(item => item.status === 'active'),
@@ -58,26 +64,17 @@ router.get('(/status/:status)?', async (req, res, next) => {
 })
 
 // access FORM
-router.get('/form/(:id)?', async function (req, res, next) {
+router.get('/form/', async function (req, res, next) {
 	try {
 		let inform = req.flash()
 		let main = {pageTitle: pageTitle,
 		inform: inform
 		}
-	if (req.params.id != undefined) {
-		let item = await serviceContact.getItemByID(req.params.id)
-			res.render(`${folderView}form`, {
-				main: main,
-				item: item,
-				layout,
-			});
-    } else {
-        res.render(`${folderView}form`, {
+    res.render(`${folderView}form`, {
 			main: main,
 			item: [],
 			layout,
         });
-    }
 	} catch (error) {
 		console.log(error)
 	}
@@ -105,42 +102,21 @@ router.post('/save/(:id)?',
 		.withMessage(notify.ERROR_MESSAGE),
 	async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
 			let item = req.body;
-			let itemData = [{}]
-			if(req.params.id != undefined){
-				itemData = await serviceContact.getItemByID(req.params.id)
-			}
 			let errors = await validationResult(req)
 			if(!errors.isEmpty()) {
 				let main = {pageTitle: pageTitle,
 							showError: errors.errors,
 							}
-				if (req.params.id !== undefined){
-						res.render(`${folderView}form`, {
-							main: main,
-							item: itemData,
-							id: req.params.id,
-							layout
-						})
-				} else {
 					res.render(`${folderView}form`, {
 						main: main,
-						item: req.body,
+						item: item,
 						layout,
 					})
 				}
-				return
-			}
-
 			try {
-				if (req.params.id !== undefined) {
-					let data = await serviceContact.editItem(req.params.id, item)
-					req.flash('success', notify.EDIT_SUCCESS);
-					res.redirect(linkIndex);
-				} else {
 					let data = await serviceContact.saveItems(item);
 					req.flash('success', notify.ADD_SUCCESS);
 					res.redirect(linkIndex);
-				}
 			} catch (error) {
 				console.log(error)
 			}
@@ -161,18 +137,22 @@ router.post('/save/(:id)?',
 //     }
 // });
 
-router.post('/change-status/(:status)?', async (req, res, next) => {
-    if (req.params.status === 'multi') {
-        let arrId = req.body.id.split(",")
-        let status = req.body.status
-        let data = await serviceContact.changeStatusItemsMulti(arrId, status);
-        res.send({success: true})
-    } else {
-        let {status, id} = req.body
-        status = (status == 'active') ? 'inactive' : 'active'
-        let changeStatus = await serviceContact.changeStatus(id, status)
-        res.send({success: true})
-    }
+router.post('/change-status/(:status)?',
+async (req, res, next) => {
+	try {
+			let {status, id} = req.body
+			status = (status == 'active') ? 'inactive' : 'active'
+			if(status == 'inactive'){
+				res.send({success: false})
+			} else{
+				let changeStatus = await serviceContact.changeStatus(id, status)
+				console.log(changeStatus)
+				res.send({success: true, update: changeStatus.updatedAt})
+			}
+	} catch (error) {
+		res.send({success: false})
+	}
+
 });
 
 router.post('/change-ordering', 

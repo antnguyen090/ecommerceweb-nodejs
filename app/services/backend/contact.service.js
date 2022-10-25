@@ -19,24 +19,11 @@ module.exports = {
                                             .sort(updatedAt)
                 return data;
     },
-    deleteItem: async (id) =>{
-        let data = await modelContact.deleteOne({_id: id})
-        return
-    },
-    deleteItemsMulti: async (arrId) =>{
-        let data = await modelContact.deleteMany({_id: {$in: arrId}})
-        return
-    }
-    ,
-    changeStatus: async (id, status) =>{
-        let data = await modelContact.updateOne({_id: id}, {status: status})
-        return
-        },
-    changeStatusItemsMulti: async (arrId, status) =>{
-        let data = await modelContact.updateMany({_id: {$in: arrId}}, {status: status})
 
-    }
-    ,
+    changeStatus: async (id, status) =>{
+        let data = await modelContact.findOneAndUpdate({_id: id}, {status: status})
+        return data
+      },
     changeOrdering: async (id, ordering) =>{
             let data = await modelContact.updateOne({_id: id}, {ordering: ordering})
             return

@@ -12,8 +12,11 @@ $(document).ready(function() {
     initCountDown();
     // count down init
     function initCountDown() {
-        var newDate = new Date(2019, 12, 20);
-
+        var now = new Date();
+        let day = now.getDate()	+ 1
+        let month= now.getMonth()	
+        let year = now.getFullYear()	
+        var newDate = new Date(year, month, day);
         jQuery("#defaultCountdown").countdown({until: newDate});
     }
 

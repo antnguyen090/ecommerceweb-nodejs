@@ -24,7 +24,7 @@ const uploadThumb	 = FileHelpers.uploadFileMulti('thumb', `${mainName}`);
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
 	try {
-		let category = await serviceCategory.getCategoryList({status: 'active'})
+		let category = await serviceCategory.getCategoryList('active')
     let inform = req.flash()
     let objWhere = {};
     let keyword = ParamsHelpers.getParam(req.query, 'keyword', '');
@@ -76,7 +76,7 @@ router.post('(/option)', async (req, res, next) => {
 router.get('/form/(:id)?', async function (req, res, next) {
 	try {
 		let inform = req.flash()
-		let category = await serviceCategory.getCategoryList({status: 'active'})
+		let category = await serviceCategory.getCategoryList('active')
 		let main = {pageTitle: pageTitle,
 								categoryList: category,
 								inform: inform
@@ -187,7 +187,7 @@ router.post('/save/(:id)?',
 			}
 			let errors = validationResult(req)
 			if(!errors.isEmpty()) {
-				let category = await serviceCategory.getCategoryList({status: 'active'})
+				let category = await serviceCategory.getCategoryList('active')
 				let main = {pageTitle: pageTitle,
 							showError: errors.errors,
 							categoryList: category,
@@ -349,5 +349,33 @@ router.post('/changecategory',
 		console.log(error)
 	}
 });
-
+router.post('/sortable',
+       async (req, res, next) => {
+				try {
+					let arr = req.body.thumb.split(",")
+					let id = req.body.id
+					arr.pop()
+					let data = await serviceProduct.updateSortable(id, arr)
+					res.send({success:true})
+				} catch (error) {
+					console.log(error)
+					res.send({success:false})
+				}
+			 })
+router.post('/deletephoto',
+       async (req, res, next) => {
+				try {
+					let arr = req.body.thumb.split(",")
+					let id = req.body.id
+					arr.pop()
+					FileHelpers.remove(`public/uploads/${mainName}/`, req.body.delete)
+					let data = await serviceProduct.updateSortable(id, arr)
+					res.send({success:true})
+				} catch (error) {
+					console.log(error)
+					res.send({success:false})
+				}
+			 })
 module.exports = router;
+
+

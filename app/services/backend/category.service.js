@@ -59,8 +59,8 @@ module.exports = {
         let data = await modelCategory.find({slug: val})
         return data
     },
-    getCategoryList: async (val) =>{
-        let data = await modelCategory.find(val)
+    getCategoryList: async (status, sort = 'asc') =>{
+        let data = await modelCategory.find({status: status}).sort({ordering: sort })
         return data
     },
     getCategoryById: async (val) =>{

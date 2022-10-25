@@ -1,12 +1,16 @@
 <%- include('./../../helpers/showerror'); -%>
 <%- include('./../../helpers/showsucess'); -%>
+<%- include('./../../helpers/showlistclientsay'); -%>
+<%- include('./../../helpers/showdataaboutus'); -%>
+<%- include('./../../helpers/showlistmission'); -%>
+
 
 <% 
     const collection="setting" ; 
     const linkPrefix="/" + systemConfig.prefixAdmin + `/${collection}/`; 
     const linkThumb="/" + "uploads" + `/${collection}/`; 
 %>
-        <%- showSucess(main.inform.success) %>
+        <%- showSucess(inform.success) %>
         <div class="card card-info card-outline">
             <form action="<%= linkPrefix %>save/" method="POST" class="mb-0" enctype="multipart/form-data">
                 <div class="card-body">
@@ -26,6 +30,36 @@
                                                 href="#custom-tabs-one-profile" role="tab"
                                                 aria-controls="custom-tabs-one-profile"
                                                 aria-selected="false">Social</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill"
+                                                href="#custom-tabs-two-profile" role="tab"
+                                                aria-controls="custom-tabs-two-profile"
+                                                aria-selected="false">Email Contact</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill"
+                                                href="#custom-tabs-three-profile" role="tab"
+                                                aria-controls="custom-tabs-three-profile"
+                                                aria-selected="false">Newsletter</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill"
+                                                href="#custom-tabs-four-profile" role="tab"
+                                                aria-controls="custom-tabs-four-profile"
+                                                aria-selected="false">What say Client</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-five-profile-tab" data-toggle="pill"
+                                                href="#custom-tabs-five-profile" role="tab"
+                                                aria-controls="custom-tabs-five-profile"
+                                                aria-selected="false">About Us</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-six-profile-tab" data-toggle="pill"
+                                                href="#custom-tabs-six-profile" role="tab"
+                                                aria-controls="custom-tabs-six-profile"
+                                                aria-selected="false">Partner</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -169,11 +203,174 @@
                                             </div>
 
                                         </div>
+                                        <div class="tab-pane fade" id="custom-tabs-two-profile" role="tabpanel"
+                                        aria-labelledby="custom-tabs-two-profile-tab">
+                                            <div class="form-group row">
+                                                <label for="main_email" class="col-sm-2 col-form-label text-sm-right">Main Email</label>
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <input name='main_email' class="main_email" value="<%=item.main_email %>" type="email">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="sub_email" class="col-sm-2 col-form-label text-sm-right">Sub Email</label>
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <textarea class="tagarea">
+                                                    </textarea>
+                                                </div>
+                                                <input name='sub_email' type="hidden" value="<%=item.sub_email %>">
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="subject_email" class="col-sm-2 col-form-label text-sm-right">Subject Email</label>
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <input name='subject_email' class="main_email" value="<%=item.subject_email %>" type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="content_email" class="col-sm-2 col-form-label text-sm-right">Content Email</label>
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <textarea id="contactEmail" name="content_email" > 
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel"
+                                        aria-labelledby="custom-tabs-three-profile-tab">
+                                            <div class="form-group row">
+                                                <label for="subject_email_newsletter" class="col-sm-2 col-form-label text-sm-right">Subject Email</label>
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <input name='subject_email_newsletter' class="main_email" value="<%=item.subject_email_newsletter %>" type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="content_email_newsletter" class="col-sm-2 col-form-label text-sm-right">Content Email</label>
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <textarea id="newsLetter" name="content_email_newsletter" ></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
+                                        aria-labelledby="custom-tabs-four-profile-tab">
+                                            <div class="form-group row">
+                                                <label for="title_say_client" class="col-sm-2 col-form-label text-sm-right">Title</label>
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <input name='title_say_client' class="main_email" value="<%=item.title_say_client %>" type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="" class="col-sm-2 col-form-label text-sm-right">Clients List</label>
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <div class="card shadow">
+                                                        <div class="card-body">
+                                                            <%- showListClientSay(item.list_say_client) %>
+                                                            <div class="clearfix mt-4">
+                                                              <button type="button" id="say-add-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="fas fa-plus fa-fw"></i> Add</button>
+                                                              <button type="button" id="say-remove-button" class="btn btn-secondary float-left text-uppercase ml-1"><i class="fas fa-minus fa-fw"></i> Remove</button>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="list_say_client" value="<%=item.list_say_client %>">
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-five-profile" role="tabpanel"
+                                        aria-labelledby="custom-tabs-five-profile-tab">
+                                        <div class="card card-primary card-tabs">
+                                            <div class="card-header p-0 pt-1">
+                                              <ul class="nav nav-tabs" id="sub-custom-tabs-one-tab" role="tablist">
+                                                <li class="nav-item">
+                                                  <a class="nav-link active" id="sub-custom-tabs-one-home-tab" data-toggle="pill" href="#sub-custom-tabs-one-home" role="tab"
+                                                    aria-controls="sub-custom-tabs-one-home" aria-selected="false">About Us Page</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" id="sub-custom-tabs-one-profile-tab" data-toggle="pill" href="#sub-custom-tabs-one-profile"
+                                                    role="tab" aria-controls="sub-custom-tabs-one-profile" aria-selected="true">Why Choose Us?</a>
+                                                </li>
+                                              </ul>
+                                            </div>
+                                            <div class="card-body">
+                                              <div class="tab-content" id="sub-custom-tabs-one-tabContent">
+                                                <div class="tab-pane fade active show in" id="sub-custom-tabs-one-home" role="tabpanel" aria-labelledby="sub-ustom-tabs-one-home-tab">
+                                                    <div class="form-group row">
+                                                        <label for="titleAboutUS" class="col-sm-2 col-form-label text-sm-right">Title</label>
+                                                        <div class="col-xs-12 col-sm-8">
+                                                            <input name='titleAboutUS' class="main_email" value="<%=item.titleAboutUS %>" type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="contentAboutUS" class="col-sm-2 col-form-label text-sm-right">Content</label>
+                                                        <div class="col-xs-12 col-sm-8">
+                                                                <textarea name="contentAboutUS" class="main_email" id="" cols="30" rows="4"><%=item.contentAboutUS %></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row uploadImage">
+                                                        <label for="photoContent" class="col-sm-2 col-form-label text-sm-right">Upload Photo Content</label>
+                                                        <div class="col-xs-12 col-sm-8">
+                                                            <input id="photoContent" name="photoContent" type="file" class="custom-file-input" value="PhotoContent" style="opacity:1">
+                                                            <div id="divImageMediaPreviewPhotoContent">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row ckeditor">
+                                                        <label for="photoContent" class="col-sm-2 col-form-label text-sm-right">Photo Content Uploaded</label>
+                                                    <% if (item.photocontent != undefined) { %>
+                                                        <img style="width: 15%; padding: 10px" src="<%= linkThumb %><%= item.photocontent%>" alt="thumb" onerror="this.onerror=null;this.src='<%= linkThumb %>/no-image-found.jpg'">
+                                                        <%}  %>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                                <label for="dataAboutUS" class="col-sm-2 col-form-label text-sm-right">Data</label>
+                                                                <div class="col-xs-12 col-sm-8">
+                                                                    <div class="row">
+                                                                        <%- showDataAboutUs(item.dataAboutUS,["HAPPY CLIENTS","COMPLETED PROJECT","AWESOME STAFF","WINNING AWARDS"]) %>
+                                                                    </div>
+                                                                </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="" class="col-sm-2 col-form-label text-sm-right">Mission List</label>
+                                                        <div class="col-xs-12 col-sm-8">
+                                                            <div class="card shadow">
+                                                                <div class="card-body">
+                                                                    <%- showListMission(item.list_mission) %>
+                                                                    <div class="clearfix mt-4">
+                                                                      <button type="button" id="mission-add-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="fas fa-plus fa-fw"></i> Add</button>
+                                                                      <button type="button" id="mission-remove-button" class="btn btn-secondary float-left text-uppercase ml-1"><i class="fas fa-minus fa-fw"></i> Remove</button>
+                                                                    </div>
+                                                                    <input type="hidden" name="list_mission" value="<%=item.list_mission %>">
+                                                                </div>
+                                                              </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row uploadImage">
+                                                        <label for="photoMission" class="col-sm-2 col-form-label text-sm-right">Upload Photo Misson</label>
+                                                        <div class="col-xs-12 col-sm-8">
+                                                            <input id="photoMission" name="photoMission" type="file" class="custom-file-input" value="PhotoMission" style="opacity:1">
+                                                            <div id="divImageMediaPreviewPhotoMission">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row ckeditor">
+                                                        <label for="photoMission" class="col-sm-2 col-form-label text-sm-right">Photo Mission Uploaded</label>
+                                                    <% if (item.photomission != undefined) { %>
+                                                        <img style="width: 15%; padding: 10px" src="<%= linkThumb %><%= item.photomission%>" alt="thumb" onerror="this.onerror=null;this.src='<%= linkThumb %>/no-image-found.jpg'">
+                                                        <%}  %>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="sub-custom-tabs-one-profile" role="tabpanel"
+                                                  aria-labelledby="custom-tabs-one-profile-tab">
+                          
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-six-profile" role="tabpanel"
+                                        aria-labelledby="custom-tabs-six-profile-tab">
+
+                                        </div>
+                                    </div>
+                                    </div>
                                     </div>
                                 </div>
-
                             </div>
-                        </div>
                 </div>
                 <div class="card-footer">
                     <input name="image_old_large" value="<%= item.logolarge%>" type="hidden">
@@ -184,7 +381,7 @@
 				    <input name="image_uploaded_title" value="" type="hidden" id="image_uploaded_title">
                     <input name="image_old_banner" value="<%= item.logobanner%>" type="hidden">
 				    <input name="image_uploaded_banner" value="" type="hidden" id="image_uploaded_banner">
-                    <div class="col-12 col-sm-8 offset-sm-2">
+                    <div class="col-12 col-sm-12 text-center">
                         <button type="submit" class="btn btn-sm btn-success mr-1">
                             Submit</button>
                         <a href="<%= linkPrefix %>/" class="btn btn-sm btn-danger mr-1">
@@ -192,15 +389,27 @@
                     </div>
                 </div>
             </form>
-
+            <div id="prizePopup"></div>
         </div>
 
         <script src="/plugins/jquery/jquery.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
         <script src="/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        
         <!-- Summernote -->
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-        <script>
+        <script type="text/javascript">
+            $('#contactEmail').summernote({
+                height: "200px",
+            });
+            $('#newsLetter').summernote({
+                height: "200px",
+            });
+            var contentContactEmail = `<%- item.content_email %>`;
+             $('#contactEmail').summernote('code', contentContactEmail);
+             var contentNewsLetter = `<%- item.content_email_newsletter %>`;
+             $('#newsLetter').summernote('code', contentNewsLetter);
             ImageMediasLarge.onchange = evt => {
                 const [file] = ImageMediasLarge.files
                 if (file) {

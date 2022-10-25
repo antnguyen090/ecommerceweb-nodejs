@@ -1,0 +1,20 @@
+<%
+  showClientSay = (data) =>{
+    let html= ""
+    if (data == undefined) return
+    let dataParse = JSON.parse(data)
+    dataParse.forEach((item)=>{
+      html+= `
+      <div class="slide text-center mb-7">
+        <span class="icon-qoute mb-2 d-block"></span>
+        <p class="mb-7">
+          ${item.content}
+        </p>
+        <strong class="title d-block fwEbold mb-1">${item.name}</strong>
+        <span class="desination">${item.career}</span>
+      </div>
+      `
+    })
+    return html
+  }
+%>

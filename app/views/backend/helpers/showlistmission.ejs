@@ -1,0 +1,31 @@
+<%
+  showListMission = (data) =>{
+        let dataParse = (data == undefined) ? [{name:"", content:""}] : JSON.parse(data)
+        let html = ""
+        dataParse.forEach((item, index) =>{
+            html+= `
+            <div id="mission-dynamic-field-${index+1}" class="form-group mission-dynamic-field">
+              <label for="field" class="font-weight-bold">Mission ${index+1}</label>
+              <div class="row">
+                <div class="col-sm-2">
+                    <label for="name_mission[]_1" class="col-form-label text-sm-right">Name</label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="name_mission_1[]" value="${item.name}"/>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-sm-2">
+                    <label for="content_mission_1[]" class="col-form-label text-sm-right">Content</label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="content_mission_1[]" value="${item.content}"/>
+                </div>
+              </div>
+            </div>
+             `
+        })
+        return html
+  }
+
+%>

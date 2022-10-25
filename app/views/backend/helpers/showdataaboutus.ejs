@@ -1,0 +1,16 @@
+<%
+  showDataAboutUs = (data, name) =>{
+    let html=''
+    if (!data) data = ["","","",""]
+    data.forEach((item,index) =>{
+      html +=  `
+        <div class="col-3">
+          <label for="dataAboutUS[]" class="col-form-label text-sm-left" style="font-size: 13px;">${name[index]}</label>
+          <input name='dataAboutUS[]' class="main_email" value="${item}" type="number">
+        </div>
+      `
+    })
+    return html
+  }
+
+%>

@@ -1,0 +1,16 @@
+<%- include('./../helpers/showclientsay'); -%>
+
+<div class="container-fluid px-xl-20 px-lg-10">
+  <!-- testimonailBlock -->
+  <section class="testimonailBlock bgCover py-xl-24 py-lg-20 py-md-16 py-10" style="background-image: url(/frontend/images/35e57a7d0b49a2e082f3e2cf844b47e5.jpg)">
+    <header class="col-12 mainHeader mb-9 text-center">
+      <h1 class="headingIV playfair fwEblod"><%= settingPage.title_say_client%></h1>
+    </header>
+    <div class="container">
+      <!-- testimonailSlider -->
+      <div class="testimonailSlider overflow-hidden">
+        <%- showClientSay(settingPage.list_say_client) %>
+      </div>
+    </div>
+  </section>
+</div>

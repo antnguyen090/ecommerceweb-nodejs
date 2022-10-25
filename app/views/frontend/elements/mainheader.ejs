@@ -6,13 +6,13 @@
 				<div class="col-6 col-sm-3 col-lg-2 order-sm-2 order-md-0 dis-none">
 					<!-- wishList -->
 					<ul class="nav nav-tabs wishList pt-xl-5 pt-lg-4 pt-3 mr-xl-3 mr-0 justify-content-end border-bottom-0">
-						<li class="nav-item"><a class="nav-link position-relative" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="far fa-user-circle"></i></a></li>
-						<li class="nav-item"><a class="nav-link position-relative" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"><i class="far fa-registered mr-1"></i></a></li>
+						<li class="nav-item"><a class="nav-link position-relative"  data-bs-custom-class="custom-tooltip" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="Đăng Nhập"><i class="far fa-user-circle"></i></a></li>
+						<li class="nav-item"><a class="nav-link position-relative"  data-bs-custom-class="custom-tooltip" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="Đăng Ký"><i class="far fa-registered mr-1"></i></a></li>
 					</ul>
 				</div>
 				<div class="col-12 col-sm-6 col-lg-8 static-block">
 					<div class="nav-item logocenter">
-						<a class="nLogo" href="home.html"><img src="/frontend/images/logo.png" alt="Botanical" class="img-fluid"></a>
+						<a class="nLogo" href="/index"><img src="/uploads/setting/<%=settingPage.logolarge%>" alt="Botanical" class="img-fluid"></a>
 					</div>
 					<!-- mainHolder -->
 					<div class="mainHolder justify-content-center">
@@ -26,11 +26,11 @@
 							</button>
 							<div class="collapse navbar-collapse" id="navbarNav">
 								<ul class="navbar-nav mx-auto text-uppercase d-inline-block">
-										<%- showMenuBar(listmenu) %>
+										<%- showMenuBar(listmenu, listCategory) %>
 								</ul>
 						</nav>
 						<div class="logo">
-							<a href="home.html"><img src="/frontend/images/logo.png" alt="Botanical" class="img-fluid"></a>
+							<a href="home.html"><img src="/uploads/setting/<%=settingPage.logosmall%>" alt="Botanical" class="img-fluid"></a>
 						</div>
 					</div>
 

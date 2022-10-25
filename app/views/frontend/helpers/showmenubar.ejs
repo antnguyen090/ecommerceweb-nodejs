@@ -1,5 +1,14 @@
 <%
-    showMenuBar = (menu) =>{
+    showMenuBar = (menu, listCategory) =>{
+        if (!listCategory) listCategory = []
+        let showCategory =''
+        listCategory.forEach((category) =>{
+                showCategory +=`
+                        <li class="d-block mx-0">
+                                <a class="d-block" href='/category/${category.slug}'>${category.name}</a>
+                        </li>
+                `
+        })
         let isChild = []
         let xhtml=''
         let xhtmlChild=''
@@ -14,14 +23,14 @@
             if(item.parentMenu != '0'){isChild.push(item)} 
         })
         
-        let callRoot = (data, parentId = 0, stt = 0) =>{
+        let callRoot = (data, parentId = 0, stt = 0, category = 0) =>{
             for (const parent of data) {
                     if (parent.parentMenu == parentId){
                         let id = parent.id
+                        let slug = parent.slug
                         hadChild = idExists(id, isChild)
                         let level = (stt <= 0) ? '' : 'menu-level-2'
                         let classChild = (stt > 0) ? "d-block mx-0 dropdown" : "nav-item dropdown"
-                        console.log(hadChild)
                         if(hadChild == true){
                             xhtml += `
                             <li class="${classChild}">
@@ -29,23 +38,40 @@
                                     ${parent.name}
                                 </a>
                                 <ul class="list-unstyled text-capitalize border-right border-bottom border-left dropdown-menu mt-0 py-0 ${level}">`
-                             callRoot(data, id, stt+1)
+                            callRoot(data, id, stt+1)
+                            let htmlCategoryLevelTwo = ''
+                            if(slug == 'category') {
+                                htmlCategoryLevelTwo = showCategory
+                            }
+                            xhtml += htmlCategoryLevelTwo
                             xhtml += ` </ul>
-                                        </li>
+                            </li>
                             `
                         } else {
                                 if(stt > 0){
-                                xhtml += `
-                                    <li class="d-block mx-0">
-                                        <a class="d-block" href="${parent.slug}">${parent.name}</a>
-                                    </li>
-                                    `
-                                } else{
                                     xhtml += `
-                                    <li class="nav-item">
+                                        <li class="d-block mx-0">
+                                            <a class="d-block" href="${parent.slug}">${parent.name}</a>
+                                        </li>
+                                        `
+                                } else{
+                                    let htmlCategory = ''
+                                    let isDropDown = ''
+                                    if(slug == 'category'){
+                                        htmlCategory =`
+                                            <ul class="list-unstyled text-capitalize border-right border-bottom border-left dropdown-menu mt-0 py-0 ">
+                                                ${showCategory}
+                                            </ul>
+                                        `
+                                        isDropDown = "dropdown"
+                                    }
+                                    xhtml += `
+                                    <li class="nav-item ${isDropDown}">
                                         <a class="d-block" href="${parent.slug}">${parent.name}</a>
+                                        ${htmlCategory}
                                     </li>
                                     `
+
                                 }
 
                         }

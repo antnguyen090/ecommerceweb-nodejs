@@ -12,9 +12,9 @@
             xhtmlStatus = 'btn-danger';
             icon = 'fa-ban';
         }
-        console.log(link)
+        let func = (collection =="contact" && status == "inactive") ? "changeProcess" : "changeStatus"
         <!-- return `<a href="${link}" class="rounded-circle btn btn-sm ${xhtmlStatus}"><i class="fas fa-check"></i></a>`; -->
-        return `<a href="javascript:" onClick="changeStatus('${status}','${id}', '${link}')" id="change-status-${id}" class="rounded-circle btn btn-sm ${xhtmlStatus}"><i class="fas ${icon}"></i></a>`;
+        return `<a href="javascript:" onClick="${func}('${status}','${id}', '${link}')" id="change-status-${id}" class="rounded-circle btn btn-sm ${xhtmlStatus}"><i class="fas ${icon}"></i></a>`;
     }
 %>
 

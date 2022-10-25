@@ -15,6 +15,7 @@ const serviceSetting = require(__path_services_backend + `${mainName}.service`);
 const layout = __path_views_backend + 'backend';
 
 const FileHelpers = require(__path_helpers + 'file');
+const ValidationHelpers = require(__path_helpers + 'validation');
 const uploadThumb = FileHelpers.uploadFileSetting([
   {
     name: 'logoLarge'
@@ -25,6 +26,12 @@ const uploadThumb = FileHelpers.uploadFileSetting([
   },
 	{
     name: 'logoBanner'
+  },
+	{
+    name: 'photoContent'
+  },
+	{
+    name: 'photoMission'
   }
 ], `${mainName}`);
 
@@ -37,21 +44,21 @@ router.get('/', async function (req, res, next) {
 				let inform = req.flash()
 				let settingObj = await serviceSetting.getOne()
 				let main = {
-					inform: inform,
 					pageTitle: pageTitle,
 				}
 				if (settingObj === null) { // document exists });
-						console.log('settingObj')
 						res.render(`${folderView}form`, {
-						main: main,
+						main:main,
 						item: [],
-						layout
+						layout,
+						inform
 					})
 					} else {
 						res.render(`${folderView}form`, {
 							main: main,
 							item: JSON.parse(settingObj.setting),
-							layout
+							layout,
+							inform
 						});
 					}
 	} catch (error) {
@@ -65,7 +72,59 @@ router.post('/save/(:id)?',
 	body('title')
 		.not()
 		.isEmpty()
-		.withMessage(notify.ERROR_SETTING_TITLEPAGE), 
+		.withMessage(notify.ERROR_SETTING_TITLEPAGE),
+	body('titleAboutUS')
+		.not()
+		.isEmpty()
+		.withMessage(notify.ERROR_SETTING_TITLE_ABOUTUS),
+	body('title_say_client')
+		.not()
+		.isEmpty()
+		.withMessage(notify.ERROR_SETTING_TITLE_CLIENT), 
+	body('list_say_client')
+		.custom(async (value, {req}) => {
+			try {
+				function NotImplementedError(message = "") {
+						this.name = "NotImplementedError";
+						this.message = message;
+				}
+				NotImplementedError.prototype = Error.prototype;
+				let arr = JSON.parse(value)
+				arr.map(item=>{
+					if(item.name == "" || item.content == "" || item.career == ""){
+						throw new NotImplementedError("")
+					}
+				})
+			} catch (error) {
+				if (error.name == "NotImplementedError") return Promise.reject(notify.ERROR_SETTING_LIST_CLIENT)
+				return Promise.reject(notify.ERROR_SETTING_LIST_CLIENT_VALUE)
+			}
+		})
+		,
+		body('list_mission')
+		.custom(async (value, {req}) => {
+			try {
+				function NotImplementedError(message = "") {
+						this.name = "NotImplementedError";
+						this.message = message;
+				}
+				NotImplementedError.prototype = Error.prototype;
+				let arr = JSON.parse(value)
+				arr.map(item=>{
+					if(item.name == "" || item.content == ""){
+						throw new NotImplementedError("")
+					}
+				})
+			} catch (error) {
+				if (error.name == "NotImplementedError") return Promise.reject(notify.ERROR_SETTING_LIST_MISSION)
+				return Promise.reject(notify.ERROR_SETTING_LIST_MISSION)
+			}
+		})
+		,
+	body('contentAboutUS')
+		.not()
+		.isEmpty()
+		.withMessage(notify.ERROR_SETTING_CONTENT_ABOUTUS),
 	body('coppyright')
 		.not()
 		.isEmpty()
@@ -80,7 +139,46 @@ router.post('/save/(:id)?',
 	body('email')
 		.isEmail()
 		.normalizeEmail()
-		.withMessage(notify.ERROR_SETTING_EMAIL), 
+		.withMessage(notify.ERROR_SETTING_EMAIL),
+	body('main_email')
+		.isEmail()
+		.normalizeEmail()
+		.withMessage(notify.ERROR_SETTING_EMAIL),
+	body('sub_email')
+		.custom(async (value, {req}) => {
+			let emails = req.body.sub_email
+			if(!emails) return
+			let arrEmail = emails.split(',')
+			arrEmail.pop()
+			arrEmail.forEach(email=>{
+				if(ValidationHelpers.isEmail(email) === false){
+					throw new Error(notify.ERROR_SETTING_EMAIL)
+				}
+			})
+			return
+	}),
+	body('dataAboutUS')
+	.custom(async (value, {req}) => {
+		let data = req.body.dataAboutUS
+		data.forEach(number=>{
+			if(isNaN(number) === true || number==''){
+				throw new Error(notify.ERROR_SETTING_DATA_ABOUTUS)
+			}
+		})
+		return
+	}),
+	body('subject_email')
+		.isLength({min: 5})
+		.withMessage(util.format(notify.ERROR_SETTING_SUBJECT_EMAIL,5)),
+	body('subject_email_newsletter')
+		.isLength({min: 5})
+		.withMessage(util.format(notify.ERROR_SETTING_SUBJECT_EMAIL,5)),
+	body('content_email')
+		.isLength({min: 20})
+		.withMessage(util.format(notify.ERROR_SETTING_CONTENT_EMAIL,20)),
+	body('content_email_newsletter')
+		.isLength({min: 20})
+		.withMessage(util.format(notify.ERROR_SETTING_CONTENT_EMAIL,20)), 
 	body('linkfacebook')
 		.isURL()
 		.withMessage(notify.ERROR_SETTING_URLFACEBOOK), 
@@ -137,6 +235,8 @@ router.post('/save/(:id)?',
 	})
 	, async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
   try {
+		console.log(req.body)
+		console.log(req.files)
 		let settingObj = await serviceSetting.getOne()
     let item = req.body;
 		let settingData
@@ -146,25 +246,27 @@ router.post('/save/(:id)?',
 			item.logolarge = (settingData.logolarge!=undefined) ? settingData.logolarge : undefined
 			item.logotitle = (settingData.logotitle!=undefined) ? settingData.logotitle : undefined
 			item.logobanner = (settingData.logobanner!=undefined) ? settingData.logobanner : undefined
+			item.photocontent = (settingData.photocontent!=undefined) ? settingData.photocontent : undefined
+			item.photomission = (settingData.photomission!=undefined) ? settingData.photomission : undefined
 		}
+
     let errors = validationResult(req)
     if (! errors.isEmpty()) {
       let main = {
         pageTitle: pageTitle,
         showError: errors.errors,
       }
-      if (req.files != undefined) {
+      if (req.files) {
         for (const [key, value] of Object.entries(req.files)) {
           FileHelpers.remove(`public/uploads/${mainName}/`, value[0].filename)
         }
       }
       res.render(`${folderView}form`, {
+				inform: {success: undefined},
         main: main,
-        settingObj,
-        item: settingData,
+        item: req.body,
 				layout
-      });
-      return
+      })
     } else {
 					if(settingObj === null){
 						for (const [key, value] of Object.entries(req.files)) {

@@ -97,7 +97,19 @@ module.exports = {
                     return Promise.reject()
         });
         }
-    }
+    },
+    updateSortable: async (id, thumb) =>{
+        let data = await modelProduct.updateOne({_id: id}, {thumb: thumb})
+        return data
+    },
+    getListProductOption: async (id, thumb) =>{
+        let data = await modelProduct.find({$or: [{ dailydeals: true }, { fearturedproduct: true }]})
+        return data
+    },
+    getOneProduct : async (obj) =>{
+        let data = await modelProduct.findOne(obj)
+        return data
+    },
 }
 
 
