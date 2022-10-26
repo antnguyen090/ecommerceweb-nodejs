@@ -1,0 +1,12 @@
+<%
+ showCategoryFooter = (category) =>{
+        let html=""
+        category.forEach((item, index)=>{
+            let mr = (index%2 == 1) ? "mr-2" : ""
+            html += `
+                <li class="list-inline-item text-center mb-2 ${mr}"><a href="/danh-muc/${item.slug}" class="md-round d-block py-2 px-2">${item.name}</a></li>
+            `
+        })  
+     return html
+ }
+%>

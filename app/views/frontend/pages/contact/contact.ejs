@@ -1,85 +1,81 @@
-<!-- Contact Start -->
-<div class="container-fluid pt-3">
+<%- include('./../../helpers/formatphonenumber'); -%>
+
+<section class="introBannerHolder d-flex w-100 bgCover" style="background-image: url(/frontend/images/breadcum.jpg);">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
-                <div class="section-title mb-0">
-                    <h4 class="m-0 text-uppercase font-weight-bold">LIÊN HỆ VỚI CHÚNG TÔI</h4>
-                </div>
-                <div class="bg-white border border-top-0 p-4 mb-3">
-                    <div class="mb-4">
-                        <h6 class="text-uppercase font-weight-bold mb-3">Thông Tin Liên Hệ</h6>
-                        <div class="mb-3">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fa fa-map-marker-alt text-primary mr-2"></i>
-                                <h6 class="font-weight-bold mb-0">Địa Chỉ</h6>
-                            </div>
-                            <p class="m-0"><%= settingData.address %></p>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fa fa-envelope-open text-primary mr-2"></i>
-                                <h6 class="font-weight-bold mb-0">Email</h6>
-                            </div>
-                            <p class="m-0"><%= settingData.email %></p>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fa fa-phone-alt text-primary mr-2"></i>
-                                <h6 class="font-weight-bold mb-0">Số Điện Thoại</h6>
-                            </div>
-                            <p class="m-0"><%= settingData.phonenumber %></p>
-                        </div>
-                    </div>
-                    <h6 class="text-uppercase font-weight-bold mb-3">Liên Hệ</h6>
-                    <form method="post" id="sendMail">
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input type="text" name="name" class="form-control p-4" placeholder="Tên" required="required"/>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input type="email" name="email" class="form-control p-4" placeholder="Email" required="required"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="subject" class="form-control p-4" placeholder="Chủ Đề" required="required"/>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control p-4" rows="4" name="message" placeholder="Lời Nhắn" required="required"></textarea>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary font-weight-semi-bold px-4" style="height: 50px;" type="submit">Gửi</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="col-12 pt-lg-23 pt-md-15 pt-sm-10 pt-6 text-center">
+                <h1 class="headingIV fwEbold playfair mb-4">Liên Hệ</h1>
+                <ul class="list-unstyled breadCrumbs d-flex justify-content-center" style="margin-top: 12%; font-size: 15px;">
+                    <li class="mr-2"><a href="/index">Trang Chủ</a></li>
+                    <li class="mr-2">/</li>
+                    <li class="active">Liên Hệ</li>
+                </ul>
             </div>
-            <!-- News With SidebarRight Start -->
-            <div
-                class="col-lg-4">
-                <!-- Social Follow Start -->
-                <%- include('./../../elements/sidebarright/wheather'); -%>
-                <!-- Social Follow End -->
-
-                <!-- Ads Start -->
-                <!-- Ads End -->
-
-                <!-- Popular News Start -->
-                <%- include('./../../elements/sidebarright/popularnews'); -%>
-                <!-- Popular News End -->
-
-                <!-- Newsletter Start -->
-                <%- include('./../../elements/sidebarright/newsletter'); -%>
-                <!-- Newsletter End -->
-                <!-- Tags Start -->
-            <%- include('./../../elements/sidebarright/tags'); -%>
-                <!-- Tags End -->
-            </div>
-            <!-- News With SidebarRight End -->
+        </div>
+    </div>
+</section>
+<div class="contactSec container pt-xl-10 pb-xl-10 py-lg-10 pt-md-8 pb-md-5 pt-5 pb-0">
+    <div class="row">
+        <div class="col-12">
+            <ul class="list-unstyled contactListHolder mb-0 d-flex flex-wrap text-center">
+                <li class="mb-lg-0 mb-6">
+                    <span class="icon d-block mx-auto bg-lightGray py-4 mb-4"><i
+                            class="fas fa-map-marker-alt"></i></span>
+                    <strong class="title text-uppercase playfair mb-5 d-block">Địa Chỉ</strong>
+                    <address class="mb-0"><%= settingPage.address%></address>
+                </li>
+                <li class="mb-lg-0 mb-6">
+                    <span class="icon d-block mx-auto bg-lightGray py-4 mb-3"><i class="fas fa-headphones"></i></span>
+                    <strong class="title text-uppercase playfair mb-5 d-block">Số điện thoại</strong>
+                    <a href="tel:<%= settingPage.phonenumber%>" class="d-block"><%= formatPhoneNumber(settingPage.phonenumber)%></a>
+                </li>
+                <li class="mb-lg-0 mb-6">
+                    <span class="icon d-block mx-auto bg-lightGray py-5 mb-3"><i class="fas fa-envelope"></i></span>
+                    <strong class="title text-uppercase playfair mb-5 d-block">Email</strong>
+                    <email class="mb-0"><%= settingPage.email%></email>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
-<!-- Contact End -->
+<!-- mapHolder -->
+<div class="mapHolder mb-4 ml-lg-20 mr-lg-20">
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6175.924376430175!2d106.77417161700741!3d10.82805489816712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317526f07f6e787f%3A0x28314d3c3c460662!2zUGjGsOG7m2MgTG9uZyBCLCBRdeG6rW4gOSwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1666798339180!5m2!1svi!2s"
+        style="border:0;" allowfullscreen="">
+    </iframe>
+</div>
+<section class="contactSecBlock container pt-xl-4 pb-xl-4 pt-lg-4 pb-lg-4 pt-md-4 pb-md-4 py-5 bgCover" style="background-image: url(https://img.freepik.com/free-photo/gray-abstract-wireframe-technology-background_53876-101941.jpg?w=2000);">
+    <div class="row">
+        <header class="col-12 mainHeader mb-2 text-center">
+            <h1 class="headingIV playfair fwEblod mb-2">Liên Lạc Với Chúng Tôi</h1>
+        </header>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form method="post" id='sendMail' class="contactForm">
+                <div class="d-flex flex-wrap row1 mb-md-1">
+                    <div class="form-group coll mb-5">
+                        <input type="text" id="name" class="form-control text-dark font-weight-bold" name="name" placeholder="Tên của bạn  *">
+                    </div>
+                    <div class="form-group coll mb-5">
+                        <input type="email" class="form-control text-dark font-weight-bold" id="email" name="email" placeholder="Email của bạn  *">
+                    </div>
+                    <div class="form-group coll mb-5">
+                        <input type="tel" pattern="[0-9]{10}"
+                        required class="form-control text-dark font-weight-bold" id="phonenumber" name="phonenumber" placeholder="Số điện thoại của bạn  *">
+                    </div>
+                    <div class="form-group col-12 mb-5">
+                        <input type="subject" class="form-control text-dark font-weight-bold" id="subject" name="subject" placeholder="Tiêu đề  *">
+                    </div>
+                </div>
+                <div class="form-group w-100 mb-6">
+                    <textarea class="form-control text-dark font-weight-bold" name='message' placeholder="Tin nhắn  *"></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btnTheme btnShop md-round fwEbold text-white py-3 px-4 py-md-3 px-md-4">Gửi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

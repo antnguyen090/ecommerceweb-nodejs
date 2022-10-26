@@ -1,5 +1,7 @@
 const mainName = "contact"
 const modelContact 	= require(__path_models_backend + `${mainName}.model`);
+const serviceSetting = require(__path_services_backend + `setting.service`);
+
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 
@@ -44,11 +46,13 @@ module.exports = {
         let data = await modelContact.count(objWhere)
         return data
     },
-    mainMail: async function (params) {
+    sendMailContact: async function (params) {
         // Generate test SMTP service account from ethereal.email
         // Only needed if you don't have a real mail account for testing
         let testAccount = await nodemailer.createTestAccount();
-      
+        let setting = await serviceSetting.getOne()
+        let settingObj = JSON.parse(setting.setting)
+        let listReceiversObj = settingObj.main_email + ',' + settingObj.sub_email
         // create reusable transporter object using the default SMTP transport
         let transporter = nodemailer.createTransport({
           service: "gmail" ,
@@ -60,22 +64,26 @@ module.exports = {
             pass: `${process.env.PASSWORD_SMTP}`, // generated ethereal password
           },
         });
-      
         // send mail with defined transport object
-        let info = await transporter.sendMail({
+        let infoForClient = await transporter.sendMail({
+          from: `"${settingObj.title}" <${settingObj.main_email}>`, // sender address
+          to: `${params.email}`, // list of receivers
+          subject: `${settingObj.subject_email}`, // Subject line
+          text: settingObj.content_email, // plain text body
+          // html: document.rawHTML, // html body
+        });
+
+        let infoForMember = await transporter.sendMail({
           from: `"${params.name}" <${params.email}>`, // sender address
-          to: "thinhnguyenxy04@gmail.com", // list of receivers
-          subject: `${params.subject}`, // Subject line
-          text: `${params.message}`, // plain text body
+          to: `${listReceiversObj}`, // list of receivers
+          subject: `${params.subject} - ${params.phonenumber}`, // Subject line
+          text: `
+          ${params.message}
+          `, // plain text body
         //   html: "<b>Hello world?</b>", // html body
         });
-      
-        console.log("Message sent: %s", info.messageId);
-        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-      
-        // Preview only available when sending through an Ethereal account
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+        console.log("Message sent: %s", infoForClient.messageId);
+        console.log("Message sent: %s", infoForMember.messageId);
       }
 }
 

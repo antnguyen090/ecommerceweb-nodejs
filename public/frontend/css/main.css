@@ -31,3 +31,10 @@
   color: aliceblue;
 }
 
+.item-product{
+    border: 2px solid #5ba515;
+    border-radius: 10px;
+    margin-left: 20px;
+    margin-top: 20px;
+
+}

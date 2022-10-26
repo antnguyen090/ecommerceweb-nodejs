@@ -67,4 +67,8 @@ module.exports = {
         let data = await modelCategory.findOne({_id: val, status:'active'})
         return data
     },
+    getProductByCategory: async (slug) =>{
+        let data = await modelCategory.findOne({slug: slug}).populate("productList")
+        return data
+    }
 }

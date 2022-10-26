@@ -1,0 +1,24 @@
+<%
+    showProductSlider = (data, link, is) =>{
+      if(!data) return
+      let html = ""
+      if(is){
+        data.forEach(item =>{
+          html += `
+            <div>
+              <img src="${link+item}" alt="image description" class="img-fluid w-100">
+            </div>
+          `
+        })
+      } else{
+          data.forEach(item =>{
+          html += `<div class="">
+            <div class="imgBlock item-product">
+              <img src="${link+item}" alt="image description" class="img-fluid w-100">
+            </div>
+          </div>`
+          })
+      }
+      return html
+    }
+%>

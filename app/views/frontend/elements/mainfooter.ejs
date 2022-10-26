@@ -1,3 +1,6 @@
+<%- include('./../helpers/showcategoryfooter'); -%>
+<%- include('./../helpers/formatphonenumber'); -%>
+
 <!-- footerHolder -->
 <aside class="footerHolder container-fluid overflow-hidden px-xl-20 px-lg-14 pt-xl-6 pb-xl-4 pt-lg-6 pt-md-8 pt-6 pb-lg-4">
 	<div class="d-flex flex-wrap">
@@ -5,7 +8,7 @@
 					<h3 class="headingVI fwEbold text-uppercase mb-7">Liên Hệ</h3>
 					<ul class="list-unstyled footerContactList mb-3">
 							<li class="mb-3 d-flex flex-nowrap"><span class="icon icon-place mr-3"></span> <address class="fwEbold m-0">Địa Chỉ: <%= settingPage.address%></address></li>
-							<li class="mb-3 d-flex flex-nowrap"><span class="icon icon-phone mr-3"></span> <span class="leftAlign">Số Điện Thoại : <a href="javascript:void(0);"><%= settingPage.phonenumber%></a></span></li>
+							<li class="mb-3 d-flex flex-nowrap"><span class="icon icon-phone mr-3"></span> <span class="leftAlign">Số Điện Thoại : <a href="tel:<%= settingPage.phonenumber%>"><%= formatPhoneNumber(settingPage.phonenumber)%></a></span></li>
 							<li class="email d-flex flex-nowrap"><span class="icon icon-email mr-2"></span> <span class="leftAlign">Email:  <a href="javascript:void(0);"><%= settingPage.email%></a></span></li>
 					</ul>
 			</div>
@@ -27,12 +30,7 @@
 			<div class="col-12 col-sm-6 col-lg-4 col-xl-4">
 					<h3 class="headingVI fwEbold text-uppercase">Danh Mục Sản Phẩm</h3>
 					<ul class="list-inline tagNavList mx-auto justify-content-center">
-							<li class="list-inline-item text-center mb-2 mr-2"><a href="javascript:void(0);" class="md-round d-block py-2 px-2">Trend</a></li>
-							<li class="list-inline-item text-center mb-2"><a href="javascript:void(0);" class="md-round d-block py-2 px-2">Decor</a></li>
-							<li class="list-inline-item text-center mb-2 mr-2"><a href="javascript:void(0);" class="md-round d-block py-2 px-2">Plant</a></li>
-							<li class="list-inline-item text-center mb-2"><a href="javascript:void(0);" class="md-round d-block py-2 px-2">Table tree</a></li>
-							<li class="list-inline-item text-center mb-2 mr-2"><a href="javascript:void(0);" class="md-round d-block py-2 px-2">Bedroom tree</a></li>
-							<li class="list-inline-item text-center mb-2"><a href="javascript:void(0);" class="md-round d-block py-2 px-2">Living room</a></li>
+							<%- showCategoryFooter(listCategory) %>
 					</ul>
 			</div>
 	</div>

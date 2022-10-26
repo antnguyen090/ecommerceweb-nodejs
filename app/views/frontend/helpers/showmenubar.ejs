@@ -5,7 +5,7 @@
         listCategory.forEach((category) =>{
                 showCategory +=`
                         <li class="d-block mx-0">
-                                <a class="d-block" href='/category/${category.slug}'>${category.name}</a>
+                                <a class="d-block" href='/danh-muc/${category.slug}'>${category.name}</a>
                         </li>
                 `
         })
@@ -34,7 +34,7 @@
                         if(hadChild == true){
                             xhtml += `
                             <li class="${classChild}">
-                                <a class="dropdown-toggle d-block" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="${parent.slug}">
+                                <a class="dropdown-toggle d-block" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="/${parent.slug}">
                                     ${parent.name}
                                 </a>
                                 <ul class="list-unstyled text-capitalize border-right border-bottom border-left dropdown-menu mt-0 py-0 ${level}">`
@@ -51,12 +51,13 @@
                                 if(stt > 0){
                                     xhtml += `
                                         <li class="d-block mx-0">
-                                            <a class="d-block" href="${parent.slug}">${parent.name}</a>
+                                            <a class="d-block" href="/${parent.slug}">${parent.name}</a>
                                         </li>
                                         `
                                 } else{
                                     let htmlCategory = ''
                                     let isDropDown = ''
+                                    let btnDisabled = ''
                                     if(slug == 'category'){
                                         htmlCategory =`
                                             <ul class="list-unstyled text-capitalize border-right border-bottom border-left dropdown-menu mt-0 py-0 ">
@@ -64,10 +65,11 @@
                                             </ul>
                                         `
                                         isDropDown = "dropdown"
+                                        btnDisabled = 'onclick="return false;"'
                                     }
                                     xhtml += `
                                     <li class="nav-item ${isDropDown}">
-                                        <a class="d-block" href="${parent.slug}">${parent.name}</a>
+                                        <a class="d-block" ${btnDisabled} href="/${parent.slug}">${parent.name}</a>
                                         ${htmlCategory}
                                     </li>
                                     `
