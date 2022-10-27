@@ -5,8 +5,7 @@ const serviceCategory = require(__path_services_backend + `category.service`);
 const serviceSetting = require(__path_services_backend + `setting.service`);
 const serviceProduct = require(__path_services_backend + `product.service`);
 const serviceContact  = require(__path_services_backend + `contact.service`);
-
-
+const serviceNewsletter  = require(__path_services_backend + `newsletter.service`);
 
 let getSlider = async () => {
     let data = await serviceSlider.getListByStatus('active')
@@ -54,6 +53,18 @@ let saveContact     = async (item) =>{
   return data
 }
 
+let sendMailLetter  = async (item) =>{
+  let data = await serviceNewsletter.sendMailLetter(item)
+  return data
+}
+
+let saveNewsletter   = async (item) =>{
+  let dataDuplicated = await serviceNewsletter.checkDuplicated({email: item.email})
+  if (dataDuplicated) return
+  let data = await serviceNewsletter.saveItems(item)
+  return data
+}
+
 
 module.exports = {
   getSlider,
@@ -65,4 +76,6 @@ module.exports = {
   getProductByCategory,
   sendMailContact,
   saveContact,
+  sendMailLetter,
+  saveNewsletter,
 }

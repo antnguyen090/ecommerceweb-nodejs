@@ -58,4 +58,8 @@ module.exports = {
     ERROR_SETTING_TITLE_ABOUTUS: 'Title of About US page must be non-empty',
     ERROR_SETTING_CONTENT_ABOUTUS: 'Content of About US page must be non-empty',
     ERROR_SETTING_DATA_ABOUTUS: 'Data of About US page must be number',
+    ERROR_EMAIL_DUPLICATED: 'Duplicated Email',
+    ERROR_SETTING_TITLE_CHOOSE: 'Title of CHOOSE US page must be non-empty',
+    ERROR_SETTING_DESCRIPTION_CHOOSE: 'DESCRIPTION of CHOOSE US page must be non-empty',
+    ERROR_SETTING_LINK_CHOOSE: 'LINK of CHOOSE US page must be non-empty',
 };

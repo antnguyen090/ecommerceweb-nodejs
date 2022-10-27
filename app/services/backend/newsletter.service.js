@@ -1,5 +1,5 @@
-const mainName = "contact"
-const modelContact 	= require(__path_models_backend + `${mainName}.model`);
+const mainName = "newsletter"
+const modelNewsLetter 	= require(__path_models_backend + `${mainName}.model`);
 const serviceSetting = require(__path_services_backend + `setting.service`);
 
 const nodemailer = require("nodemailer");
@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 
 module.exports = {
     saveItems: async (params) =>{
-            let data = await modelContact(params).save()
+            let data = await modelNewsLetter(params).save()
             return
         },
         listItems: async (objWhere,
@@ -15,7 +15,7 @@ module.exports = {
             totalItemsPerPage,
             updatedAt
             ) => {
-                let data = await modelContact.find(objWhere)
+                let data = await modelNewsLetter.find(objWhere)
                                             .skip((currentPage-1) * totalItemsPerPage)
                                             .limit(totalItemsPerPage)
                                             .sort(updatedAt)
@@ -23,30 +23,30 @@ module.exports = {
     },
 
     changeStatus: async (id, status) =>{
-        let data = await modelContact.findOneAndUpdate({_id: id}, {status: status})
+        let data = await modelNewsLetter.findOneAndUpdate({_id: id}, {status: status})
         return data
       },
     changeOrdering: async (id, ordering) =>{
-            let data = await modelContact.updateOne({_id: id}, {ordering: ordering})
+            let data = await modelNewsLetter.updateOne({_id: id}, {ordering: ordering})
             return
             },
     getItemByID: async (id) =>{
-        let data = await modelContact.findOne({_id: id})
+        let data = await modelNewsLetter.findOne({_id: id})
         return data
         },
     editItem: async (id, item) =>{
-        let data = await modelContact.updateOne({_id: id}, item)
+        let data = await modelNewsLetter.updateOne({_id: id}, item)
         return
     },
     checkDuplicated: async (val) =>{
-      let data = await modelContact.find(val)
+      let data = await modelNewsLetter.findOne(val)
       return data
     },
     countItem: async (objWhere) =>{
-        let data = await modelContact.count(objWhere)
+        let data = await modelNewsLetter.count(objWhere)
         return data
     },
-    sendMailContact: async function (params) {
+    sendMailLetter: async function (params) {
         // Generate test SMTP service account from ethereal.email
         // Only needed if you don't have a real mail account for testing
         let testAccount = await nodemailer.createTestAccount();
@@ -68,22 +68,22 @@ module.exports = {
         let infoForClient = await transporter.sendMail({
           from: `"${settingObj.title}" <${settingObj.main_email}>`, // sender address
           to: `${params.email}`, // list of receivers
-          subject: `${settingObj.subject_email}`, // Subject line
-          // text: settingObj.content_email, // plain text body
-          html: settingObj.content_email, // html body
+          subject: settingObj.subject_email_newsletter, // Subject line
+          // text: settingObj.content_email_newsletter, // plain text body
+          html: settingObj.content_email_newsletter, // html body
         });
 
-        let infoForMember = await transporter.sendMail({
-          from: `"${params.name}" <${params.email}>`, // sender address
-          to: `${listReceiversObj}`, // list of receivers
-          subject: `${params.subject} - ${params.phonenumber}`, // Subject line
-          text: `
-          ${params.message}
-          `, // plain text body
+        // let infoForMember = await transporter.sendMail({
+        //   from: `"${params.name}" <${params.email}>`, // sender address
+        //   to: `${listReceiversObj}`, // list of receivers
+        //   subject: `${params.subject} - ${params.phonenumber}`, // Subject line
+        //   text: `
+        //   ${params.message}
+        //   `, // plain text body
         //   html: "<b>Hello world?</b>", // html body
-        });
+        // });
         console.log("Message sent: %s", infoForClient.messageId);
-        console.log("Message sent: %s", infoForMember.messageId);
+        // console.log("Message sent: %s", infoForMember.messageId);
       }
 }
 

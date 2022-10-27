@@ -3,7 +3,7 @@
 <%- include('./../../helpers/showlistclientsay'); -%>
 <%- include('./../../helpers/showdataaboutus'); -%>
 <%- include('./../../helpers/showlistmission'); -%>
-
+<%- include('./../../helpers/showlistchoose'); -%>
 
 <% 
     const collection="setting" ; 
@@ -356,7 +356,57 @@
                                                 </div>
                                                 <div class="tab-pane fade" id="sub-custom-tabs-one-profile" role="tabpanel"
                                                   aria-labelledby="custom-tabs-one-profile-tab">
-                          
+                                                  <div class="form-group row">
+                                                    <label for="titleChoose" class="col-sm-2 col-form-label text-sm-right">Title</label>
+                                                    <div class="col-xs-12 col-sm-8">
+                                                        <input name='titleChoose' class="main_email" value="<%=item.titleChoose %>" type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="descriptionChoose" class="col-sm-2 col-form-label text-sm-right">Description</label>
+                                                    <div class="col-xs-12 col-sm-8">
+                                                        <textarea id="descriptionChoose" class="main_email" name="descriptionChoose" ><%=item.descriptionChoose %></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="linkChoose" class="col-sm-2 col-form-label text-sm-right">Link</label>
+                                                    <div class="col-xs-12 col-sm-8">
+                                                        <input type="url" name="linkChoose" id="linkChoose"
+                                                        placeholder="https://example.com"
+                                                        pattern="https://.*" size="30" class="form-control form-control-sm main_email"
+                                                        value="<%= item.linkChoose %>"
+                                                        required>
+                                                    </div>
+                                                </div>
+                                                  <div class="form-group row uploadImage">
+                                                    <label for="photoChoose" class="col-sm-2 col-form-label text-sm-right">Upload Photo (570x590px)</label>
+                                                    <div class="col-xs-12 col-sm-8">
+                                                        <input id="photoChoose" name="photoChoose" type="file" class="custom-file-input" value="PhotoChoose" style="opacity:1">
+                                                        <div id="divImageMediaPreviewPhotoChoose">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row ckeditor">
+                                                    <label for="photoChoose" class="col-sm-2 col-form-label text-sm-right">Photo Uploaded</label>
+                                                <% if (item.photochoose != undefined) { %>
+                                                    <img style="width: 15%; padding: 10px" src="<%= linkThumb %><%= item.photochoose%>" alt="thumb" onerror="this.onerror=null;this.src='<%= linkThumb %>/no-image-found.jpg'">
+                                                    <%}  %>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="" class="col-sm-2 col-form-label text-sm-right">Item List</label>
+                                                    <div class="col-xs-12 col-sm-8">
+                                                        <div class="card shadow">
+                                                            <div class="card-body">
+                                                                <%- showListChoose(item.list_choose) %>
+                                                                <div class="clearfix mt-4">
+                                                                  <button type="button" id="choose-add-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="fas fa-plus fa-fw"></i> Add</button>
+                                                                  <button type="button" id="choose-remove-button" class="btn btn-secondary float-left text-uppercase ml-1"><i class="fas fa-minus fa-fw"></i> Remove</button>
+                                                                </div>
+                                                                <input type="hidden" name="list_choose" value="<%=item.list_choose %>">
+                                                            </div>
+                                                          </div>
+                                                    </div>
+                                                </div>
                                                 </div>
                                               </div>
                                             </div>
@@ -364,7 +414,7 @@
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-six-profile" role="tabpanel"
                                         aria-labelledby="custom-tabs-six-profile-tab">
-
+                                                    ttttttt
                                         </div>
                                     </div>
                                     </div>

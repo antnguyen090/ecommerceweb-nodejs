@@ -1,0 +1,39 @@
+<%
+    showListChoose = (data) =>{
+        let dataParse = (data == undefined) ? [{title:"", description:"", icon: ""}] : JSON.parse(data)
+        let html = ""
+        dataParse.forEach((item, index) =>{
+            html+= `
+            <div id="choose-dynamic-field-${index+1}" class="form-group choose-dynamic-field">
+              <label for="field" class="font-weight-bold">Item ${index+1}</label>
+              <div class="row">
+                <div class="col-sm-2">
+                    <label for="title_choose[]_1" class="col-form-label text-sm-right">Title</label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="title_choose_1[]" value="${item.title}"/>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-sm-2">
+                    <label for="description_choose_1[]" class="col-form-label text-sm-right">Description</label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="description_choose_1[]" value="${item.description}"/>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-sm-2">
+                    <label for="icon_choose_1[]" class="col-form-label text-sm-right">Icon</label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="icon_choose_1[]" value="${item.icon}"/>
+                </div>
+              </div>
+            </div>
+             `
+        })
+        return html
+  }
+
+%>

@@ -1,0 +1,131 @@
+<%- include('./../../helpers/formatphonenumber'); -%>
+<%
+    let showDataAboutUs = (data, nameArr) =>{
+        if (!data) return
+        let html =''
+        data.forEach((item, index)=>{
+            html += `
+            <li class="mb-md-0 mb-3">
+                <strong class="d-block fwEbold counter mb-2">${item}</strong>
+                <strong class="d-block text-uppercase txtWrap">${nameArr[index]}</strong>
+            </li>
+            `
+        })
+        return html
+    }
+
+    let showListMission = (data) =>{
+        if (!data) return
+        let html =''
+        let dataParse = JSON.parse(data)
+        dataParse.forEach((item, index)=>{
+            let show = (index== 0) ? 'show' : ''
+            html += `
+            <div class="card mb-2">
+                <div class="card-header px-xl-5 py-xl-3" id="headingMission${index}">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link fwEbold text-uppercase text-left w-100 p-0" data-toggle="collapse" data-target="#collapseMission${index}" aria-expanded="true" aria-controls="collapseMission${index}">
+                        ${item.name}<i class="fas fa-sort-down float-right"></i>
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseMission${index}" class="collapse ${show}" aria-labelledby="headingMission${index}" data-parent="#accordion">
+                    <div class="card-body px-xl-5 py-0">
+                        <p class="mb-7">${item.content}</p>
+                    </div>
+                </div>
+            </div>
+            `
+        })
+        return html
+    }
+%>
+<section class="introBannerHolder d-flex w-100 bgCover" style="background-image: url(/frontend/images/breadcum.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 pt-lg-23 pt-md-15 pt-sm-10 pt-6 text-center">
+                <ul class="list-unstyled breadCrumbs d-flex justify-content-center" style="margin-top: 12%; font-size: 15px;">
+                    <li class="mr-2"><a href="/index">Trang Chủ</a></li>
+                    <li class="mr-2">/</li>
+                    <li class="active">Về Chúng Tôi</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="abtSecHolder container pt-xl-12 pb-xl-6 pt-lg-10 pb-lg-5 pt-md-8 pb-md-4 pt-5 pb-2">
+    <div class="row">
+        <div class="col-12 col-lg-6 pt-xl-12 pt-lg-8">
+            <h2 class="playfair fwEbold position-relative mb-7 pb-5">
+                <strong class="d-block"><%=settingPage.titleAboutUS %></strong>
+            </h2>
+            <p class="pr-xl-16 pr-lg-10 mb-lg-0 mb-6"><%=settingPage.contentAboutUS %></p>
+        </div>
+        <div class="col-12 col-lg-6">
+                <img src="/uploads/setting/<%= settingPage.photocontent%>" alt="image description" class="img-fluid" onerror="this.onerror=null;this.src='/uploads/setting/no-image-found.jpg'">
+        </div>
+    </div>
+</section>
+<section class="counterSec container pt-xl-12 pb-xl-24 pt-lg-10 pb-lg-20 pt-md-8 pb-md-16 pt-5 pb-10">
+    <div class="row">
+        <div class="col-12">
+            <!-- progressCounter -->
+            <ul class="progressCounter list-unstyled mb-2 d-flex flex-wrap text-capitalize text-center">
+                <%- showDataAboutUs(settingPage.dataAboutUS,["KHÁCH HÀNG HÀI LÒNG","DỰ ÁN HOÀN THÀNH","NHÂN VIÊN XUẤT SẮC","GIẢI THƯỞNG LỚN"])%>
+            </ul>
+        </div>
+    </div>
+</section>
+<section class="introSec bg-lightGray pt-xl-12 pb-xl-7 pt-10 pb-10">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-6 mb-lg-0 mb-6">
+                <img src="/uploads/setting/<%= settingPage.photomission%>" alt="image description" class="img-fluid" onerror="this.onerror=null;this.src='/uploads/setting/no-image-found.jpg'">
+            </div>
+            <div class="col-12 col-lg-6">
+                <div id="accordion" class="accordionList pt-lg-12">
+                    <%-  showListMission(settingPage.list_mission)%>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="processStepSec container pt-xl-23 pb-xl-10 pt-lg-20 pb-lg-10 pt-md-16 pb-md-8 pt-10 pb-0">
+    <div class="row">
+        <header class="col-12 mainHeader mb-3 text-center">
+            <h1 class="headingIV playfair fwEblod mb-4">Delivery Process</h1>
+            <span class="headerBorder d-block mb-5"><img src="/frontend/images/hbdr.png" alt="Header Border" class="img-fluid img-bdr"></span>
+        </header>
+    </div>
+    <div class="row">
+        <div class="col-12 pl-xl-23 mb-lg-3 mb-10">
+            <div class="stepCol position-relative bg-lightGray py-6 px-6">
+                <strong class="mainTitle text-uppercase mt-n8 mb-5 d-block text-center py-1 px-3">step 01</strong>
+                <h2 class="headingV fwEblod text-uppercase mb-3">Choose your products</h2>
+                <p class="mb-5">There are many variations of passages of lorem ipsum available, but the majority have suffered alteration in some form, by injected humour. Both betanin</p>
+            </div>
+        </div>
+        <div class="col-12 pr-xl-23 mb-lg-3 mb-10">
+            <div class="stepCol rightArrow position-relative bg-lightGray py-6 px-6 float-right">
+                <strong class="mainTitle text-uppercase mt-n8 mb-5 d-block text-center py-1 px-3">step 02</strong>
+                <h2 class="headingV fwEblod text-uppercase mb-3">Connect nearest stored</h2>
+                <p class="mb-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+            </div>
+        </div>
+        <div class="col-12 pl-xl-23 mb-lg-3 mb-10">
+            <div class="stepCol position-relative bg-lightGray py-6 px-6">
+                <strong class="mainTitle text-uppercase mt-n8 mb-5 d-block text-center py-1 px-3">step 03</strong>
+                <h2 class="headingV fwEblod text-uppercase mb-3">Share your location</h2>
+                <p class="mb-5">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore</p>
+            </div>
+        </div>
+        <div class="col-12 pr-xl-23 mb-lg-3 mb-10">
+            <div class="stepCol rightArrow position-relative bg-lightGray py-6 px-6 float-right">
+                <strong class="mainTitle text-uppercase mt-n8 mb-5 d-block text-center py-1 px-3">step 04</strong>
+                <h2 class="headingV fwEblod text-uppercase mb-3">Get delivered fast</h2>
+                <p class="mb-5">On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<%- include('./../../elements/subscribe'); -%>

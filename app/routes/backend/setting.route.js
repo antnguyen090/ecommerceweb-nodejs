@@ -32,6 +32,9 @@ const uploadThumb = FileHelpers.uploadFileSetting([
   },
 	{
     name: 'photoMission'
+  },
+	{
+    name: 'photoChoose'
   }
 ], `${mainName}`);
 
@@ -80,7 +83,19 @@ router.post('/save/(:id)?',
 	body('title_say_client')
 		.not()
 		.isEmpty()
-		.withMessage(notify.ERROR_SETTING_TITLE_CLIENT), 
+		.withMessage(notify.ERROR_SETTING_TITLE_CLIENT),
+	body('titleChoose')
+		.not()
+		.isEmpty()
+		.withMessage(notify.ERROR_SETTING_TITLE_CHOOSE),
+	body('descriptionChoose')
+		.not()
+		.isEmpty()
+		.withMessage(notify.ERROR_SETTING_DESCRIPTION_CHOOSE),
+	body('linkChoose')
+		.not()
+		.isEmpty()
+		.withMessage(notify.ERROR_SETTING_LINK_CHOOSE),
 	body('list_say_client')
 		.custom(async (value, {req}) => {
 			try {
@@ -248,6 +263,7 @@ router.post('/save/(:id)?',
 			item.logobanner = (settingData.logobanner!=undefined) ? settingData.logobanner : undefined
 			item.photocontent = (settingData.photocontent!=undefined) ? settingData.photocontent : undefined
 			item.photomission = (settingData.photomission!=undefined) ? settingData.photomission : undefined
+			item.photochoose = (settingData.photochoose!=undefined) ? settingData.photochoose : undefined
 		}
 
     let errors = validationResult(req)

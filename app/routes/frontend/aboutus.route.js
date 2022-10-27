@@ -5,18 +5,18 @@ const layout	     = __path_views_frontend + 'frontend';
 const { body, validationResult } = require('express-validator');
 
 
-const mainName = "contact"
+const mainName = "aboutus"
 const folderView = __path_views_frontend + `pages/${mainName}/`;
 const FrontEndHelpers = require(__path_helpers + 'frontend');
 
 /* GET home page. */
-router.get('/(:product)?', async function(req, res, next) {
+router.get('/', async function(req, res, next) {
     try {
     let listmenu = await FrontEndHelpers.getMenuBar()
     let listCategory = await FrontEndHelpers.getListCategory()
     let settingPage = await FrontEndHelpers.getInforSetting()
     let listProductOption = await FrontEndHelpers.getListProductOption()
-    res.render(`${folderView}contact`, {
+    res.render(`${folderView}aboutus`, {
         layout,
         listmenu,
         listCategory,

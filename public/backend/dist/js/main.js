@@ -93,6 +93,12 @@ $(document).ready(async function () {
     let value = e.target.getAttribute('value')
     showPreview($(this)[0].files, value);
   });
+
+  $("#photoChoose").change(function (e) {
+    let value = e.target.getAttribute('value')
+    showPreview($(this)[0].files, value);
+  });
+
   // preview multi img
   //<div class="hide"><a href="javascript:deletePhotoDiv('${nameImage}')"><i class="fa-solid fa-trash text-danger"></i></a></div>
   let removeFileFromFileList = (name) => {
@@ -906,7 +912,7 @@ $(document).ready(async function () {
   }
 
   function addNewFieldSay() {
-    countSay = totalFields() + 1;
+    countSay = totalFieldsSay() + 1;
     fieldSay = $("#say-dynamic-field-1").clone();
     fieldSay.attr("id", "say-dynamic-field-" + countSay);
     fieldSay.children("label").text("Person " + countSay);
@@ -952,9 +958,9 @@ $(document).ready(async function () {
   }
 
   buttonAddSay.click(function() {
-    addNewField();
-    enableButtonRemove();
-    disableButtonAdd();
+    addNewFieldSay();
+    enableButtonRemoveSay();
+    disableButtonAddSay();
   });
 
   buttonRemoveSay.click(function() {
@@ -1056,6 +1062,91 @@ $(document).ready(async function () {
     })
     $("input[name='list_mission']").val(JSON.stringify(arrValue))
   });
+//
+
+    // add column
+    var buttonAddChoose = $("#choose-add-button");
+    var buttonRemoveChoose = $("#choose-remove-button");
+    var classNameChoose = ".choose-dynamic-field";
+    var countChoose = 0;
+    var fieldChoose = "";
+    var maxFieldsChoose = 5;
+  
+    function totalFieldsChoose() {
+      return $(classNameChoose).length;
+    }
+  
+    function addNewFieldChoose() {
+      countChoose = totalFieldsChoose() + 1;
+      fieldChoose = $("#choose-dynamic-field-1").clone();
+      fieldChoose.attr("id", "choose-dynamic-field-" + countChoose);
+      fieldChoose.children("label").text("Item " + countChoose);
+      fieldChoose.find("input").val("");
+      $(classNameChoose + ":last").after($(fieldChoose));
+    }
+  
+    function removeLastFieldChoose() {
+      if (totalFieldsChoose() > 1) {
+        $(classNameChoose + ":last").remove();
+        let arr = JSON.parse($("input[name='list_choose']").val())
+        arr.pop()
+        $("input[name='list_choose']").val(JSON.stringify(arr))
+      }
+    }
+  
+    function enableButtonRemoveChoose() {
+      if (totalFieldsChoose() === 2) {
+        buttonRemoveChoose.removeAttr("disabled");
+        buttonRemoveChoose.addClass("shadow-sm");
+      }
+    }
+  
+    function disableButtonRemoveChoose() {
+      if (totalFieldsChoose() === 1) {
+        buttonRemoveChoose.attr("disabled", "disabled");
+        buttonRemoveChoose.removeClass("shadow-sm");
+      }
+    }
+  
+    function disableButtonAddChoose() {
+      if (totalFieldsChoose() === maxFieldsChoose) {
+        buttonAddChoose.attr("disabled", "disabled");
+        buttonAddChoose.removeClass("shadow-sm");
+      }
+    }
+  
+    function enableButtonAddChoose() {
+      if (totalFieldsChoose() === (maxFieldsChoose - 1)) {
+        buttonAddChoose.removeAttr("disabled");
+        buttonAddChoose.addClass("shadow-sm");
+      }
+    }
+  
+    buttonAddChoose.click(function() {
+      addNewFieldChoose();
+      enableButtonRemoveChoose();
+      disableButtonAddChoose();
+    });
+  
+    buttonRemoveChoose.click(function() {
+      removeLastFieldChoose();
+      disableButtonRemoveChoose();
+      enableButtonAddChoose();
+    });
+    
+    $(document).on("keyup", "div[id*='choose-dynamic-field']" , function(e) {
+        let arrValue = []
+        $("div[id*='choose-dynamic-field']").each((index,item)=>{
+          let obj = {}
+          obj["title"] = $(item).find('input[name="title_choose_1[]"').val()
+          obj["description"] = $(item).find('input[name="description_choose_1[]"').val()
+          obj["icon"] = $(item).find('input[name="icon_choose_1[]"').val()
+          arrValue.push(obj)
+        })
+        $("input[name='list_choose']").val(JSON.stringify(arrValue))
+    });
+
+  //
   getArrPhoto = (id) =>{
       let valueArr =""
       $(`#${id} img`).each((index,value)=>{

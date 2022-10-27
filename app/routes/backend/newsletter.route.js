@@ -4,11 +4,11 @@ var mongoose = require('mongoose');
 const {body, validationResult} = require('express-validator');
 var util = require('util')
 
-const mainName = "contact"
-const pageTitle = `Contact Management`
+const mainName = "newsletter"
+const pageTitle = `Newsletter Management`
 const systemConfig = require(__path_configs + 'system');
 const linkIndex = '/' + systemConfig.prefixAdmin + '/' + mainName;
-const serviceContact = require(__path_services_backend + `${mainName}.service`);
+const serviceNewsLetter = require(__path_services_backend + `${mainName}.service`);
 const notify = require(__path_configs + 'notify');
 const layout = __path_views_backend + 'backend';
 
@@ -33,20 +33,13 @@ router.get('(/status/:status)?', async (req, res, next) => {
 
     if (currentStatus !== 'all') objWhere.status = currentStatus;
     if (keyword !== '') objWhere.name = new RegExp(keyword, 'i');
-    pagination.totalItems = await serviceContact.countItem(objWhere);
+    pagination.totalItems = await serviceNewsLetter.countItem(objWhere);
 
-			let data = await serviceContact.listItems(objWhere, 
+			let data = await serviceNewsLetter.listItems(objWhere, 
 				pagination.currentPage,
 				pagination.totalItemsPerPage,
 				{updatedAt: 'desc'},
 				)
-			statusFilter.map( item =>{
-				if(item.class == "danger"){
-					item.name = "Incomplete"
-				} else if(item.class == "success"){
-					item.name = "Complete"
-				}
-			})
 			res.render(`${folderView}list`, {
 				pageTitle: pageTitle,
 				countItemsActive: data.filter(item => item.status === 'active'),
@@ -82,39 +75,37 @@ router.get('/form/', async function (req, res, next) {
 
 
 router.post('/save/(:id)?',
-	body('name')
-		.isLength({min: 2, max: 100})
-		.withMessage(util.format(notify.ERROR_NAME,2,100)),
 	body('ordering')
 		.isInt({min: 0, max: 99})
 		.withMessage(util.format(notify.ERROR_ORDERING,0,99)),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
-	body('subject')
-		.not()
-		.isEmpty()
-		.withMessage(notify.ERROR_SUBJECT),
 	body('email')
 		.isEmail()
-		.withMessage(notify.ERROR_EMAIL),
-		body('message')
-		.not()
-		.isEmpty()
-		.withMessage(notify.ERROR_MESSAGE),
+		.withMessage(notify.ERROR_EMAIL)
+		.custom(async (val, {req}) => {
+			let dataDuplicated		= await serviceNewsLetter.checkDuplicated({email: req.body.email})
+			if (dataDuplicated) {
+				throw (notify.ERROR_EMAIL_DUPLICATED)
+			} else{
+				return
+			}
+			}),
 	async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
 			try {
-				let item = req.body;
-				let errors = await validationResult(req)
-				if(!errors.isEmpty()) {
-					let main = {pageTitle: pageTitle,
-								showError: errors.errors,
-								}
-						res.render(`${folderView}form`, {
-							main: main,
-							item: item,
-							layout,
-						})
+					let item = req.body;
+					let errors = await validationResult(req)
+					if(!errors.isEmpty()) {
+						let main = {pageTitle: pageTitle,
+									showError: errors.errors,
+									}
+							res.render(`${folderView}form`, {
+								main: main,
+								item: item,
+								layout,
+							})
 					} else{
-						let data = await serviceContact.saveItems(item);
+						let dataSend = await serviceNewsLetter.sendMailLetter(item);
+						let data = await serviceNewsLetter.saveItems(item);
 						req.flash('success', notify.ADD_SUCCESS);
 						res.redirect(linkIndex);
 					}
@@ -123,17 +114,14 @@ router.post('/save/(:id)?',
 			}
 });
 
+
 router.post('/change-status/(:status)?',
 async (req, res, next) => {
 	try {
 			let {status, id} = req.body
 			status = (status == 'active') ? 'inactive' : 'active'
-			if(status == 'inactive'){
-				res.send({success: false})
-			} else{
-				let changeStatus = await serviceContact.changeStatus(id, status)
+				let changeStatus = await serviceNewsLetter.changeStatus(id, status)
 				res.send({success: true, update: changeStatus.updatedAt})
-			}
 	} catch (error) {
 		res.send({success: false})
 	}
@@ -151,7 +139,7 @@ router.post('/change-ordering',
 			return
 		}
 		let {ordering, id} = req.body
-		let changeStatus = await serviceContact.changeOrdering(id, ordering)
+		let changeStatus = await serviceNewsLetter.changeOrdering(id, ordering)
 		res.send({success: true})
 });
 
