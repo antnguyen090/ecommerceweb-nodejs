@@ -70,5 +70,5 @@ module.exports = {
     getProductByCategory: async (slug) =>{
         let data = await modelCategory.findOne({slug: slug}).populate("productList")
         return data
-    }
+    },
 }

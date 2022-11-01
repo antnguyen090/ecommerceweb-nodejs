@@ -1,5 +1,25 @@
 <%
       showFeaturedProduct = (data, link, unit, page) =>{
+        if(!data) return
+        let showSale = (dataShow, money) =>{
+          let activeData = dataShow.filter(item => item.status === 'active')
+          let listMoney = activeData.filter(item => item.discountValue.unit == 'money')
+          let listPercent = activeData.filter(item => item.discountValue.unit == 'percent')
+          let maxMoney, maxPercent
+          if(listMoney.length>0) maxMoney      = listMoney.reduce((max, item)=> max.value > item.value ? max : item)
+          if(listPercent.length>0) maxPercent  = listPercent.reduce((max, item)=> max.value > item.value ? max : item)
+          if(maxMoney && maxPercent){
+            if(maxMoney > (maxPercent.discountValue.value*money/100)){
+              return maxMoney
+            }else{
+              return maxPercent
+            }
+          } else if(maxMoney && !maxPercent){
+              return maxMoney
+          } else if(!maxMoney && maxPercent){
+              return maxPercent
+          }
+        }
         let html =""
         let count = 0
         if(page == 'category'){
@@ -23,8 +43,10 @@
           })
         }else{
           data.forEach((item,index)=>{
-            let position = (index%2 == 0) ? "" : "position-relative "
             if(item.fearturedproduct == true){
+              let position = "position-relative "
+              let dataSale = showSale(item.discountProduct, item.price)
+              let sale     = (dataSale) ? '<span class="hotOffer green fwEbold text-uppercase text-white position-absolute d-block ml-8">Sale</span>' : '' 
               html+= `
               <div class="featureCol px-3 ${position} mb-6">
                 <div class="border">
@@ -41,7 +63,7 @@
                         <span class="title d-block mb-2"><a href="/${item.slug}">${item.name}</a></span>
                         <span class="price d-block fwEbold">${item.price.toLocaleString() + " " + unit}</span>
                         <span class="hotOffer fwEbold text-uppercase text-white position-absolute d-block">HOT</span>
-                        <span class="hotOffer green fwEbold text-uppercase text-white position-absolute d-block ml-8">Sale</span>
+                        ${sale}
                     </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 const layout	     = __path_views_frontend + 'frontend';
 
 const mainName = "category"
+const pageTitle = "Danh Mục"
 const folderView = __path_views_frontend + `pages/${mainName}/`;
 const folderViewProduct = __path_views_frontend + `pages/product/`;
 const FrontEndHelpers = require(__path_helpers + 'frontend');
@@ -18,6 +19,7 @@ router.get('/(:slug)?', async function(req, res, next) {
     let listProductByCategory = await FrontEndHelpers.getProductByCategory(req.params.slug)
     let listProductOption = await FrontEndHelpers.getListProductOption()
     res.render(`${folderView}category`, {
+        pageTitle: listProductByCategory.name,
         layout,
         listmenu,
         listCategory,

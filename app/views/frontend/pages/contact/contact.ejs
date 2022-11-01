@@ -1,13 +1,17 @@
 <%- include('./../../helpers/formatphonenumber'); -%>
 
-<section class="introBannerHolder d-flex w-100 bgCover" style="background-image: url(/frontend/images/breadcum.jpg);">
+<%
+	const linkThumbSetting = "/" + "uploads" + `/setting/`;
+
+%>
+<section class="introBannerHolder d-flex w-100 bgCover" style="background-image: url(<%= linkThumbSetting + settingPage.logobanner%>);">
     <div class="container">
         <div class="row">
             <div class="col-12 pt-lg-23 pt-md-15 pt-sm-10 pt-6 text-center">
                 <ul class="list-unstyled breadCrumbs d-flex justify-content-center" style="margin-top: 12%; font-size: 15px;">
                     <li class="mr-2"><a href="/index">Trang Chủ</a></li>
                     <li class="mr-2">/</li>
-                    <li class="active">Liên Hệ</li>
+                    <li class="active"><%= pageTitle %></li>
                 </ul>
             </div>
         </div>
@@ -40,7 +44,7 @@
 <!-- mapHolder -->
 <div class="mapHolder mb-4 ml-lg-20 mr-lg-20">
     <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6175.924376430175!2d106.77417161700741!3d10.82805489816712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317526f07f6e787f%3A0x28314d3c3c460662!2zUGjGsOG7m2MgTG9uZyBCLCBRdeG6rW4gOSwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1666798339180!5m2!1svi!2s"
+        src="<%= settingPage.linkgooglemap %>"
         style="border:0;" allowfullscreen="">
     </iframe>
 </div>

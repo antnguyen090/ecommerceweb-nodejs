@@ -6,6 +6,7 @@ const { body, validationResult } = require('express-validator');
 
 
 const mainName = "aboutus"
+const pageTitle= 'Về Chúng Tôi'
 const folderView = __path_views_frontend + `pages/${mainName}/`;
 const FrontEndHelpers = require(__path_helpers + 'frontend');
 
@@ -17,6 +18,7 @@ router.get('/', async function(req, res, next) {
     let settingPage = await FrontEndHelpers.getInforSetting()
     let listProductOption = await FrontEndHelpers.getListProductOption()
     res.render(`${folderView}aboutus`, {
+        pageTitle,
         layout,
         listmenu,
         listCategory,

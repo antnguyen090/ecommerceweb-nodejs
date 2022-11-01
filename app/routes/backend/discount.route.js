@@ -80,6 +80,7 @@ router.get('/form/(:id)?', async function (req, res, next) {
 		if (req.params.id != undefined) {
 			let item = await serviceDiscount.getItemByID(req.params.id)
 			res.render(`${folderView}form`, {
+				pageTitle,
 				main: main,
 				item: item,
 				layout,
@@ -87,6 +88,7 @@ router.get('/form/(:id)?', async function (req, res, next) {
 			});
 			} else {
 					res.render(`${folderView}form`, {
+						pageTitle,
 						main: main,
 						item: [],
 						layout,
@@ -169,7 +171,6 @@ router.post('/save/(:id)?',
 	}),
 	async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
 		try {
-			console.log(req.body)
 			let item = req.body;
 			let itemData
 			if(req.params.id != undefined){
@@ -192,6 +193,7 @@ router.post('/save/(:id)?',
 						}
 				if (req.params.id !== undefined){
 						res.render(`${folderView}form`, {
+							pageTitle,
 							main: main,
 							item: itemData,
 							id: req.params.id,
@@ -200,6 +202,7 @@ router.post('/save/(:id)?',
 						})
 				} else {
 					res.render(`${folderView}form`, {
+						pageTitle,
 						main: main,
 						item: req.body,
 						layout,

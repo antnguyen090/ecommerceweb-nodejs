@@ -64,6 +64,7 @@ router.get('/form/', async function (req, res, next) {
 		inform: inform
 		}
     res.render(`${folderView}form`, {
+			pageTitle,
 			main: main,
 			item: [],
 			layout,
@@ -99,6 +100,7 @@ router.post('/save/(:id)?',
 									showError: errors.errors,
 									}
 							res.render(`${folderView}form`, {
+								pageTitle,
 								main: main,
 								item: item,
 								layout,

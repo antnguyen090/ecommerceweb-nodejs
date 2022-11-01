@@ -44,6 +44,9 @@ router.get('(/status/:status)?', async (req, res, next) => {
 												pagination.totalItemsPerPage,
 												{updatedAt: 'desc'},
 												)
+												data.forEach(item=>{
+													console.log(item.discountProduct)
+												})
 	res.render(`${folderView}list`, {
 				layout,
 				pageTitle: pageTitle,
@@ -63,7 +66,6 @@ router.get('(/status/:status)?', async (req, res, next) => {
 
 router.post('(/option)', async (req, res, next) => {
 	try {
-		console.log( req.body)
 		let {id, field, isCheck} = req.body
 		let data = await serviceProduct.changeOption(id, field, isCheck)
 		res.send({success: true})
@@ -84,12 +86,14 @@ router.get('/form/(:id)?', async function (req, res, next) {
 		if (req.params.id != undefined) {
 			let item = await serviceProduct.getItemByID(req.params.id)
 			res.render(`${folderView}form`, {
+				pageTitle,
 				main: main,
 				item: item,
 				layout,
 			});
 			} else {
 					res.render(`${folderView}form`, {
+						pageTitle,
 						main: main,
 						item: [],
 						layout,
@@ -199,6 +203,7 @@ router.post('/save/(:id)?',
 				}// xóa tấm hình khi form không hợp lệ
 				if (req.params.id !== undefined){
 						res.render(`${folderView}form`, {
+							pageTitle,
 							main: main,
 							item: itemData,
 							id: req.params.id,
@@ -206,6 +211,7 @@ router.post('/save/(:id)?',
 						})
 				} else {
 					res.render(`${folderView}form`, {
+						pageTitle,
 						main: main,
 						item: req.body,
 						layout,
@@ -376,6 +382,23 @@ router.post('/deletephoto',
 					res.send({success:false})
 				}
 			 })
+
+// router.get('/alltest', async (req,res,next)=>{
+// 				try {
+// 					let changeStatus = await serviceProduct.findall()
+// 					res.send({success: true})
+// 				} catch (error) {
+// 					console.log(error)
+// 				}
+// 			})
+// router.get('/clearall', async (req,res,next)=>{
+// 				try {
+// 					let changeStatus = await serviceProduct.clearall()
+// 					res.send({success: true})
+// 				} catch (error) {
+// 					console.log(error)
+// 				}
+// 			})
 module.exports = router;
 
 

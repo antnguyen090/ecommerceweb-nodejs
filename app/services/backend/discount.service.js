@@ -35,10 +35,15 @@ module.exports = {
         let removeObject = await modelDiscount.findOne({_id: id}).then( async (objDiscount)=>{
             let productList = await objDiscount.productList
             let delele = await Promise.all(productList.map(async (idProduct,index) => {
-                    let findObject = await modelProduct.findOne({_id: idProduct}).then( async (objProduct)=>{
-                        await objProduct.discountProduct.remove(id)
-                        await modelProduct(objProduct).save()
-                    })
+                    modelProduct.countDocuments({_id: idProduct}, async function (err, count){ 
+                            if(count>0){
+                                let findObject = await modelProduct.findOne({_id: idProduct}).then( async (objProduct)=>{
+                                    await objProduct.discountProduct.remove(id)
+                                    await modelProduct(objProduct).save()
+                                })
+                            }
+                            return
+                    }); 
                     return
             }))
             .then(async ()=>{
@@ -83,7 +88,35 @@ module.exports = {
         return data
         },
     editItem: async (id, item) =>{
-        let data = await modelDiscount.updateOne({_id: id}, item)
+        let data = await modelDiscount.findOne({_id: id}).then(async old=>{
+            let newItem = item.productList
+            let oldItem = old.productList
+            let addNew = newItem.filter(obj => !oldItem.includes(obj.toString()))
+            let exceptItem = oldItem.filter(obj => !newItem.includes(obj.toString()))
+            console.log(exceptItem)
+            console.log(addNew)
+            await Promise.all(addNew.map(async (idd,index) => {
+                let findObject = await modelProduct.findOne({_id: idd.toString()}).then( async (obj)=>{
+                    obj.discountProduct.push(id)
+                    await modelProduct(obj).save()
+                })
+            }))
+            .catch((error) => {
+                console.error(error.message)
+                return Promise.reject()
+            });
+            await Promise.all(exceptItem.map(async (idd,index) => {
+                let findObject = await modelProduct.findOne({_id: idd}).then( async (obj)=>{
+                    obj.discountProduct.remove(id)
+                    await modelProduct(obj).save()
+                })
+            }))
+            .catch((error) => {
+                console.error(error.message)
+                return Promise.reject()
+            });
+            await modelDiscount.updateOne({_id: id}, item)
+        })
         return
     },
     changeOption: async (id, field, isCheck) =>{

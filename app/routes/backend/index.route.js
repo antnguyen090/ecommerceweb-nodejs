@@ -13,8 +13,10 @@ router.use('/managegroup', require('./managegroup.route'));
 router.use('/blogarticle', require('.//blogarticle.route'));
 router.use('/blogcategory', require('./blogcategory.route'));
 router.use('/slider', require('./slider.route'));
+router.use('/coupon', require('./coupon.route'));
 router.use('/discount', require('./discount.route'));
 router.use('/newsletter', require('./newsletter.route'));
+router.use('/delivery', require('./delivery.route'));
 router.use('/', require('./dashboard.route'));
 
 module.exports = router;

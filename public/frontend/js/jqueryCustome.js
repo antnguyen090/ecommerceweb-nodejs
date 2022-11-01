@@ -16889,17 +16889,18 @@ var effectTransfer = $.effects.effect.transfer = function( o, done ) {
 $(function() {
     $( "#slider-range" ).slider({
         range: true,
+        step: 50000,
         min: 0,
-        max: 75,
-        values: [ 0, 50 ],
+        max: 9900000,
+        values: [ 0, 500000 ],
         slide: function( event, ui ) {
-            $( "#amount" ).html( "Price : $" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+            $( "#amount" ).html( "Giá: " + ui.values[ 0 ].toLocaleString() + " VND - " + ui.values[ 1 ].toLocaleString() + " VND" );
     $( "#amount1" ).val(ui.values[ 0 ]);
     $( "#amount2" ).val(ui.values[ 1 ]);
         }
     });
-    $( "#amount" ).html( "Price : $" + $( "#slider-range" ).slider( "values", 0 ) +
-    " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+    $( "#amount" ).html( "Giá: " + $( "#slider-range" ).slider( "values", 0 ).toLocaleString() +
+    " VND - " + $( "#slider-range" ).slider( "values", 1 ).toLocaleString() +" VND");
 
     $( "#amount1" ).val($( "#slider-range" ).slider( "values", 0 ));
     $( "#amount2" ).val($( "#slider-range" ).slider( "values", 1 ));

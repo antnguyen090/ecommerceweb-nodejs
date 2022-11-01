@@ -4,8 +4,8 @@ var mongoose = require('mongoose');
 const layout	     = __path_views_frontend + 'frontend';
 const { body, validationResult } = require('express-validator');
 
-
 const mainName = "contact"
+const pageTitle ='Liên Hệ'
 const folderView = __path_views_frontend + `pages/${mainName}/`;
 const FrontEndHelpers = require(__path_helpers + 'frontend');
 
@@ -17,6 +17,7 @@ router.get('/(:product)?', async function(req, res, next) {
     let settingPage = await FrontEndHelpers.getInforSetting()
     let listProductOption = await FrontEndHelpers.getListProductOption()
     res.render(`${folderView}contact`, {
+        pageTitle,
         layout,
         listmenu,
         listCategory,

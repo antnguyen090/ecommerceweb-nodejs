@@ -1,0 +1,38 @@
+
+<%
+ let showShippingMethod = (data) =>{
+    if(!data) return
+    let dataParse = JSON.parse(data)
+    let html = ''
+    dataParse.forEach((item, index)=>{
+      let arrow = ''
+      let right = ''
+      if(index%2 != 0){
+        arrow = 'rightArrow'
+        right = 'float-right'
+      }
+      html += `
+          <div class="col-12 pl-xl-23 mb-lg-3 mb-10">
+            <div class="stepCol ${arrow} position-relative bg-lightGray py-6 px-6 ${right}">
+                <strong class="mainTitle text-uppercase mt-n8 mb-5 d-block text-center py-1 px-3">Bước ${index+1}</strong>
+                <h2 class="headingV fwEblod text-uppercase mb-3">${item.title}</h2>
+                <p class="mb-5">${item.description}</p>
+            </div>
+        </div>
+      `
+    })
+    return html
+  }
+%>
+
+<section class="processStepSec container pt-xl-23 pb-xl-10 pt-lg-20 pb-lg-10 pt-md-16 pb-md-8 pt-10 pb-0">
+  <div class="row">
+      <header class="col-12 mainHeader mb-3 text-center">
+          <h1 class="headingIV playfair fwEblod mb-4">Quy Trình Vận Chuyển</h1>
+          <span class="headerBorder d-block mb-5"><img src="/frontend/images/hbdr.png" alt="Header Border" class="img-fluid img-bdr"></span>
+      </header>
+  </div>
+  <div class="row">
+    <%- showShippingMethod(settingPage.list_shipping) %>
+  </div>
+</section>

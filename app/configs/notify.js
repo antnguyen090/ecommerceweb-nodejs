@@ -40,8 +40,11 @@ module.exports = {
     SUCCESS_SETTING_SAVE: 'Save Setting Successfully',
     ERROR_NOT_EXITS: 'Not Exits',
     ERROR_DISCOUNT_UNIT: 'Discount Value is Percent or Money',
+    ERROR_COUPON_UNIT: 'Coupon Value is Percent or Money',
     ERROR_DISCOUNT_MONEY: 'Money must be number from %d',
-    ERROR_DISCOUNT_PERCENT: 'Money must be number from > %d to < %d',
+    ERROR_MINTOTAL_MONEY: 'Money MINTOTAL must be number from %d',
+    ERROR_MAXDOWN_MONEY: 'Money Max Down must be number from %d',
+    ERROR_DISCOUNT_PERCENT: 'Percent must be number from > %d to < %d',
     ERROR_DISCOUNT_LISTPRODUCT: 'List product must be non-empty',
     ERROR_DISCOUNT_LISTPRODUCT_INVALID:'List product invalid',
     ERROR_SLIDER_TEXTBUTTON: 'Text button length must be from %d to %d',
@@ -62,4 +65,7 @@ module.exports = {
     ERROR_SETTING_TITLE_CHOOSE: 'Title of CHOOSE US page must be non-empty',
     ERROR_SETTING_DESCRIPTION_CHOOSE: 'DESCRIPTION of CHOOSE US page must be non-empty',
     ERROR_SETTING_LINK_CHOOSE: 'LINK of CHOOSE US page must be non-empty',
+    ERROR_COST:'Cost must be non-empty',
+    ERROR_COST_SHIP:'Cost must be from %d VND',
+
 };

@@ -13,5 +13,7 @@ module.exports = {
     col_blogcategory: "blogcategory",
     col_slider: "slider",
     col_discount: 'discount',
-    col_newsletter: 'newsletter'
+    col_newsletter: 'newsletter',
+    col_coupon: 'coupon',
+    col_delivery: 'delivery',
 };

@@ -10,7 +10,19 @@ $(document).ready(async function () {
     });
     if (localStorage.getItem("tabSetting")){
       $(`a[id="${localStorage.getItem("tabSetting")}"]`).click()
-    } 
+    } else{
+      $(`a[id="custom-tabs-one-home-tab"]`).click()
+    }
+
+    $( "ul#sub-custom-tabs-one-tab >li" ).click(function(value) {
+      value.preventDefault();
+      localStorage.setItem("subTabSetting", $(value.target).attr('id'));
+    });
+    if (localStorage.getItem("subTabSetting")){
+      $(`a[id="${localStorage.getItem("subTabSetting")}"]`).click()
+    }else{
+      $(`a[id="sub-custom-tabs-one-home-tab"]`).click()
+    }
 
   toastr.options = {
     "closeButton": true,
@@ -42,6 +54,14 @@ $(document).ready(async function () {
       $(this).children('a').addClass('active')
     }
   })
+
+    $(".nav .nav-treeview").each((index,item)=>{
+      if($(item).find('a').hasClass("active") == true){
+        $(item).css("display","block");
+        $(item).parent('.nav-item').addClass('menu-is-opening menu-open')
+        console.log($(item).parent('.nav-item'))
+      }
+    })
   showPreview = (FileList, value) => {
     if (typeof(FileReader) != "undefined") {
       var dvPreview = $(`#divImageMediaPreview${value}`);
@@ -99,6 +119,16 @@ $(document).ready(async function () {
     showPreview($(this)[0].files, value);
   });
 
+  $("#photoAdsone").change(function (e) {
+    let value = e.target.getAttribute('value')
+    showPreview($(this)[0].files, value);
+  });
+
+  $("#photoAdstwo").change(function (e) {
+    let value = e.target.getAttribute('value')
+    showPreview($(this)[0].files, value);
+  });
+
   // preview multi img
   //<div class="hide"><a href="javascript:deletePhotoDiv('${nameImage}')"><i class="fa-solid fa-trash text-danger"></i></a></div>
   let removeFileFromFileList = (name) => {
@@ -146,7 +176,6 @@ $(document).ready(async function () {
         })
       )
       removeFileFromFileList(name)
-      console.log(id)
       if(id){
         $.ajax({
           type: "post",
@@ -506,6 +535,11 @@ $(document).ready(async function () {
     inputSlugForm.val(ChangeToSlug($(this).val()));
   });
 
+  const inputCodeCoupon = $("input#couponcode-input-form")
+  inputCodeCoupon.on("change paste keyup", function () {
+    inputCodeCoupon.val($(this).val().toUpperCase());
+  });
+
   // price format
   // Jquery Dependency
 
@@ -599,7 +633,7 @@ $(document).ready(async function () {
     let newParent = $(this).find(":selected").val()
     $.ajax({
       type: "post",
-      url: `menubar/changeparentmenu`,
+      url: `/${linkAdmin}menubar/changeparentmenu`,
       data: `id=${id}&newParent=${newParent}`,
       dataType: "json",
       success: function (response) {
@@ -638,8 +672,6 @@ $(document).ready(async function () {
     let dataArr = data.split("-")
     let id = dataArr[1]
     let fieldOption = dataArr[0]
-    console.log(fieldOption)
-    console.log(id)
     $.ajax({
       type: "post",
       url: `${link}`,
@@ -730,6 +762,23 @@ $(document).ready(async function () {
     }
   });
 
+  $('input:radio[name=coupon]').change(function () {
+    if (this.value == 'money') {
+      $(`input#${
+        this.value
+      }_input`).prop("disabled", false)
+      $(`input#percent_input`).prop("disabled", true)
+      $(`input#maxdown_input`).prop("disabled", true)
+
+    } else if (this.value == 'percent') {
+      $(`input#${
+        this.value
+      }_input`).prop("disabled", false)
+      $(`input#money_input`).prop("disabled", true)
+      $(`input#maxdown_input`).prop("disabled", false)
+    }
+  });
+
   // change time discount
   let showDiscountStatus = (data) => {
     if (!data) 
@@ -771,7 +820,6 @@ $(document).ready(async function () {
   }
   $('input[id^="reservationtime-"]').datepicker({
     onSelect: function (dateText) {
-      console.log("Selected date: " + dateText + ", Current Selected Value= " + this.value);
       $(this).change();
     }
   }).on("change", function () {
@@ -1146,7 +1194,173 @@ $(document).ready(async function () {
         $("input[name='list_choose']").val(JSON.stringify(arrValue))
     });
 
-  //
+  // shipping
+  var buttonAddShipping = $("#shipping-add-button");
+  var buttonRemoveShipping = $("#shipping-remove-button");
+  var classNameShipping = ".shipping-dynamic-field";
+  var countShipping = 0;
+  var fieldShipping = "";
+  var maxFieldsShipping = 5;
+
+  function totalFieldsShipping() {
+    return $(classNameShipping).length;
+  }
+
+  function addNewFieldShipping() {
+    countShipping = totalFieldsShipping() + 1;
+    fieldShipping = $("#shipping-dynamic-field-1").clone();
+    fieldShipping.attr("id", "shipping-dynamic-field-" + countShipping);
+    fieldShipping.children("label").text("Step " + countShipping);
+    fieldShipping.find("input").val("");
+    $(classNameShipping + ":last").after($(fieldShipping));
+  }
+
+  function removeLastFieldShipping() {
+    if (totalFieldsShipping() > 1) {
+      $(classNameShipping + ":last").remove();
+      let arr = JSON.parse($("input[name='list_shipping']").val())
+      arr.pop()
+      $("input[name='list_shipping']").val(JSON.stringify(arr))
+    }
+  }
+
+  function enableButtonRemoveShipping() {
+    if (totalFieldsShipping() === 2) {
+      buttonRemoveShipping.removeAttr("disabled");
+      buttonRemoveShipping.addClass("shadow-sm");
+    }
+  }
+
+  function disableButtonRemoveShipping() {
+    if (totalFieldsShipping() === 1) {
+      buttonRemoveShipping.attr("disabled", "disabled");
+      buttonRemoveShipping.removeClass("shadow-sm");
+    }
+  }
+
+  function disableButtonAddShipping() {
+    if (totalFieldsShipping() === maxFieldsShipping) {
+      buttonAddShipping.attr("disabled", "disabled");
+      buttonAddShipping.removeClass("shadow-sm");
+    }
+  }
+
+  function enableButtonAddShipping() {
+    if (totalFieldsShipping() === (maxFieldsShipping - 1)) {
+      buttonAddShipping.removeAttr("disabled");
+      buttonAddShipping.addClass("shadow-sm");
+    }
+  }
+
+  buttonAddShipping.click(function() {
+    addNewFieldShipping();
+    enableButtonRemoveShipping();
+    disableButtonAddShipping();
+  });
+
+  buttonRemoveShipping.click(function() {
+    removeLastFieldShipping();
+    disableButtonRemoveShipping();
+    enableButtonAddShipping();
+  });
+  
+  $(document).on("keyup", "div[id*='shipping-dynamic-field']" , function(e) {
+      let arrValue = []
+      $("div[id*='shipping-dynamic-field']").each((index,item)=>{
+        let obj = {}
+        obj["title"] = $(item).find('input[name="title_shipping_1[]"').val()
+        obj["description"] = $(item).find('input[name="description_shipping_1[]"').val()
+        arrValue.push(obj)
+      })
+      $("input[name='list_shipping']").val(JSON.stringify(arrValue))
+  });
+  /// end shipping
+
+  //policy
+      // add column
+      var buttonAddPolicy = $("#policy-add-button");
+      var buttonRemovePolicy = $("#policy-remove-button");
+      var classNamePolicy = ".policy-dynamic-field";
+      var countPolicy = 0;
+      var fieldPolicy = "";
+      var maxFieldsPolicy = 5;
+    
+      function totalFieldsPolicy() {
+        return $(classNamePolicy).length;
+      }
+    
+      function addNewFieldPolicy() {
+        countPolicy = totalFieldsPolicy() + 1;
+        fieldPolicy = $("#policy-dynamic-field-1").clone();
+        fieldPolicy.attr("id", "policy-dynamic-field-" + countPolicy);
+        fieldPolicy.children("label").text("Policy " + countPolicy);
+        fieldPolicy.find("input").val("");
+        $(classNamePolicy + ":last").after($(fieldPolicy));
+      }
+    
+      function removeLastFieldPolicy() {
+        if (totalFieldsPolicy() > 1) {
+          $(classNamePolicy + ":last").remove();
+          let arr = JSON.parse($("input[name='list_policy']").val())
+          arr.pop()
+          $("input[name='list_policy']").val(JSON.stringify(arr))
+        }
+      }
+    
+      function enableButtonRemovePolicy() {
+        if (totalFieldsPolicy() === 2) {
+          buttonRemovePolicy.removeAttr("disabled");
+          buttonRemovePolicy.addClass("shadow-sm");
+        }
+      }
+    
+      function disableButtonRemovePolicy() {
+        if (totalFieldsPolicy() === 1) {
+          buttonRemovePolicy.attr("disabled", "disabled");
+          buttonRemovePolicy.removeClass("shadow-sm");
+        }
+      }
+    
+      function disableButtonAddPolicy() {
+        if (totalFieldsPolicy() === maxFieldsPolicy) {
+          buttonAddPolicy.attr("disabled", "disabled");
+          buttonAddPolicy.removeClass("shadow-sm");
+        }
+      }
+    
+      function enableButtonAddPolicy() {
+        if (totalFieldsPolicy() === (maxFieldsPolicy - 1)) {
+          buttonAddPolicy.removeAttr("disabled");
+          buttonAddPolicy.addClass("shadow-sm");
+        }
+      }
+    
+      buttonAddPolicy.click(function() {
+        addNewFieldPolicy();
+        enableButtonRemovePolicy();
+        disableButtonAddPolicy();
+      });
+    
+      buttonRemovePolicy.click(function() {
+        removeLastFieldPolicy();
+        disableButtonRemovePolicy();
+        enableButtonAddPolicy();
+      });
+      
+      $(document).on("keyup", "div[id*='policy-dynamic-field']" , function(e) {
+          let arrValue = []
+          $("div[id*='policy-dynamic-field']").each((index,item)=>{
+            let obj = {}
+            obj["title"] = $(item).find('input[name="title_policy_1[]"').val()
+            obj["description"] = $(item).find('input[name="description_policy_1[]"').val()
+            obj["icon"] = $(item).find('input[name="icon_policy_1[]"').val()
+            arrValue.push(obj)
+          })
+          $("input[name='list_policy']").val(JSON.stringify(arrValue))
+      });
+  
+  //end policy
+
   getArrPhoto = (id) =>{
       let valueArr =""
       $(`#${id} img`).each((index,value)=>{

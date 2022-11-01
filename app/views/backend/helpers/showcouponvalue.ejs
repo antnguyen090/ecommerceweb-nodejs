@@ -1,0 +1,73 @@
+<%
+  showCouponValue = (data) =>{
+      let html = ''
+      if (!data) data = {unit: '', value: '', minTotal: '', maxDown: ''}
+      let isCheckedMoney = ''
+      let isCheckedPercent = ''
+      let isDisableMoney = 'disabled'
+      let isDisablePercent = 'disabled'
+      let valueMoney = ''
+      let valuePercent = ''
+      let valueMaxDown = ''
+      let valueMinTotal = 'VND ' + new Intl.NumberFormat().format(data.minTotal)
+      if (data.unit == 'money'){
+        isCheckedMoney = 'checked'
+        isDisableMoney = '' 
+        valueMoney = 'VND ' + new Intl.NumberFormat().format(data.value)
+      } else if(data.unit == 'percent') {
+        isCheckedPercent = 'checked'
+        isDisablePercent = '' 
+        valuePercent = data.value
+        valueMaxDown = 'VND ' + new Intl.NumberFormat().format(data.maxDown)
+      }
+      html = `
+      <div class="form-group row">
+        <label for="coupon"
+            class="col-sm-2 col-form-label text-sm-right required">Coupon Value</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="row">
+              <div class="col-md-6 mt-2">
+                <input class="mr-2" type="radio" name="coupon" id="money" value="money" ${isCheckedMoney}>
+                Money 
+                <input ${isDisableMoney} value="${valueMoney}" type="text" name="money_input" id="money_input" pattern='^\\VND\\d{1,3}(,\\d{3})*(\\.\\d+)?VND'  data-type="currency" placeholder="VND">
+            </div>
+            <div class="col-md-6 mt-2">
+                <input class="mr-2" type="radio" name="coupon" id="percent" value="percent" ${isCheckedPercent}>
+                        Percent (%) 
+                <input ${isDisablePercent} value="${valuePercent}" name="percent_input" type="number" min="1" max="99" id="percent_input" data-type="percent" placeholder="%"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-4">
+            <div class="form-group row">
+                <label for="mintotal"
+                    class="col-sm-6 col-form-label text-sm-right required">Min Total</label>
+                <div class="col-xs-8 col-sm-6">
+                    <input type="text" id="mintotal_input" name="mintotal"
+                        value="${valueMinTotal}" class="form-control form-control-sm"
+                        placeholder="VND"
+                        data-type="currency"
+                        >
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="form-group row">
+                <label for="maxdown"
+                class="col-sm-2 col-form-label text-sm-right required">Max Down</label>
+                <div class="col-xs-8 col-sm-4">
+                    <input ${isDisablePercent} type="text" id="maxdown_input" name="maxdown"
+                        value="${valueMaxDown}" class="form-control form-control-sm"
+                        placeholder="VND"
+                        data-type="currency"
+                        >
+                </div>
+            </div>
+        </div>
+    </div>
+      `
+    return html
+  }
+%>

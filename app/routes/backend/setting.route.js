@@ -35,6 +35,12 @@ const uploadThumb = FileHelpers.uploadFileSetting([
   },
 	{
     name: 'photoChoose'
+  },
+	{
+    name: 'photoAdsone'
+  },
+	{
+    name: 'photoAdstwo'
   }
 ], `${mainName}`);
 
@@ -51,6 +57,7 @@ router.get('/', async function (req, res, next) {
 				}
 				if (settingObj === null) { // document exists });
 						res.render(`${folderView}form`, {
+						pageTitle: pageTitle,
 						main:main,
 						item: [],
 						layout,
@@ -58,6 +65,7 @@ router.get('/', async function (req, res, next) {
 					})
 					} else {
 						res.render(`${folderView}form`, {
+							pageTitle: pageTitle,
 							main: main,
 							item: JSON.parse(settingObj.setting),
 							layout,
@@ -264,6 +272,8 @@ router.post('/save/(:id)?',
 			item.photocontent = (settingData.photocontent!=undefined) ? settingData.photocontent : undefined
 			item.photomission = (settingData.photomission!=undefined) ? settingData.photomission : undefined
 			item.photochoose = (settingData.photochoose!=undefined) ? settingData.photochoose : undefined
+			item.photoadsone = (settingData.photoadsone!=undefined) ? settingData.photoadsone : undefined
+			item.photoadstwo = (settingData.photoadstwo!=undefined) ? settingData.photoadstwo : undefined
 		}
 
     let errors = validationResult(req)
@@ -278,6 +288,7 @@ router.post('/save/(:id)?',
         }
       }
       res.render(`${folderView}form`, {
+				pageTitle: pageTitle,
 				inform: {success: undefined},
         main: main,
         item: req.body,

@@ -4,6 +4,8 @@
 <%- include('./../../helpers/showdataaboutus'); -%>
 <%- include('./../../helpers/showlistmission'); -%>
 <%- include('./../../helpers/showlistchoose'); -%>
+<%- include('./../../helpers/showlistshipping'); -%>
+<%- include('./../../helpers/showlistpolicy'); -%>
 
 <% 
     const collection="setting" ; 
@@ -21,7 +23,7 @@
                                 <div class="card-header p-0 pt-1">
                                     <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill"
+                                            <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill"
                                                 href="#custom-tabs-one-home" role="tab"
                                                 aria-controls="custom-tabs-one-home" aria-selected="true">Web</a>
                                         </li>
@@ -59,13 +61,13 @@
                                             <a class="nav-link" id="custom-tabs-six-profile-tab" data-toggle="pill"
                                                 href="#custom-tabs-six-profile" role="tab"
                                                 aria-controls="custom-tabs-six-profile"
-                                                aria-selected="false">Partner</a>
+                                                aria-selected="false">Advertisment</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="card-body">
                                     <div class="tab-content" id="custom-tabs-one-tabContent">
-                                        <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel"
+                                        <div class="tab-pane fade" id="custom-tabs-one-home" role="tabpanel"
                                             aria-labelledby="custom-tabs-one-home-tab">
                                             <div class="form-group row">
                                                 <label for="title" class="col-sm-2 col-form-label text-sm-right required">Title</label>
@@ -115,7 +117,7 @@
                                                 <%}  %>
                                             </div>
                                             <div class="form-group row uploadImage">
-                                                <label for="logoBanner" class="col-sm-2 col-form-label text-sm-right">Upload Logo Banner</label>
+                                                <label for="logoBanner" class="col-sm-2 col-form-label text-sm-right">Upload Breadcrumb Photo</label>
                                                 <div class="col-xs-12 col-sm-8">
                                                     <input id="ImageMediasBanner" name="logoBanner" type="file" class="custom-file-input" value="LogoBanner">
                                                     <div id="divImageMediaPreviewLogoBanner">
@@ -123,7 +125,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row ckeditor">
-                                                <label for="logoBanner" class="col-sm-2 col-form-label text-sm-right">Banner Logo</label>
+                                                <label for="logoBanner" class="col-sm-2 col-form-label text-sm-right">Breadcrumb Photo</label>
                                             <% if (item.logobanner != undefined) { %>
                                                 <img style="width: 30%; padding: 10px" src="<%= linkThumb %><%= item.logobanner%>" alt="thumb" onerror="this.onerror=null;this.src='<%= linkThumb %>/no-image-found.jpg'">
                                                 <%}  %>
@@ -151,6 +153,16 @@
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel"
                                             aria-labelledby="custom-tabs-one-profile-tab">
+                                            <div class="form-group row">
+                                                <label for="linkgooglemap" class="col-sm-2 col-form-label text-sm-right">Google Map</label>
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <input type="url" name="linkgooglemap" id="linkgooglemap"
+                                                    placeholder="https://example.com"
+                                                    pattern="https://.*" size="30" class="form-control form-control-sm"
+                                                    value="<%= item.linkgooglemap %>"
+                                                    required>
+                                                </div>
+                                            </div>
                                             <div class="form-group row">
                                                 <label for="linkfacebook" class="col-sm-2 col-form-label text-sm-right">Facebook</label>
                                                 <div class="col-xs-12 col-sm-8">
@@ -278,18 +290,26 @@
                                             <div class="card-header p-0 pt-1">
                                               <ul class="nav nav-tabs" id="sub-custom-tabs-one-tab" role="tablist">
                                                 <li class="nav-item">
-                                                  <a class="nav-link active" id="sub-custom-tabs-one-home-tab" data-toggle="pill" href="#sub-custom-tabs-one-home" role="tab"
+                                                  <a class="nav-link" id="sub-custom-tabs-one-home-tab" data-toggle="pill" href="#sub-custom-tabs-one-home" role="tab"
                                                     aria-controls="sub-custom-tabs-one-home" aria-selected="false">About Us Page</a>
                                                 </li>
                                                 <li class="nav-item">
                                                   <a class="nav-link" id="sub-custom-tabs-one-profile-tab" data-toggle="pill" href="#sub-custom-tabs-one-profile"
                                                     role="tab" aria-controls="sub-custom-tabs-one-profile" aria-selected="true">Why Choose Us?</a>
                                                 </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="sub-custom-tabs-two-profile-tab" data-toggle="pill" href="#sub-custom-tabs-two-profile"
+                                                      role="tab" aria-controls="sub-custom-tabs-two-profile" aria-selected="true">Policy</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="sub-custom-tabs-three-profile-tab" data-toggle="pill" href="#sub-custom-tabs-three-profile"
+                                                      role="tab" aria-controls="sub-custom-tabs-three-profile" aria-selected="true">Shipping</a>
+                                                </li>
                                               </ul>
                                             </div>
                                             <div class="card-body">
                                               <div class="tab-content" id="sub-custom-tabs-one-tabContent">
-                                                <div class="tab-pane fade active show in" id="sub-custom-tabs-one-home" role="tabpanel" aria-labelledby="sub-ustom-tabs-one-home-tab">
+                                                <div class="tab-pane fade" id="sub-custom-tabs-one-home" role="tabpanel" aria-labelledby="sub-ustom-tabs-one-home-tab">
                                                     <div class="form-group row">
                                                         <label for="titleAboutUS" class="col-sm-2 col-form-label text-sm-right">Title</label>
                                                         <div class="col-xs-12 col-sm-8">
@@ -320,7 +340,7 @@
                                                                 <label for="dataAboutUS" class="col-sm-2 col-form-label text-sm-right">Data</label>
                                                                 <div class="col-xs-12 col-sm-8">
                                                                     <div class="row">
-                                                                        <%- showDataAboutUs(item.dataAboutUS,["HAPPY CLIENTS","COMPLETED PROJECT","AWESOME STAFF","WINNING AWARDS"]) %>
+                                                                        <%- showDataAboutUs(item.dataAboutUS,item.dataAboutUSNAME) %>
                                                                     </div>
                                                                 </div>
                                                     </div>
@@ -393,7 +413,7 @@
                                                     <%}  %>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label for="" class="col-sm-2 col-form-label text-sm-right">Item List</label>
+                                                    <label for="item" class="col-sm-2 col-form-label text-sm-right">Item List</label>
                                                     <div class="col-xs-12 col-sm-8">
                                                         <div class="card shadow">
                                                             <div class="card-body">
@@ -408,13 +428,96 @@
                                                     </div>
                                                 </div>
                                                 </div>
+                                                <div class="tab-pane fade" id="sub-custom-tabs-two-profile" role="tabpanel"
+                                                aria-labelledby="custom-tabs-two-profile-tab">
+                                                <div class="form-group row">
+                                                    <label for="policy" class="col-sm-2 col-form-label text-sm-right">Policy List</label>
+                                                    <div class="col-xs-12 col-sm-8">
+                                                        <div class="card shadow">
+                                                            <div class="card-body">
+                                                                <%- showListPolicy(item.list_policy) %>
+                                                                <div class="clearfix mt-4">
+                                                                  <button type="button" id="policy-add-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="fas fa-plus fa-fw"></i> Add</button>
+                                                                  <button type="button" id="policy-remove-button" class="btn btn-secondary float-left text-uppercase ml-1"><i class="fas fa-minus fa-fw"></i> Remove</button>
+                                                                </div>
+                                                                <input type="hidden" name="list_policy" value="<%=item.list_policy %>">
+                                                            </div>
+                                                          </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="sub-custom-tabs-three-profile" role="tabpanel"
+                                                aria-labelledby="custom-tabs-three-profile-tab">
+                                                <div class="form-group row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="card shadow">
+                                                            <div class="card-body">
+                                                                <%- showListShipping(item.list_shipping) %>
+                                                                <div class="clearfix mt-4">
+                                                                  <button type="button" id="shipping-add-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="fas fa-plus fa-fw"></i> Add</button>
+                                                                  <button type="button" id="shipping-remove-button" class="btn btn-secondary float-left text-uppercase ml-1"><i class="fas fa-minus fa-fw"></i> Remove</button>
+                                                                </div>
+                                                            </div>
+                                                          </div>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="list_shipping" value="<%=item.list_shipping %>">
+                                                </div>
                                               </div>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-six-profile" role="tabpanel"
                                         aria-labelledby="custom-tabs-six-profile-tab">
-                                                    ttttttt
+                                        <div class="form-group row uploadImage">
+                                            <label for="photoAdsone" class="col-sm-2 col-form-label text-sm-right">Upload Photo Ads1</label>
+                                            <div class="col-xs-12 col-sm-8">
+                                                <input id="photoAdsone" name="photoAdsone" type="file" class="custom-file-input" value="PhotoAdsone" style="opacity:1">
+                                                <div id="divImageMediaPreviewPhotoAdsone">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row ckeditor">
+                                            <label for="photoAdsone" class="col-sm-2 col-form-label text-sm-right">Photo Uploaded Ads1</label>
+                                        <% if (item.photoadsone != undefined) { %>
+                                            <img style="width: 15%; padding: 10px" src="<%= linkThumb %><%= item.photoadsone%>" alt="thumb" onerror="this.onerror=null;this.src='<%= linkThumb %>/no-image-found.jpg'">
+                                            <%}  %>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="linkAdsone" class="col-sm-2 col-form-label text-sm-right">Link Ads1</label>
+                                            <div class="col-xs-12 col-sm-8">
+                                                <input type="url" name="linkAdsone" id="linkAdsone"
+                                                placeholder="https://example.com"
+                                                pattern="https://.*" size="30" class="form-control form-control-sm main_email"
+                                                value="<%= item.linkAdsone %>"
+                                                required>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group row uploadImage">
+                                            <label for="photoAdstwo" class="col-sm-2 col-form-label text-sm-right">Upload Photo Ads2</label>
+                                            <div class="col-xs-12 col-sm-8">
+                                                <input id="photoAdstwo" name="photoAdstwo" type="file" class="custom-file-input" value="PhotoAdstwo" style="opacity:1">
+                                                <div id="divImageMediaPreviewPhotoAdstwo">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row ckeditor">
+                                            <label for="photoAdstwo" class="col-sm-2 col-form-label text-sm-right">Photo Uploaded Ads2</label>
+                                        <% if (item.photoadstwo != undefined) { %>
+                                            <img style="width: 15%; padding: 10px" src="<%= linkThumb %><%= item.photoadstwo%>" alt="thumb" onerror="this.onerror=null;this.src='<%= linkThumb %>/no-image-found.jpg'">
+                                            <%}  %>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="linkAdstwo" class="col-sm-2 col-form-label text-sm-right">Link Ads2</label>
+                                            <div class="col-xs-12 col-sm-8">
+                                                <input type="url" name="linkAdstwo" id="linkAdstwo"
+                                                placeholder="https://example.com"
+                                                pattern="https://.*" size="30" class="form-control form-control-sm main_email"
+                                                value="<%= item.linkAdstwo %>"
+                                                required>
+                                            </div>
+                                        </div>
                                         </div>
                                     </div>
                                     </div>
