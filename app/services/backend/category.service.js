@@ -67,8 +67,67 @@ module.exports = {
         let data = await modelCategory.findOne({_id: val, status:'active'})
         return data
     },
-    getProductByCategory: async (slug) =>{
-        let data = await modelCategory.findOne({slug: slug}).populate("productList")
-        return data
+    getProductRelated: async (slug) =>{
+        let data = await modelCategory.findOne({slug: slug}).populate({ 
+            path: 'productList',
+            options: {
+                    limit: 9,
+            },
+            populate: {
+              path: 'discountProduct',
+            } 
+         })
+         return data
+    }
+    ,
+    getProductByCategory: async (slug, rangePrice,sort) =>{
+        let checkSortPrice = (data) =>{
+            if(!data.minPrice || !data.maxPrice){
+                return false
+            } else{
+                return true
+            }
+        }
+        if(checkSortPrice(rangePrice)){
+            let data = await modelCategory.findOne({slug: slug}).populate({ 
+                path: 'productList',
+                match:{
+                    $and: [
+                        {
+                            price : { $gte : rangePrice.minPrice }
+                        },
+                        {
+                            price : { $lte : rangePrice.maxPrice }
+                        }
+                    ]
+                },
+                options: {
+                        sort: sort,
+                        limit: 9,
+                },
+                populate: {
+                  path: 'discountProduct',
+                } 
+             })
+            return data
+        } else{
+            let data = await modelCategory.findOne({slug: slug}).populate({ 
+                path: 'productList',
+                options: {
+                        sort: sort,
+                        limit: 9,
+                },
+                populate: {
+                  path: 'discountProduct',
+                } 
+             })
+            return data
+        }
+
     },
+    checkExits: async (obj) =>{
+        let data = await modelCategory.exists(obj)
+        return data
+    }
 }
+

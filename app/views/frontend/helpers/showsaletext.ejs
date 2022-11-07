@@ -1,0 +1,15 @@
+<%- include('./formatprice'); -%>
+
+<%
+  showSaleText = (data, unit) =>{
+    if(!data) return
+    let html = '<span class="hotOfferGreen fwEbold text-uppercase text-white position-absolute d-block ml-8">Sale -'
+    if(data.discountValue.unit == 'money'){
+      html+= formatPrice(data.discountValue.value, unit)
+    } else{
+      html+= data.discountValue.value + " %"
+    }
+    html += '</span>' 
+    return html
+  }
+%>

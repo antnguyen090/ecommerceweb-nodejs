@@ -75,14 +75,10 @@ module.exports = {
     changeCategory: async (id, newCategory) =>{
         let updateOldCategory = modelProduct.findOne({_id: id}).then(async item=>{
             await modelCategory.findOne({_id: item.category}).then( async oldItem=>{
-                console.log("oldItem")
-                console.log(oldItem)
                 oldItem.productList.remove(id)
                 await modelCategory(oldItem).save()
             })
             await modelCategory.findOne({_id: newCategory}).then( async newItem=>{
-                console.log("newItem")
-                console.log(newItem)
                 newItem.productList.push(id)
                 await modelCategory(newItem).save()
             })
@@ -117,33 +113,13 @@ module.exports = {
         return data
     },
     getListProductOption: async (id, thumb) =>{
-        let data = await modelProduct.find({$or: [{ dailydeals: true }, { fearturedproduct: true }]}).populate("discountProduct")
+        let data = await modelProduct.find({$or: [{ dailydeals: true }, { fearturedproduct: true }]}).sort({ ordering: 'asc'}).populate("discountProduct")
         return data
     },
     getOneProduct : async (obj) =>{
-        let data = await modelProduct.findOne(obj)
+        let data = await modelProduct.findOne(obj).populate('discountProduct')
         return data
     },
-    findall: async () =>{
-        await modelProduct.find({}).then(async function (data, err) {
-            let arr = []
-                if (!err) {
-                    await Promise.all(data.map(async item=>{
-                        if(item.category == '6357a9634386e9ab343e6574'){
-                            arr.push(item.id)
-                        }
-                    }))
-                    console.log(arr)
-                    let update = await modelCategory.updateMany({_id: '6357a9634386e9ab343e6574'}, {"productList": arr})
-                } else {
-                    throw err;
-                }
-            })
-     },
-    clearall: async () =>{
-        let data = await modelCategory.updateMany({"$set":{"productList": []}})
-        return
-    }
 }
 
 

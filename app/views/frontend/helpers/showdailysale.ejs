@@ -4,24 +4,30 @@
     data.forEach((item,index)=>{
       let position = (index%2 == 0) ? "" : "position-relative "
       if(item.dailydeals === true){
+        let dataSale = showSaleIcon(item.discountProduct, item.price, item.time)
+        let sale     = (dataSale) ? showSaleText(dataSale,unit) : ''
+        let position = (dataSale || item.fearturedproduct == true) ? "position-relative " : ""
+        let hotShow  = ''
+        if(item.fearturedproduct == true){
+          hotShow = '<span class="hotOffer fwEbold text-uppercase text-white position-absolute d-block">HOT</span>'
+        }
           html += `
                 <div>
-                  <div class="featureCol ${position} w-100 px-3 mb-sm-8 mb-6">
+                  <div data-product="product-${item.id}" class="featureCol ${position} w-100 px-3 mb-sm-8 mb-6">
                       <div class="border">
                           <div class="imgHolder position-relative w-100 overflow-hidden">
                               <img src="${link}${item.thumb[0]}" alt="image description" class="img-fluid w-100">
                               <ul class="list-unstyled postHoverLinskList d-flex justify-content-center m-0">
                                   <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" class="icon-heart d-block"></a></li>
                                   <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" class="icon-cart d-block"></a></li>
-                                  <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" class="icon-eye d-block"></a></li>
-                                  <li class="overflow-hidden"><a href="javascript:void(0);" class="icon-arrow d-block"></a></li>
+                                  <li class="overflow-hidden"><a href="javascript:void(0);" class="icon-eye d-block"></a></li>
                               </ul>
                           </div>
                           <div class="text-center py-5 px-2">
                               <span class="title d-block mb-2"><a href="/${item.slug}">${item.name}</a></span>
-                              <span class="price d-block fwEbold">${item.price.toLocaleString() + " " + unit}</span>
-                              <span class="hotOffer fwEbold text-uppercase text-white position-absolute d-block">HOT</span>
-                              <span class="hotOffer green fwEbold text-uppercase text-white position-absolute d-block ml-8">Sale</span>
+                              <span class="price d-block fwEbold">${formatPrice(item.price, unit, dataSale)}</span>
+                              ${hotShow}
+                              ${sale}
                           </div>
                       </div>
                   </div>

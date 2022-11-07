@@ -1,0 +1,17 @@
+<% 
+  formatPrice = (price, unit, discount) =>{
+    if(!price || !unit) return
+    if(!discount){
+      return price.toLocaleString() + ' ' + unit
+    } else {
+      if(discount.discountValue.unit == 'money'){
+        let newPriceMoney = price - discount.discountValue.value
+        return `<del>${formatPrice(price, unit)}</del> ${formatPrice(newPriceMoney, unit)}`
+      } else{
+        let newPricePercent = price - discount.discountValue.value*price/100
+        newPricePercent = parseInt(newPricePercent/1000)*1000
+        return `<del>${formatPrice(price, unit)}</del> ${formatPrice(newPricePercent, unit)}`
+      }
+    }
+  }
+%>

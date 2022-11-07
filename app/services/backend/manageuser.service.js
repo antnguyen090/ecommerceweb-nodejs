@@ -6,12 +6,13 @@ const modelManageGroup  = require(__path_models_backend + `managegroup.model`);
 module.exports = {
     saveItems: async (params) =>{
         let data = await modelManageUser(params).save(async function(err,room) {
+            if(!room.group) return
             let userArr = await modelManageGroup.findById({_id: room.group})
-            userArr.manageuser.push(room)
+            await userArr.manageuser.push(room)
             await modelManageGroup(userArr).save()
          })
         return 
-        },
+    },
     listItems: async (objWhere,
                     currentPage,
                     totalItemsPerPage,
@@ -69,6 +70,14 @@ module.exports = {
         let data = await modelManageUser.count(objWhere)
         return data
     },
+    getUserByEmail: async (email) =>{
+        let data = await modelManageUser.findOne({email:email})
+        return data
+    },
+    getUserById: async (id) =>{
+        let data = await modelManageUser.findOne({id: id})
+        return data
+    }
 }
 
 

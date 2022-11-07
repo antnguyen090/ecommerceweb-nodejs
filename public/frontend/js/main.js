@@ -1,7 +1,19 @@
 $(function () {
+  $( ".mapHolder iframe" ).load(function() {
+    // Handler for .load() called.
+      $( ".mapHolder").css("display","block")
+  });
   $('[data-toggle="tooltip"]').tooltip()
+  $("form").submit((e)=>{
+    $( "form button[type='submit']" ).addClass('disabled').attr('disabled','')
+  })
 
   $("#sendMail").submit(function(e) {
+    $('.submitButton').html(`
+    <div class="spinner-border text-success" role="status">
+        <span class="sr-only">Loading...</span>
+    </div> Đang gửi vui lòng chờ trong giây lát...
+    `)
     let urlPath = window.location.pathname.split("/")[1]
     e.preventDefault(); // avoid to execute the actual submit of the form.
     var form = $("#sendMail").serialize();
@@ -34,11 +46,19 @@ $(function () {
             } else {
                 toastr["error"]("Đã có lỗi, vui lòng thử lại!")
             }
+            $('.submitButton').html('<button type="submit" class="btn btnTheme btnShop md-round fwEbold text-white py-3 px-4 py-md-3 px-md-4">Gửi</button>')
         }
     });
 });
 
 $("#newsletterForm").submit(function(e) {
+    $('.submitButton').html(`
+    <button type="submit" class="btn btnTheme btnShop fwEbold text-white py-2 disabled" disabled>
+      <div class="spinner-border text-success" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </button>
+    `)
     let urlPath = window.location.pathname.split("/")[1]
     e.preventDefault(); // avoid to execute the actual submit of the form.
     var form = $("#newsletterForm").serialize();
@@ -70,6 +90,9 @@ $("#newsletterForm").submit(function(e) {
             } else {
                 toastr["error"]("Đã có lỗi, vui lòng thử lại!")
             }
+            $('.submitButton').html(`
+            <button type="submit" class="btn btnTheme btnShop fwEbold text-white py-3 px-4">Enter <i class="fas fa-arrow-right ml-2"></i></button>
+            `)
         }
     });
 });
@@ -97,5 +120,7 @@ $(".search-btn").click(function(){
     $(".search-data label").fadeOut(500);
     $(".search-data span").fadeOut(500);
   });
+
+  $('a[data-fancybox="gallery"]').css('display','initial')
 
 })

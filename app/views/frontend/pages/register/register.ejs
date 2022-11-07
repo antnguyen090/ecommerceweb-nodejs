@@ -1,0 +1,97 @@
+<%- include('./../../helpers/formatphonenumber'); -%>
+
+<%
+  let showErrorRegister = (error) =>{
+    if(!error) return
+    let html =''
+    error.forEach(item=>{
+      let login = (item.param == 'emailexits') 
+      ? `<a href="/dang-nhap"
+      class="font-weight-bold text-success"><u>Đăng nhập ở đây</u></a> 
+      `
+      : ''
+      html+= `
+      <div class="alert alert-danger" role="alert">
+        ${item.msg} ${login}
+      </div>
+      `
+    })
+    return html
+  }
+	const linkThumbSetting = "/" + "uploads" + `/setting/`;
+%>
+<section class="introBannerHolder d-flex w-100 bgCover" style="background-image: url(<%= linkThumbSetting + settingPage.logobanner%>);">
+  <div class="container">
+      <div class="row">
+          <div class="col-12 pt-lg-23 pt-md-15 pt-sm-10 pt-6 text-center">
+              <ul class="list-unstyled breadCrumbs d-flex justify-content-center" style="margin-top: 12%; font-size: 15px;">
+                  <li class="mr-2"><a href="/index">Trang Chủ</a></li>
+                  <li class="mr-2">/</li>
+                  <li class="active"><%= pageTitle %></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+</section>
+
+<div class="registerSec container pt-xl-10 pb-xl-10 py-lg-10 pt-md-8 pb-md-5 pt-5 pb-0">
+  <div class="row">
+      <div class="col-12">
+        <section class="bgCover"
+        style="background-image: url('/frontend/images/bg-newsletter.png');">
+        <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+          <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+              <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                <div class="card" style="border-radius: 15px;">
+                  <div class="card-body p-5">
+                    <h2 class="text-uppercase text-center mb-5">Tạo Tài Khoản</h2>
+                    <%- showErrorRegister(error) %>
+                    <form id="formRegister" action="/dang-ky" method="post">
+                      <div class="form-outline mb-4">
+                        <input type="text" id="form3Example1cg" name="name" class="form-control form-control-lg" value='<%= userRegister.name %>' required/>
+                        <label class="form-label" for="form3Example1cg">Tên của bạn</label>
+                      </div>
+      
+                      <div class="form-outline mb-4">
+                        <input type="email" id="form3Example3cg" name="email" class="form-control form-control-lg" value='<%= userRegister.email %>' required/>
+                        <label class="form-label" for="form3Example3cg">Email của bạn</label>
+                      </div>
+      
+                      <div class="form-outline mb-4">
+                        <input type="password" id="form3Example4cg" name="password" class="form-control form-control-lg" required/>
+                        <label class="form-label" for="form3Example4cg">Mật khẩu</label>
+                      </div>
+      
+                      <div class="form-outline mb-4">
+                        <input type="password" id="form3Example4cdg" name="confirmpassword" class="form-control form-control-lg" required/>
+                        <label class="form-label" for="form3Example4cdg">Nhập lại mật khẩu</label>
+                      </div>
+      
+                      <div class="form-check d-flex justify-content-center mb-5">
+                        <input class="form-check-input me-2" type="checkbox" name="policy" value="yes" id="form2Example3cg" required/>
+                        <label class="form-check-label" for="form2Example3g">
+                          Đồng ý với quy định của chúng tôi.
+                        </label>
+                      </div>
+      
+                      <div class="d-flex justify-content-center">
+                        <button type="submit"
+                          class="btn btn-success btn-block btn-lg gradient-custom-4 ">Đăng Ký</button>
+                      </div>
+      
+                      <p class="text-center text-muted mt-5 mb-0">Tôi đã có tài khoản? <a href="/dang-nhap"
+                          class="font-weight-bold text-success"><u>Đăng nhập ở đây</u></a></p>
+      
+                    </form>
+      
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      </div>
+  </div>
+</div>

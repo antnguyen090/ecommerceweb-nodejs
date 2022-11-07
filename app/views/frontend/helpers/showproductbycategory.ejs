@@ -3,9 +3,15 @@
         if(!data) return
         let html=''
         data.forEach((item)=>{
+            let dataSale = showSaleIcon(item.discountProduct, item.price, item.time)
+            let sale     = (dataSale) ? showSaleText(dataSale, unit) : ''
+            let hotShow  = ''
+            if(item.fearturedproduct == true){
+              hotShow = '<span class="hotOffer fwEbold text-uppercase text-white position-absolute d-block">HOT</span>'
+            }
           html += `
                                     <!-- featureCol -->
-                                    <div class="col-12 col-sm-6 col-lg-4 featureCol mb-7">
+                                    <div data-product="product-${item.id}" class="position-relative col-12 col-sm-6 col-lg-4 featureCol mb-7">
                                       <div class="border">
                                           <div class="imgHolder position-relative w-100 overflow-hidden">
                                               <img src="${link}${item.thumb[0]}" alt="image description" class="img-fluid w-100">
@@ -14,19 +20,15 @@
                                                           class="icon-heart d-block"></a></li>
                                                   <li class="mr-2 overflow-hidden"><a href="javascript:void(0);"
                                                           class="icon-cart d-block"></a></li>
-                                                  <li class="mr-2 overflow-hidden"><a href="javascript:void(0);"
-                                                          class="icon-eye d-block"></a></li>
                                                   <li class="overflow-hidden"><a href="javascript:void(0);"
-                                                          class="icon-arrow d-block"></a></li>
+                                                          class="icon-eye d-block"></a></li>
                                               </ul>
                                           </div>
                                           <div class="text-center py-5 px-4">
                                               <span class="title d-block mb-2"><a href="/${item.slug}">${item.name}</a></span>
-                                              <span class="price d-block fwEbold">${item.price.toLocaleString() + " " + unit}</span>
-                                              <span
-                                                  class="hotOffer fwEbold text-uppercase text-white position-absolute d-block">HOT</span>
-                                              <span
-                                                  class="hotOffer green fwEbold text-uppercase text-white position-absolute d-block ml-8">Sale</span>
+                                              <span class="price d-block fwEbold">${formatPrice(item.price, unit, dataSale)}</span>
+                                             ${hotShow}
+                                             ${sale}
                                           </div>
                                       </div>
                                   </div>

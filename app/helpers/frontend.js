@@ -6,7 +6,7 @@ const serviceSetting = require(__path_services_backend + `setting.service`);
 const serviceProduct = require(__path_services_backend + `product.service`);
 const serviceContact  = require(__path_services_backend + `contact.service`);
 const serviceNewsletter  = require(__path_services_backend + `newsletter.service`);
-
+const serviceCoupon = require(__path_services_backend + `coupon.service`);
 let getSlider = async () => {
     let data = await serviceSlider.getListByStatus('active')
     return data
@@ -38,8 +38,8 @@ let getOneProduct = async (obj) =>{
   return data
 }
 
-let getProductByCategory = async (slug) =>{
-  let data = await serviceCategory.getProductByCategory(slug)
+let getProductByCategory = async (slug, rangePrice, sort) =>{
+  let data = await serviceCategory.getProductByCategory(slug, rangePrice, sort)
   return data
 }
 
@@ -65,6 +65,23 @@ let saveNewsletter   = async (item) =>{
   return data
 }
 
+let checkCategoryExits   = async (item) =>{
+  let data = await serviceCategory.checkExits(item)
+  if (!data) return
+  return data
+}
+
+let getProductRelated   = async (slug) =>{
+  let data = await serviceCategory.getProductRelated(slug)
+  if (!data) return
+  return data
+}
+
+let getListCoupon = async () =>{
+  let data = await serviceCoupon.getListCoupon()
+  if (!data) return
+  return data
+}
 
 module.exports = {
   getSlider,
@@ -78,4 +95,7 @@ module.exports = {
   saveContact,
   sendMailLetter,
   saveNewsletter,
+  checkCategoryExits,
+  getProductRelated,
+  getListCoupon
 }

@@ -66,6 +66,10 @@ module.exports = {
         let data = await modelCoupon.updateOne({_id: id}, {time: time})
         return
     },
+    getListCoupon: async () =>{
+        let data = await modelCoupon.find({status: 'active'}).sort({ updatedAt : 'desc'})
+        return data
+    }
 }
 
 

@@ -10,20 +10,12 @@ const folderView = __path_views_frontend + `pages/${mainName}/`;
 const FrontEndHelpers = require(__path_helpers + 'frontend');
 
 /* GET home page. */
-router.get('/(:product)?', async function(req, res, next) {
+router.get('/', async function(req, res, next) {
     try {
-    let listmenu = await FrontEndHelpers.getMenuBar()
-    let listCategory = await FrontEndHelpers.getListCategory()
-    let settingPage = await FrontEndHelpers.getInforSetting()
-    let listProductOption = await FrontEndHelpers.getListProductOption()
-    res.render(`${folderView}contact`, {
-        pageTitle,
-        layout,
-        listmenu,
-        listCategory,
-        settingPage,
-        listProductOption,
-     });        
+        res.render(`${folderView}contact`, {
+            pageTitle,
+            layout,
+        });        
     } catch (error) {
         console.log(error)
         res.redirect("/error")
@@ -33,15 +25,15 @@ router.get('/(:product)?', async function(req, res, next) {
 
 router.post('/', 
     body('name')
-        .isLength({min: 2, max: 100}),
+        .isLength({min: 1, max: 100}),
     body('email')
         .isEmail(),
     body('phonenumber')
         .isMobilePhone(),
     body('subject')
-        .isLength({min: 5}),
+        .isLength({min: 1}),
     body('message')
-        .isLength({min: 5}),
+        .isLength({min: 1}),
     async function(req, res, next) {
         try {
             let errors = validationResult(req)

@@ -1,9 +1,41 @@
 <%- include('./../../helpers/showproductslider'); -%>
-  
+<%- include('./../../helpers/showsaleicon'); -%>
+<%- include('./../../helpers/showsaletext'); -%>
+<%- include('./../../helpers/formatprice'); -%>
+
 <% 
+	let showCouponList = (dataCoupon) =>{
+		let html = `<ul class="list-unstyled productInfoDetail mb-0">
+			<li class="mb-2">Mã giảm giá:</li>
+		`
+		if(!dataCoupon || dataCoupon == null) return
+		let count = 1
+		dataCoupon.forEach(item =>{
+			if(checkTimeInRange(item.time)){
+				html+= `
+					<li class="mb-2 ml-2 ">
+					<span class="d-block mt-1 font-weight-bold">${count}/ ${item.name}:</span>
+					<span class="d-block mt-1 font-italic"> ${item.description}</span>
+					<span class="d-block mt-1">Nhập mã: ${item.couponcode}</span>
+					</li>
+				`
+				count++
+			}
+		})
+		html += '</ul>'
+		return html
+	}
 	const collection = "product";
 	const linkThumb = "/" + "uploads" + `/${collection}/`;
   const unit = ' VND'
+
+	let dataSale = showSaleIcon(product.discountProduct, product.price)
+	let sale     = (dataSale) ? showSaleText(dataSale,unit) : ''
+	let position = (dataSale || product.fearturedproduct == true) ? "position-relative " : ""
+	let hotShow  = ''
+	if(product.fearturedproduct == true){
+		hotShow = '<span class="hotOffer fwEbold text-uppercase text-white d-block">HOT</span>'
+	}
 %>
 			<!-- introBannerHolder -->
 			<section class="introBannerHolder d-flex w-100 bgCover" style="background-image: url(/frontend/images/breadcum.jpg);">
@@ -11,9 +43,9 @@
 					<div class="row">
 						<div class="col-12 pt-lg-23 pt-md-15 pt-sm-10 pt-6 text-center">
 							<ul class="list-unstyled breadCrumbs d-flex justify-content-center" style="margin-top: 12%; font-size: 15px;">
-								<li class="mr-2"><a href="">Trang Chủ</a></li>
+								<li class="mr-2"><a href="/">Trang Chủ</a></li>
 								<li class="mr-2">/</li>
-								<li class="mr-2"><a href="/danh-muc/<%=categoryObj.slug%>"><%=categoryObj.name%></a></li>
+								<li class="mr-2"><a href="/<%=categoryObj.slug%>"><%=categoryObj.name%></a></li>
 								<li class="mr-2">/</li>
 								<li class="active"><%= product.name%></li>
 							</ul>
@@ -36,40 +68,35 @@
                 </div>
             </div>
 					</div>
-					<div class="col-12 col-lg-6 order-lg-3">
+					<div class="col-12 col-lg-6 order-lg-3 flashSale">
 						<!-- productTextHolder -->
 						<div class="productTextHolder overflow-hidden">
-							<h2 class="fwEbold mb-2"><%= product.name%></h2>
-							<strong class="price d-block mb-5 text-green"><%= product.price.toLocaleString() + unit %></strong>
+							<%- hotShow %>
+							<h2 class="fwEbold mb-2"> <%= product.name %></h2>
+							<strong class="price d-block mb-5 text-green"><%- formatPrice(product.price, unit, dataSale)  %> <%- sale %></strong>
 							<p class="mb-5"><%= product.description %></p>
 							<ul class="list-unstyled productInfoDetail mb-5 overflow-hidden">
 								<li class="mb-2">Số Lượng: <span><%= product.quantity %></span></li>
-								<li class="mb-2">Phí Vận Chuyển: <span>Free</span></li>
 							</ul>
 							<div class="holder overflow-hidden d-flex flex-wrap mb-6">
 								<input type="number" placeholder="1">
 								<a href="javascript:void(0);" class="btn btnTheme btnShop fwEbold text-white md-round py-3 px-4 py-md-3 px-md-4">Add To Cart <i class="fas fa-arrow-right ml-2"></i></a>
 							</div>
 							<ul class="list-unstyled productInfoDetail mb-0">
-								<li class="mb-2">Danh Mục: <a href="/danh-muc/<%=categoryObj.slug%>"><span><%=categoryObj.name%></span></a></li>
+								<li class="mb-2">Danh Mục: <a href="/<%=categoryObj.slug%>"><span><%=categoryObj.name%></span></a></li>
 							</ul>
-              <ul class="list-unstyled productInfoDetail mb-0">
-								<li class="mb-2">Mã giảm giá:</li>
-                <li class="mb-2 ml-4"><span>Mã giảm giá:1</span></li>
-								<li class="mb-2 ml-4"><span>Mã giảm giá:2</span></li>
-							</ul>
+							<%- showCouponList(couponData) %>
 						</div>
-
+					<img src="/frontend/images/hbdr.png" alt="Header Border" class="img-fluid img-bdr" style="margin: 0 10%">
 					</div>
 				</div>
-
 			</div>
 			<div class="container">
 				<div class="row">
 					<div class="col-12">
 						<!-- tabSetList -->
 						<ul class="list-unstyled tabSetList d-flex justify-content-center mb-9">
-							<li class="mr-md-20 mr-sm-10 mr-2">
+							<li >
 								<a href="#tab1-0" class="active playfair fwEbold pb-2">Mô Tả Chi Tiết</a>
 							</li>
 						</ul>

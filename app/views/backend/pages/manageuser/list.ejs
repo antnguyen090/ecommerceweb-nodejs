@@ -93,10 +93,10 @@
 						</th>
 						<th class="text-center">#</a></th>
 						<th class="text-center">Name</a></th>
+						<th class="text-center">Email</a></th>
 						<th class="text-center">Group</a></th>
 						<th class="text-center">Avatar</a></th>
 						<th class="text-center">Status</a></th>
-						<th class="text-center">Ordering</a></th>
 						<th class="text-center">Action</th>
 					</tr>
 				</thead>
@@ -115,7 +115,11 @@
 								<%- highlightHelper(item.name, keyword) %>
 							</td>
 							<td class="text-center position-relative" >
+								<%= item.email%>
+							</td>
+							<td class="text-center position-relative" >
 								<select id="category" data-id="<%= item.id %>" name="category" class="custom-select custom-select-sm">
+									<option value="">Please choose Group</option>
 									<% category.forEach( (value, index) => { %>
 										<% if(value.id == item.categoryId){ %>
 											<option value="<%= value.id %>" selected><%= value.name %></option>
@@ -130,9 +134,6 @@
 							</td>
 							<td class="text-center position-relative" id="status-item-<%= item.id %>">
 								<%- statusHelper(collection, item.status, item.id)  %>
-							</td>
-							<td class="text-center position-relative" >
-								<input type="number" class="ordering" id="change-ordering-<%= item.id%>" name="items-ordering" data-router="<%= linkPrefix+'change-ordering'%>" data-id="<%= item.id%>"  value="<%= item.ordering%>" class="text-center ordering">
 							</td>
 							<td class="text-center">
 								<a href="<%= linkPrefix %>form/<%= item.id %>" class="rounded-circle btn btn-sm btn-info" title="Edit">

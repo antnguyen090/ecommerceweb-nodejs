@@ -1,32 +1,20 @@
+<%- include('./showsaleicon'); -%>
+<%- include('./showsaletext'); -%>
+<%- include('./formatprice'); -%>
+
 <%
       showFeaturedProduct = (data, link, unit, page) =>{
         if(!data) return
-        let showSale = (dataShow, money) =>{
-          let activeData = dataShow.filter(item => item.status === 'active')
-          let listMoney = activeData.filter(item => item.discountValue.unit == 'money')
-          let listPercent = activeData.filter(item => item.discountValue.unit == 'percent')
-          let maxMoney, maxPercent
-          if(listMoney.length>0) maxMoney      = listMoney.reduce((max, item)=> max.value > item.value ? max : item)
-          if(listPercent.length>0) maxPercent  = listPercent.reduce((max, item)=> max.value > item.value ? max : item)
-          if(maxMoney && maxPercent){
-            if(maxMoney > (maxPercent.discountValue.value*money/100)){
-              return maxMoney
-            }else{
-              return maxPercent
-            }
-          } else if(maxMoney && !maxPercent){
-              return maxMoney
-          } else if(!maxMoney && maxPercent){
-              return maxPercent
-          }
-        }
         let html =""
         let count = 0
         if(page == 'category'){
           data.forEach((item,index)=>{
+            let dataSale = showSaleIcon(item.discountProduct, item.price)
+            let sale     = (dataSale) ? '<span class="fwEbold text-uppercase position-absolute d-block saleFeatured">Sale</span>' : ''
             if(item.fearturedproduct == true && count<5 ){
               html+= `
-              <li class="mb-6 d-flex flex-nowrap">
+              <li class="mb-6 d-flex flex-nowrap position-relative">
+                ${sale}
                 <div class="alignleft">
                     <a href="/${item.slug}">
                       <img src="${link}${item.thumb[0]}" alt="image description" class="img-fluid">
@@ -34,7 +22,7 @@
                 </div>
                 <div class="description-wrap pl-1">
                     <h4 class="headingVII mb-1"><a href="/${item.slug}">${item.name}</a></h4>
-                    <strong class="price fwEbold d-block;">${item.price.toLocaleString() + " " + unit}</strong>
+                    <strong class="price fwEbold d-block;">${formatPrice(item.price, unit, dataSale)}</strong>
                 </div>
             </li>
               `
@@ -43,31 +31,35 @@
           })
         }else{
           data.forEach((item,index)=>{
-            if(item.fearturedproduct == true){
-              let position = "position-relative "
-              let dataSale = showSale(item.discountProduct, item.price)
-              let sale     = (dataSale) ? '<span class="hotOffer green fwEbold text-uppercase text-white position-absolute d-block ml-8">Sale</span>' : '' 
+            if(item.fearturedproduct == true && count<10){
+              let dataSale = showSaleIcon(item.discountProduct, item.price)
+              let sale     = (dataSale) ? showSaleText(dataSale,unit) : ''
+              let position = (dataSale || item.fearturedproduct == true) ? "position-relative " : ""
+              let hotShow  = ''
+              if(item.fearturedproduct == true){
+                hotShow = '<span class="hotOffer fwEbold text-uppercase text-white position-absolute d-block">HOT</span>'
+              }
               html+= `
-              <div class="featureCol px-3 ${position} mb-6">
+              <div data-product="product-${item.id}" class="featureCol px-3 ${position} mb-6">
                 <div class="border">
                     <div class="imgHolder position-relative w-100 overflow-hidden">
                         <img src="${link}${item.thumb[0]}" alt="image description" class="img-fluid w-100">
                         <ul class="list-unstyled postHoverLinskList d-flex justify-content-center m-0">
                             <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" class="icon-heart d-block"></a></li>
                             <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" class="icon-cart d-block"></a></li>
-                            <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" class="icon-eye d-block"></a></li>
-                            <li class="overflow-hidden"><a href="javascript:void(0);" class="icon-arrow d-block"></a></li>
+                            <li class="overflow-hidden"><a href="javascript:void(0);" class="icon-eye d-block"></a></li>
                         </ul>
                     </div>
                     <div class="text-center py-xl-5 py-sm-4 py-2 px-xl-2 px-1">
                         <span class="title d-block mb-2"><a href="/${item.slug}">${item.name}</a></span>
-                        <span class="price d-block fwEbold">${item.price.toLocaleString() + " " + unit}</span>
-                        <span class="hotOffer fwEbold text-uppercase text-white position-absolute d-block">HOT</span>
+                        <span class="price d-block fwEbold">${formatPrice(item.price, unit, dataSale)}</span>
+                        ${hotShow}
                         ${sale}
                     </div>
                 </div>
             </div>
               `
+              count++ 
             }
           })
         }

@@ -16887,19 +16887,35 @@ var effectTransfer = $.effects.effect.transfer = function( o, done ) {
 
 
 $(function() {
+    let urlParams = new URLSearchParams(window.location.search);
+    let paramMinPrice = parseInt(urlParams.get('minPrice'))
+    let paramMaxPrice = parseInt(urlParams.get('maxPrice'))
+    let paramSort     = urlParams.get('sort')
+    if(paramSort) {
+        $('#filterForm').append(`<input type="hidden" name="sort" value=${paramSort}>`)
+        $('#showSortText').text($(`li > a[data-type='${paramSort}']`).text());
+    }
+    let minPrice      = 0
+    let maxPrice      = 500000
+    if(paramMinPrice && paramMaxPrice && (paramMinPrice < paramMaxPrice)){
+        $("input[name='minPrice']").val(paramMinPrice)
+        $("input[name='maxPrice']").val(paramMaxPrice)
+        minPrice      = paramMinPrice
+        maxPrice      = paramMaxPrice
+    }
     $( "#slider-range" ).slider({
         range: true,
         step: 50000,
         min: 0,
-        max: 9900000,
-        values: [ 0, 500000 ],
+        max: 1900000,
+        values: [ minPrice, maxPrice ],
         slide: function( event, ui ) {
-            $( "#amount" ).html( "Giá: " + ui.values[ 0 ].toLocaleString() + " VND - " + ui.values[ 1 ].toLocaleString() + " VND" );
+            $( "#amount" ).html(ui.values[ 0 ].toLocaleString() + " VND - " + ui.values[ 1 ].toLocaleString() + " VND" );
     $( "#amount1" ).val(ui.values[ 0 ]);
     $( "#amount2" ).val(ui.values[ 1 ]);
         }
     });
-    $( "#amount" ).html( "Giá: " + $( "#slider-range" ).slider( "values", 0 ).toLocaleString() +
+    $( "#amount" ).html($( "#slider-range" ).slider( "values", 0 ).toLocaleString() +
     " VND - " + $( "#slider-range" ).slider( "values", 1 ).toLocaleString() +" VND");
 
     $( "#amount1" ).val($( "#slider-range" ).slider( "values", 0 ));

@@ -53,16 +53,17 @@ mongoose
 app.use(cookieParser());
 app.use(session({
   secret: 'abcnhds',
-  resave: false,
   saveUninitialized: false,
+  resave: true,
+  rolling: true,
   cookie: {
-    maxAge: 5*60*1000
+    maxAge: 5*60*10000
   }
 }
 ));
-// require(__path_configs + 'passport')(passport);
-// app.use(passport.initialize());
-// app.use(passport.session());
+require(__path_configs + 'passport')(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 

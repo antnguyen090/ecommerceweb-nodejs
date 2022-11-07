@@ -67,5 +67,13 @@ module.exports = {
     ERROR_SETTING_LINK_CHOOSE: 'LINK of CHOOSE US page must be non-empty',
     ERROR_COST:'Cost must be non-empty',
     ERROR_COST_SHIP:'Cost must be from %d VND',
-
+    ERROR_REGISTER_EMAIL: 'Vui lòng nhập đúng Email.',
+    ERROR_REGISTER_NAME: 'Vui lòng nhập Tên của bạn (Độ dài từ %d đến %d )',
+    ERROR_REGISTER_PASS_INPUT: ' Vui lòng nhập đầy đủ Mật Khẩu và Nhập lại Mật Khẩu',
+    ERROR_REGISTER_PASS: 'Vui lòng nhập Mật Khẩu của bạn (Độ dài từ %d đến %d )',
+    ERROR_REGISTER_PASSCONFIRM: 'Mật Khẩu và nhập lại của bạn phải trùng nhau',
+    ERROR_REGISTER_POLICY: 'Vui lòng tick để đồng ý quy định của chúng tôi',
+    ERROR_REGISTER_CHECKUSER: 'Email này đã đăng ký tài khoản.',
+    ERROR_LOGIN_CHECKUSER: 'Email này chưa đăng ký tài khoản',
+    ERROR_LOGIN_PASS: "Mật khẩu không chính xác",
 };

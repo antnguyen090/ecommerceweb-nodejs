@@ -14,7 +14,6 @@ module.exports = {
     folder_validates_frontend : 'validates/frontend',
     folder_views_frontend     : 'views/frontend',
     folder_model_frontend   : 'model/frontend',
-
     folder_public       : 'public',
     folder_uploads      : 'uploads',
     folder_middleware   : 'middleware'

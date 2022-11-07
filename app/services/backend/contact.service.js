@@ -60,8 +60,8 @@ module.exports = {
         //   port: 587,
         //   secure: false, // true for 465, false for other ports
           auth: {
-            user: `${process.env.EMAIL_SMTP}`, // generated ethereal user
-            pass: `${process.env.PASSWORD_SMTP}`, // generated ethereal password
+            user: process.env.EMAIL_SMTP, // generated ethereal user
+            pass: process.env.PASSWORD_SMTP, // generated ethereal password
           },
         });
         // send mail with defined transport object
@@ -82,8 +82,6 @@ module.exports = {
           `, // plain text body
         //   html: "<b>Hello world?</b>", // html body
         });
-        console.log("Message sent: %s", infoForClient.messageId);
-        console.log("Message sent: %s", infoForMember.messageId);
       }
 }
 

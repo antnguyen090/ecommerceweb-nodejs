@@ -13,17 +13,9 @@ const FrontEndHelpers = require(__path_helpers + 'frontend');
 /* GET home page. */
 router.get('/', async function(req, res, next) {
     try {
-    let listmenu = await FrontEndHelpers.getMenuBar()
-    let listCategory = await FrontEndHelpers.getListCategory()
-    let settingPage = await FrontEndHelpers.getInforSetting()
-    let listProductOption = await FrontEndHelpers.getListProductOption()
     res.render(`${folderView}aboutus`, {
         pageTitle,
         layout,
-        listmenu,
-        listCategory,
-        settingPage,
-        listProductOption,
      });        
     } catch (error) {
         console.log(error)

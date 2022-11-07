@@ -1,11 +1,12 @@
 <%
-    showCategoryFilter = (data) =>{
+    showCategoryFilter = (data, slug) =>{
       if (!data) return
       let html = ''
       data.forEach((item)=>{
+        let active = (item.slug == slug) ? 'active' : ''
         html +=`
-        <li class="mb-5 overflow-hidden">
-            <a href="/danh-muc/${item.slug}">${item.name} 
+        <li class="mb-5 overflow-hidden ${active}">
+            <a href="/${item.slug}">${item.name} 
               <span class="num border float-right">${item.productList.length}</span>
             </a>
         </li>

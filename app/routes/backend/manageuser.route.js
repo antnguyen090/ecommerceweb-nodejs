@@ -120,23 +120,7 @@ router.post('/save/(:id)?',
 				}
 				return
 		}),
-	body('slug')
-		.isSlug()
-		.withMessage(notify.ERROR_SLUG)
-		.custom(async (val, {req}) => {
-			let paramId = await(req.params.id != undefined) ? req.params.id : 0
-				let data		= await serviceManageUser.checkDuplicated({name: val})
-				let length = data.length
-				data.forEach((value, index) => {
-					if (value.id == paramId) 
-						length = length - 1;
-				})
-				if (length > 0) {
-						return Promise.reject(notify.ERROR_NAME_DUPLICATED)
-				}
-				return
-		}),
-	body('editordata')
+	body('content')
 		.not()
 		.isEmpty()
 		.withMessage(notify.ERROR_DESCRIPTION),
@@ -153,9 +137,6 @@ router.post('/save/(:id)?',
 				}
 			}
 		}),
-	body('ordering')
-		.isInt({min: 0, max: 99})
-		.withMessage(util.format(notify.ERROR_ORDERING,0,99)),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
 	body('thumb').custom((value,{req}) => {
 		const {image_uploaded , image_old} = req.body;
@@ -169,7 +150,6 @@ router.post('/save/(:id)?',
 	}),
 	async function (req, res) { // Finds the validation errors in this request and wraps them in an object with handy functions
 		try {
-			console.log( req.body)
 			let item = req.body;
 			let itemData
 			if(req.params.id != undefined){
