@@ -61,15 +61,6 @@ router.get('(/status/:status)?', async (req, res, next) => {
 	}
 })
 
-router.post('(/option)', async (req, res, next) => {
-	try {
-		let {id, field, isCheck} = req.body
-		let data = await serviceManageUser.changeOption(id, field, isCheck)
-		res.send({success: true})
-	} catch (error) {
-		console.log(error)
-	}
-})
 
 // access FORM
 router.get('/form/(:id)?', async function (req, res, next) {
@@ -105,21 +96,9 @@ router.get('/form/(:id)?', async function (req, res, next) {
 router.post('/save/(:id)?',
 	uploadThumb,
 	body('name')
-			.isLength({min: 5, max: 100})
-			.withMessage(util.format(notify.ERROR_NAME,5,100))
-			.custom(async (val, {req}) => {
-				let paramId = await(req.params.id != undefined) ? req.params.id : 0
-				let data		= await serviceManageUser.checkDuplicated({name: val})
-				let length = data.length
-				data.forEach((value, index) => {
-					if (value.id == paramId) 
-						length = length - 1;
-				})
-				if (length > 0) {
-						return Promise.reject(notify.ERROR_NAME_DUPLICATED)
-				}
-				return
-		}),
+			.isLength({min: 2, max: 30})
+			.withMessage(util.format(notify.ERROR_NAME,2,30))
+	,
 	body('content')
 		.not()
 		.isEmpty()
@@ -270,19 +249,27 @@ router.post('/change-ordering',
 router.post('/changecategory',
 		body('id')
 				.custom(async (val, {req}) => {
-					let user = await serviceManageUser.getItemByID(req.params.id)
-					if (!user) {
-						return Promise.reject(notify.ERROR_NOT_EXITS)
+					try {
+						let item = await serviceManageUser.getItemByID(val)
+						if (item.length == 0) {
+							return Promise.reject(notify.ERROR_NOT_EXITS)
+						}
+					} catch (error) {
+							return Promise.reject(notify.ERROR_NOT_EXITS)
 					}
-					return
-			}),
+		}),
 		body('newCategory')
 				.custom(async (val, {req}) => {
-					let category = await serviceManageGroup.getItemByID(req.params.id)
-					if (!category) {
-						return Promise.reject(notify.ERROR_NOT_EXITS)
+					if ( val == undefined) {
+						return Promise.reject(notify.ERROR_GROUP)
+					} else {
+						try {
+							let data = await serviceManageGroup.getGroupById(val)
+							return data;
+						} catch (error) {
+							return Promise.reject(notify.ERROR_GROUP_INVALID)
+						}
 					}
-					return
 			}),
 	async (req, res, next) => {
 		try {
@@ -296,6 +283,7 @@ router.post('/changecategory',
 			}
 	} catch (error) {
 		console.log(error)
+		res.send({success: false})
 	}
 });
 

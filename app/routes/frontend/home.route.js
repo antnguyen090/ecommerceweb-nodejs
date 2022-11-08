@@ -19,6 +19,15 @@ router.get('/(:slug)?', async function(req, res, next) {
     } else if(req.params.slug === 'lien-he'){
         next()
         return
+    } else if(req.params.slug === 'yeu-thich'){
+        next()
+        return
+    } else if(req.params.slug === 'lay-lai-mat-khau'){
+        next()
+        return
+    } else if(req.params.slug === 'index'){
+        next()
+        return
     } else if(req.params.slug === 'tin-tuc'){
         next()
         return
@@ -30,6 +39,22 @@ router.get('/(:slug)?', async function(req, res, next) {
         return
     } else if(req.params.slug === 'dang-nhap'){
         next()
+        return
+    } else if(req.params.slug === 'trang-ca-nhan'){
+        next()
+        return
+    } else if(req.params.slug === 'trang-chu'){
+        next()
+        return
+    } else if(req.params.slug === 'dang-xuat'){
+        if(req.isAuthenticated()) {
+            req.logout(function(err) {
+                if (err) { return next(err); }
+                res.redirect('/');
+              });
+        } else{
+            res.redirect('/');
+        }
         return
     }
     let listCategory = await res.locals.listCategory

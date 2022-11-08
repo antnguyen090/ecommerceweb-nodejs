@@ -10,14 +10,17 @@ module.exports = function(passport){
         passReqToCallback:true
     },
         async function(req, username, password, done) {
-            console.log(username)
-            console.log(password)
             try {
                 let checkUser = await serviceManageUser.getUserByEmail(username)
                 if(checkUser){
                     let checkPassword = await bcrypt.compare(password,checkUser.password);
                     if(checkPassword){
-                        return done(null, checkUser, { message: "thanhcong"});
+                        console.log(checkUser)
+                        if(checkUser.status === 'active'){
+                            return done(null, checkUser);
+                        }else{
+                            return done(null, false, { message: notify.ERROR_USER_INACTIVE});
+                        }
                     }else{
                         return done(null, false, { message: notify.ERROR_LOGIN_PASS});
                     }
@@ -41,7 +44,8 @@ module.exports = function(passport){
                 if(checkUser){
                     return done(null, false, { message: notify.ERROR_REGISTER_CHECKUSER});
                 }
-                let saveUser = await serviceManageUser.saveItems(req.body)
+                let saveUser = await serviceManageUser.saveUser(req.body)
+                let sendMail = await serviceManageUser.sendMailRegisterSuccess(req.body.email)
                 return done(null, saveUser)
             } catch (error) {
                 console.log(error)

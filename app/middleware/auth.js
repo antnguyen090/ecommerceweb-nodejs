@@ -4,14 +4,11 @@ const systemConfig       = require(__path_configs + 'system');
 const linkLogin		= StringHelpers.formatLink('/dang-nhap'); 
 
 module.exports = (req, res, next) => {
+    console.log(req.user)
     if(req.isAuthenticated()){
-        if(req.user.username === "thinhnguyenxy04@gmail.com") {
             next();
-        }else {
-            res.redirect('/');
-        }
     }else {
-        next();
+        res.redirect(linkLogin)
     }
     
 }

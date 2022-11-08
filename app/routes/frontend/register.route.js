@@ -13,6 +13,7 @@ const pageTitle= 'Đăng Ký'
 const folderView = __path_views_frontend + `pages/${mainName}/`;
 const FrontEndHelpers = require(__path_helpers + 'frontend');
 const linkIndex		    = StringHelpers.formatLink('/');
+const linkLogin		    = StringHelpers.formatLink('/dang-nhap');
 const linkRegister		= StringHelpers.formatLink('/dang-ky'); 
 
 /* GET home page. */
@@ -64,7 +65,6 @@ router.post('/',
                 }
                 return Promise.resolve()
             }),
-            // .withMessage(util.format(notify.ERROR_REGISTER_PASS,8,18)),
         body('policy')
             .not()
             .isEmpty()
@@ -84,7 +84,7 @@ router.post('/',
                 return
             } else{
                 passport.authenticate('local.register', { 
-                    successRedirect: linkIndex,
+                    successRedirect: linkLogin,
                     failureRedirect: linkRegister,
                     failureFlash: true
                 })(req, res, next)

@@ -367,7 +367,8 @@ router.post('/sortable',
 					console.log(error)
 					res.send({success:false})
 				}
-			 })
+})
+
 router.post('/deletephoto',
        async (req, res, next) => {
 				try {

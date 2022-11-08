@@ -8,19 +8,11 @@ var schema = new mongoose.Schema({
     ordering: Number,
     content: String,
     group_acp: String,
-    manageuser: [ 
+    usersList: [ 
         { type: Schema.Types.ObjectId, ref: 'manageuser' }
     ] ,
-    created: {
-        user_id: Number,
-        user_name: String,
-        time: Date
-    },
-    modified: {
-        user_id: Number,
-        user_name: String,
-        time: Date
-    }
-});
+},
+{ timestamps: true }
+);
 
 module.exports = mongoose.model(databaseConfig.col_managegroup, schema );

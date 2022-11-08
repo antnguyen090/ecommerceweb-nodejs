@@ -15,8 +15,15 @@ var schema = new mongoose.Schema({
     password: String,
     email: String,
     thumb: String,
-    group: String,
-    managegroup: { type: Schema.Types.ObjectId, ref: 'managegroup' },
+    otp: {
+      code: {
+          type: String,
+          default: null},
+      time_get: { 
+          type: Date,
+          default: null},
+    },
+    group: { type: Schema.Types.ObjectId, ref: 'managegroup' },
 },
 { timestamps: true }
 );
@@ -31,6 +38,7 @@ schema.pre('save', async function save(next) {
       return next(err);
     }
 });
+
 
 module.exports = mongoose.model(databaseConfig.col_manageuser, schema );
 

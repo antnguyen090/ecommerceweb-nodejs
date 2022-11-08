@@ -15,17 +15,14 @@
       class="font-weight-bold text-success"><u>Lấy lại mật khẩu tại đây</u></a> 
       `
       : ''
-      if(item.param == 'success'){
-        html+= `
-          <div class="alert alert-success" role="alert">
-            ${item.msg}
-          </div>
-        `
-        return
-      }
+      let otpError = (item.param == 'otpouttime') 
+      ? `<a href="/lay-lai-mat-khau/"
+      class="font-weight-bold text-success"><u>Lấy lại mã OTP</u></a> 
+      `
+      : ''
       html+= `
       <div class="alert alert-danger" role="alert">
-        ${item.msg} ${userError}${passError}
+        ${item.msg} ${userError}${passError}${otpError}
       </div>
       `
     })
@@ -58,24 +55,28 @@
               <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                 <div class="card" style="border-radius: 15px;">
                   <div class="card-body p-5">
-                    <h2 class="text-uppercase text-center mb-5"><%= pageTitle %></h2>
+                    <h2 class="text-uppercase text-center mb-5">Đổi Mật Khẩu</h2>
                     <%- showErrorRegister(error) %>
-                    <form id="formRegister" action="/dang-nhap" method="post">
+                    <form id="formForgotPassword" action="/lay-lai-mat-khau/doi-mat-khau" method="post">
                       <div class="form-outline mb-4">
-                        <input type="email" id="form3Example3cg" name="email" class="form-control form-control-lg" value='<%= userLogin.email %>' required/>
-                        <label class="form-label" for="form3Example3cg">Email của bạn</label>
+                        <input type="hidden" name="email" class="form-control form-control-lg" value='<%= userLogin.email %>' required/>
                       </div>
-      
                       <div class="form-outline mb-4">
-                        <input type="password" id="form3Example4cg" name="password" class="form-control form-control-lg" required/>
-                        <label class="form-label" for="form3Example4cg">Mật khẩu</label>
+                        <input type="text" name="otpCode" class="form-control form-control-lg" required/>
+                        <label class="form-label" for="">Mã OTP</label>
+                      </div>
+                      <div class="form-outline mb-4">
+                        <input type="password" name="password" class="form-control form-control-lg" value='' required/>
+                        <label class="form-label" for="form3Example3cg">Mật Khẩu Mới</label>
+                      </div>
+                      <div class="form-outline mb-4">
+                        <input type="password" name="confirmpassword" class="form-control form-control-lg" value='' required/>
+                        <label class="form-label" for="form3Example3cg">Nhập Lại Mật Khẩu Mới</label>
                       </div>
                       <div class="d-flex justify-content-center">
                         <button type="submit"
-                          class="btn btn-success btn-block btn-lg gradient-custom-4 ">Đăng Nhập</button>
+                          class="btn btn-success btn-block btn-lg gradient-custom-4 ">Đổi Mật Khẩu</button>
                       </div>
-                      <p class="text-center text-muted mt-5 mb-0">Bạn chưa có tài khoản? <a href="/dang-ky"
-                          class="font-weight-bold text-success"><u>Vui lòng đăng ký tại đây</u></a></p>
                     </form>
                   </div>
                 </div>

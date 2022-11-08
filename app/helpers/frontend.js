@@ -83,6 +83,10 @@ let getListCoupon = async () =>{
   return data
 }
 
+let getProductByLove = async (data)=>{
+  let result = await serviceProduct.getProductByLove(data)
+  return result
+}
 module.exports = {
   getSlider,
   getMenuBar,
@@ -97,5 +101,6 @@ module.exports = {
   saveNewsletter,
   checkCategoryExits,
   getProductRelated,
-  getListCoupon
+  getListCoupon,
+  getProductByLove
 }

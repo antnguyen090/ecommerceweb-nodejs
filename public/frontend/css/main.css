@@ -182,3 +182,16 @@ li.mb-5.overflow-hidden.active {
 .registerSec .form-check-input.me-2{
   left: 27%
 }
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
+a.icon-heart.d-block.active{
+  background-color: #f9861f;
+  color: white;
+}

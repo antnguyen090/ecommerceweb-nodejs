@@ -1,6 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
+const middlewareAuthAdmin     = require(__path_middleware + 'auth-admin')
+const middlewareGetUser    = require(__path_middleware + 'get-user-info')
+const middlewareSettingPage= require(__path_middleware + 'get-setting-page')
+
+router.use('/', middlewareSettingPage, middlewareGetUser, middlewareAuthAdmin, require('./dashboard.route'));
 router.use('/dashboard', require('./dashboard.route'));
 router.use('/category', require('./category.route'));
 router.use('/product', require('./product.route'));
@@ -17,6 +22,5 @@ router.use('/coupon', require('./coupon.route'));
 router.use('/discount', require('./discount.route'));
 router.use('/newsletter', require('./newsletter.route'));
 router.use('/delivery', require('./delivery.route'));
-router.use('/', require('./dashboard.route'));
 
 module.exports = router;

@@ -49,10 +49,8 @@ module.exports = {
     sendMailLetter: async function (params) {
         // Generate test SMTP service account from ethereal.email
         // Only needed if you don't have a real mail account for testing
-        let testAccount = await nodemailer.createTestAccount();
         let setting = await serviceSetting.getOne()
         let settingObj = JSON.parse(setting.setting)
-        let listReceiversObj = settingObj.main_email + ',' + settingObj.sub_email
         // create reusable transporter object using the default SMTP transport
         let transporter = nodemailer.createTransport({
           service: "gmail" ,

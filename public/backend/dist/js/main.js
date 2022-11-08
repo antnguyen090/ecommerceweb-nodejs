@@ -668,6 +668,7 @@ $(document).ready(async function () {
     });
   })
 
+
   changeOption = (data, isCheck, link) => {
     let dataArr = data.split("-")
     let id = dataArr[1]

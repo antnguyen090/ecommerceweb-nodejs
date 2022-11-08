@@ -14,32 +14,42 @@ const folderView = __path_views_frontend + `pages/${mainName}/`;
 const FrontEndHelpers = require(__path_helpers + 'frontend');
 const linkIndex		= StringHelpers.formatLink('/');
 const linkLogin		= StringHelpers.formatLink('/dang-nhap'); 
+const linkPersonal		= StringHelpers.formatLink('/trang-ca-nhan');
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-    if(req.isAuthenticated()) res.redirect(linkIndex);
-    let error = []
-    if(req.flash().hasOwnProperty('error')){
-        if(req.flash().error === notify.ERROR_LOGIN_PASS){
-            error.push({
-                msg: req.flash().error,
-                param: 'loginpass'
-            })
-        } else if(req.flash().error === notify.ERROR_LOGIN_CHECKUSER){
-            error.push({
-                msg: req.flash().error,
-                param: 'loginuser'
-            })
-        }
-    }
-    let userLogin = {}
     try {
-    res.render(`${folderView}login`, {
-        pageTitle,
-        layout,
-        userLogin,
-        error: error,
-     });        
+    if(req.isAuthenticated()) {
+        res.redirect(linkPersonal);
+        return
+    } else{
+        let error = []
+        if(req.flash().hasOwnProperty('error')){
+            if(req.flash().error === notify.ERROR_LOGIN_PASS){
+                error.push({
+                    msg: req.flash().error,
+                    param: 'loginpass'
+                })
+            } else if(req.flash().error === notify.ERROR_LOGIN_CHECKUSER){
+                error.push({
+                    msg: req.flash().error,
+                    param: 'loginuser'
+                })
+            } else if(req.flash().error === notify.ERROR_USER_INACTIVE){
+                error.push({
+                    msg: req.flash().error,
+                    param: 'inactiveuser'
+                })
+            }
+        }
+        let userLogin = {}
+        res.render(`${folderView}login`, {
+            pageTitle,
+            layout,
+            userLogin,
+            error: error,
+         });
+    }        
     } catch (error) {
         console.log(error)
         res.redirect(linkLogin)
@@ -55,7 +65,6 @@ router.post('/',
         body('password')
             .isLength({min:8, max:18})
             .withMessage(util.format(notify.ERROR_REGISTER_PASS,8,18)),
-            // .withMessage(util.format(notify.ERROR_REGISTER_PASS,8,18)),
         async function(req, res, next) {
             try {
             if(req.isAuthenticated()) res.redirect(linkIndex);
@@ -71,13 +80,13 @@ router.post('/',
                 return
             } else{
                 passport.authenticate('local.login', { 
-                    successRedirect: linkIndex,
+                    successRedirect: linkPersonal,
                     failureRedirect: linkLogin,
                     failureFlash: true
                 })(req, res, next)
-                return
             }
             } catch (error) {
+                console.log(error)
                 res.redirect(linkLogin)
             }
 });

@@ -3,6 +3,7 @@ module.exports = (req, res, next) => {
     if(req.isAuthenticated()){
         userInfo = req.user;
     }
+    res.locals.checkLogin = req.isAuthenticated();
     res.locals.userInfo = userInfo;
     next();
 }

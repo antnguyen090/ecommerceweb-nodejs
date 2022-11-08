@@ -15,12 +15,12 @@
                 <div>
                   <div data-product="product-${item.id}" class="featureCol ${position} w-100 px-3 mb-sm-8 mb-6">
                       <div class="border">
-                          <div class="imgHolder position-relative w-100 overflow-hidden">
+                          <div data-product="product-${item.id}" class="imgHolder position-relative w-100 overflow-hidden">
                               <img src="${link}${item.thumb[0]}" alt="image description" class="img-fluid w-100">
                               <ul class="list-unstyled postHoverLinskList d-flex justify-content-center m-0">
-                                  <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" class="icon-heart d-block"></a></li>
-                                  <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" class="icon-cart d-block"></a></li>
-                                  <li class="overflow-hidden"><a href="javascript:void(0);" class="icon-eye d-block"></a></li>
+                                  <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" data-product="product-${item.id}" class="icon-heart d-block"></a></li>
+                                  <li class="mr-2 overflow-hidden"><a href="javascript:void(0);" data-product="product-${item.id}" class="icon-cart d-block"></a></li>
+                                  <li class="overflow-hidden"><a href="javascript:void(0);" data-product="product-${item.id}" class="icon-eye d-block"></a></li>
                               </ul>
                           </div>
                           <div class="text-center py-5 px-2">
