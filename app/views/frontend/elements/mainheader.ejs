@@ -9,7 +9,7 @@
 						<% if(checkLogin){ %>
 							<% if(userInfo.group){ %>
 										<% if(userInfo.group.group_acp === 'yes' && userInfo.group.status === 'active'){ %>
-												<li class="nav-item"><a class="nav-link position-relative"  data-bs-custom-class="custom-tooltip" href="/admin" data-toggle="tooltip" data-placement="bottom" title="Admin"><i class="far fa-user-circle"></i>Admin</a></li>
+												<li class="nav-item" style="font-size:14px; line-height: 100%; padding: 4px 5px; border-radius: 15px;background-color: beige; vertical-align: middle;"><a class="nav-link position-relative" data-bs-custom-class="custom-tooltip" href="/admin" data-toggle="tooltip" data-placement="bottom" title="Admin"><i class="far fa-user-circle"></i><span style="color: #5ba515; font-weight:700">ADMIN</span></a></li>
 										<% } %>
 							<% } %>						
 						<li class="nav-item"><a class="nav-link position-relative"  data-bs-custom-class="custom-tooltip" href="/trang-ca-nhan" data-toggle="tooltip" data-placement="bottom" title="Trang Cá Nhân"><i class="far fa-user-circle"></i></a></li>
