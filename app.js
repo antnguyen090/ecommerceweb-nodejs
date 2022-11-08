@@ -114,7 +114,7 @@ app.use(function(err, req, res, next) {
   // render the error page
   if(systemConfig.env == "dev") {
     res.status(err.status || 500);
-    res.render(__path_views_backend +  'pages/error', { pageTitle   : 'Page Not Found ', layout: layoutBackEnd });
+    res.render(__path_views_backend +  'pages/error', { pageTitle   : 'Page Not Found ', layout: false });
   }
 });
 
