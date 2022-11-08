@@ -7,6 +7,8 @@ const serviceProduct = require(__path_services_backend + `product.service`);
 const serviceContact  = require(__path_services_backend + `contact.service`);
 const serviceNewsletter  = require(__path_services_backend + `newsletter.service`);
 const serviceCoupon = require(__path_services_backend + `coupon.service`);
+const serviceDelivery = require(__path_services_backend + `delivery.service`);
+
 let getSlider = async () => {
     let data = await serviceSlider.getListByStatus('active')
     return data
@@ -87,6 +89,11 @@ let getProductByLove = async (data)=>{
   let result = await serviceProduct.getProductByLove(data)
   return result
 }
+
+let getDeliveryList = async () =>{
+  let result = await serviceDelivery.getCategoryList('active')
+  return result
+}
 module.exports = {
   getSlider,
   getMenuBar,
@@ -102,5 +109,6 @@ module.exports = {
   checkCategoryExits,
   getProductRelated,
   getListCoupon,
-  getProductByLove
+  getProductByLove,
+  getDeliveryList,
 }

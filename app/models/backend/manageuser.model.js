@@ -15,6 +15,10 @@ var schema = new mongoose.Schema({
     password: String,
     email: String,
     thumb: String,
+    address: {
+      info: String,
+      province:{type: Schema.Types.ObjectId, ref: 'delivery'} 
+    },
     otp: {
       code: {
           type: String,

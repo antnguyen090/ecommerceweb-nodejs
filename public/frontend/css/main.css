@@ -170,6 +170,15 @@ li.mb-5.overflow-hidden.active {
   color: #5ba515;
 }
 
+.registerSec select{
+  background-color: white;
+  color: #5ba515;
+}
+
+.registerSec select:focus {
+  background-color: aliceblue;
+  color: #5ba515;
+}
 .registerSec button{
   color: white;
 }

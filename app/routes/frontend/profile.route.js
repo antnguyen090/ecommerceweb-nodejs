@@ -18,10 +18,12 @@ const linkLogin		= StringHelpers.formatLink('/dang-nhap');
 /* GET home page. */
 router.get('/', async function(req, res, next) {
     try {
+        let deliveryList = await FrontEndHelpers.getDeliveryList()
         if(req.isAuthenticated()) {
             res.render(`${folderView}profile`, {
                 pageTitle,
                 layout,
+                deliveryList,
              });     
         }else{
             res.redirect(linkLogin)
