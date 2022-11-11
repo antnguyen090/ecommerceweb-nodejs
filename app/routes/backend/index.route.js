@@ -6,6 +6,7 @@ const middlewareGetUser    = require(__path_middleware + 'get-user-info')
 const middlewareSettingPage= require(__path_middleware + 'get-setting-page')
 
 router.use('/', middlewareSettingPage, middlewareGetUser, middlewareAuthAdmin, require('./dashboard.route'));
+router.use('/error', require('./error.route'));
 router.use('/dashboard', require('./dashboard.route'));
 router.use('/category', require('./category.route'));
 router.use('/product', require('./product.route'));

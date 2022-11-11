@@ -104,15 +104,10 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   // render the error page
-  if(systemConfig.env == "production") {
-    res.status(err.status || 500);
-    res.render(__path_views_backend +  'pages/error', {pageTitle   : 'Page Not Found '});
-  }
-
-  // render the error page
-  if(systemConfig.env == "dev") {
-    res.status(err.status || 500);
-    res.render(__path_views_backend +  'pages/error', { pageTitle   : 'Page Not Found ', layout: false });
+  if(req._parsedOriginalUrl._raw.split("/")[1] == systemConfig.prefixAdmin){
+    res.redirect(`/${systemConfig.prefixAdmin}/error`)
+  } else{
+    res.redirect("/trang-loi")
   }
 });
 
