@@ -124,9 +124,7 @@ router.post('/save/(:id)?',
 				itemData = await serviceDelivery.getItemByID(req.params.id)
 			}
 			let errors = await validationResult(req)
-			console.log(errors.errors)
 			if(!errors.isEmpty()) {
-				res.send({success:false})
 				let main = {pageTitle: pageTitle,
 							showError: errors.errors,
 							}
@@ -157,7 +155,6 @@ router.post('/save/(:id)?',
 					let data = await serviceDelivery.saveItems(item);
 					req.flash('success', notify.ADD_SUCCESS);
 					res.redirect(linkIndex);
-					res.send({success:true})
 				}
 			} catch (error) {
 				console.log(error)

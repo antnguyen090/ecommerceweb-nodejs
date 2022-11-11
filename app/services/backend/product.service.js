@@ -120,9 +120,13 @@ module.exports = {
         let data = await modelProduct.findOne(obj).populate('discountProduct')
         return data
     },
-    getProductByLove: async(data)=>{
+    getProductByIds: async(data)=>{
         let result = await modelProduct.find({ '_id': { $in: data } }).select('-content').populate('discountProduct');
         return result
+    },
+    checkProductExits: async (obj) =>{
+        let data = await modelProduct.exists(obj)
+        return data
     }
 }
 

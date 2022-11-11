@@ -26,7 +26,7 @@
       <div class="row">
           <div class="col-12 pt-lg-23 pt-md-15 pt-sm-10 pt-6 text-center">
               <ul class="list-unstyled breadCrumbs d-flex justify-content-center" style="margin-top: 12%; font-size: 15px;">
-                  <li class="mr-2"><a href="/index">Trang Chủ</a></li>
+                  <li class="mr-2"><a href="/">Trang Chủ</a></li>
                   <li class="mr-2">/</li>
                   <li class="active"><%= pageTitle %></li>
               </ul>
@@ -47,23 +47,23 @@
                 <div class="card" style="border-radius: 15px;">
                   <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5">Thông Tin Tài Khoản</h2>
-                    <form id="formRegister" action="/dang-ky" method="post">
+                    <form id="formProfile" action="" method="post">
                       <div class="form-outline mb-4">
-                        <input type="text" id="form3Example1cg" name="name" class="form-control form-control-lg" value='<%= userInfo.name %>' required/>
-                        <label class="form-label" for="form3Example1cg">Tên của bạn</label>
+                        <input type="text"  name="name" class="form-control form-control-lg" value='<%= userInfo.name %>' />
+                        <label class="form-label" for="">Tên của bạn</label>
                       </div>
                       <div class="form-outline mb-4">
                         <div class="row">
                           <div class="col-6">
-                            <div class="form-outline mb-4">
-                              <input type="text" name="addressInfo" class="form-control form-control-lg" required/>
-                              <label class="form-label" for="form3Example1cg">Địa Chỉ</label>
+                            <div class="form-outline">
+                              <input type="text" name="addressInfo" class="form-control form-control-lg" value="<%= userInfo.address.info %>" placeholder="Địa Chỉ..." />
+                              <label class="form-label" for="">Địa Chỉ</label>
                             </div>
                           </div>
                           <div class="col-6">
-                            <div class="form-outline mb-4">
-                              <select class="form-select form-control form-control-lg" aria-label="Default select example">
-                                <%- showDeliveryList(deliveryList, userInfo.address) %>
+                            <div class="form-outline">
+                              <select name="province" class="form-select form-control form-control-lg" aria-label="Default select example">
+                                <%- showDeliveryList(deliveryList, userInfo.address.province) %>
                               </select>
                               <label class="form-label" for="form3Example1cg">Tỉnh</label>
                             </div>
@@ -72,36 +72,58 @@
 
                       </div>
                       <div class="form-outline mb-4">
-                        <input type="email" id="form3Example3cg" name="email" class="form-control form-control-lg" value='<%= userInfo.email %>' disabled/>
+                        <input type="text"  name="phonenumber" class="form-control form-control-lg" value='<%= userInfo.phonenumber%>' placeholder="Số điện thoại..." />
+                        <label class="form-label" for="">Số điện thoại</label>
+                      </div>
+                      <div class="form-outline mb-4">
+                        <input type="email"  name="email" class="form-control form-control-lg" value='<%= userInfo.email %>' disabled/>
                         <label class="form-label" for="form3Example3cg">Email của bạn</label>
-                      </div>
+                      </div>      
       
-                      <div class="form-outline mb-4">
-                        <input type="password" id="form3Example4cg" name="password" class="form-control form-control-lg" required/>
-                        <label class="form-label" for="form3Example4cg">Mật khẩu</label>
-                      </div>
-      
-                      <div class="form-outline mb-4">
-                        <input type="password" id="form3Example4cdg" name="confirmpassword" class="form-control form-control-lg" required/>
-                        <label class="form-label" for="form3Example4cdg">Nhập lại mật khẩu</label>
-                      </div>
-      
-      
-                      <div class="d-flex justify-content-center">
+                      <div class="d-flex justify-content-center spinner">
                         <button type="submit"
                           class="btn btn-success btn-block btn-lg gradient-custom-4 ">Thay Đổi Thông Tin</button>
                       </div>
-      
+                      
                     </form>
       
                   </div>
                 </div>
               </div>
               <div class="col-6 col-md-9 col-lg-7 col-xl-6">
-                <div class="card" style="border-radius: 15px;">
+                  <div class="card" style="border-radius: 15px;">
                   <div class="card-body p-5">
-                    <h2 class="text-uppercase text-center mb-5">Danh Sách Đơn Hàng</h2>
-      
+                    <h4 class="text-uppercase text-center mb-5">Thay Đổi Mật Khẩu</h4>
+                <form id="formChangePassword" action="" method="post">
+                    <div class="form-outline mb-2">
+                      <input type="password"  name="password" class="form-control form-control-lg" required/>
+                      <label class="form-label" for="form3Example4cg">Mật khẩu</label>
+                    </div>
+    
+                    <div class="form-outline mb-2">
+                      <input type="password"  name="confirmpassword" class="form-control form-control-lg" required/>
+                      <label class="form-label" for="form3Example4cdg">Nhập lại mật khẩu</label>
+                    </div>
+                    <div class="d-flex justify-content-center spinner">
+                      <button type="submit"
+                        class="btn btn-success btn-block btn-lg gradient-custom-4 ">Đổi</button>
+                    </div>
+                  </form>
+                  </div>
+                </div>
+                <div class="card" style="border-radius: 15px; margin-top: 2px;">
+                  <div class="card-body p-5">
+                    <h4 class="text-uppercase text-center mb-5">Tra Cứu Đơn Hàng</h4>
+                <form id="formFindOrder" action="" method="post">
+                    <div class="form-outline mb-2">
+                      <input type="text"  name="codeOrder" class="form-control form-control-lg" required/>
+                      <label class="form-label" for="form3Example4cdg">Nhập mã đơn hàng</label>
+                    </div>
+                    <div class="d-flex justify-content-center spinner">
+                      <button type="submit"
+                        class="btn btn-success btn-block btn-lg gradient-custom-4 ">Tra Cứu</button>
+                    </div>
+                  </form>
                   </div>
                 </div>
               </div>

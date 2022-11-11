@@ -1,0 +1,18 @@
+let checkTimeInRange = (data) =>{
+  if (!data) return
+  let time = data.split('-')
+  let timeStart = Date.parse(time[0])
+  let timeEnd = Date.parse(time[1])
+  let timeNow = Date.now()
+  let isRight = false
+  if (timeNow < timeStart){
+    isRight = false
+  } else if(timeNow < timeEnd){
+    isRight = true
+  } 
+  return isRight
+}
+
+module.exports = {
+	checkTimeInRange
+}

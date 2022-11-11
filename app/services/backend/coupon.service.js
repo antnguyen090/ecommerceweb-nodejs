@@ -69,7 +69,11 @@ module.exports = {
     getListCoupon: async () =>{
         let data = await modelCoupon.find({status: 'active'}).sort({ updatedAt : 'desc'})
         return data
-    }
+    },
+    getCodeCoupon: async (obj) =>{
+        let data = await modelCoupon.findOne(obj)
+        return data
+    },
 }
 
 

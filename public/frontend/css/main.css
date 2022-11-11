@@ -200,7 +200,38 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0; 
 }
 
-a.icon-heart.d-block.active{
+a.icon-heart.d-block.active, a.icon-cart.d-block.active{
   background-color: #f9861f;
   color: white;
+}
+
+#listProductCart del{
+    font-size: 12px;
+    opacity: .7;
+}
+
+.jcf-number .jcf-btn-dec:hover, .jcf-number .jcf-btn-inc:hover{
+  background-color: transparent;
+  opacity: 0.1;
+  cursor: pointer;
+}
+
+.jcf-number .jcf-btn-inc{
+  border: none
+}
+
+.jcf-number .jcf-btn-dec{
+  border: none
+}
+
+.jcf-number .jcf-disabled{
+  background-color: transparent;
+  opacity: 0.5;
+}
+.jcf-number .jcf-disabled:hover{
+  cursor: not-allowed;
+}
+
+#listProductCart .jcf-focus * {
+ border-color: black!important;
 }

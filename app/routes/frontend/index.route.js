@@ -16,15 +16,14 @@ router.use('/', middlewareListProductionOption,
                 middlewareListCoupon,
                 middlewareGetUser,
                 require('./home.route'));
-router.use('/index', require('./home.route'));
-router.use('/trang-chu', require('./home.route'));
 router.use('/yeu-thich', require('./love.route'));
+router.use('/gio-hang', require('./cart.route'));
 router.use('/lien-he', require('./contact.route'));
 router.use('/ve-chung-toi', require('./aboutus.route'));
 router.use('/dang-ky', require('./register.route'));
 router.use('/dang-nhap', require('./login.route'));
 router.use('/lay-lai-mat-khau', require('./forgotpassword.route'));
 router.use('/trang-ca-nhan',middlewareAuth, require('./profile.route'));
-
+router.use('/dang-xuat', require('./logout.route'));
 
 module.exports = router;

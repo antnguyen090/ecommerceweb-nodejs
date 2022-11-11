@@ -99,10 +99,6 @@ router.post('/save/(:id)?',
 			.isLength({min: 2, max: 30})
 			.withMessage(util.format(notify.ERROR_NAME,2,30))
 	,
-	body('content')
-		.not()
-		.isEmpty()
-		.withMessage(notify.ERROR_DESCRIPTION),
 	body('group')
 		.custom(async (val, {req}) => {
 			if ( val == undefined) {

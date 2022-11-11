@@ -9,12 +9,11 @@
 						<% if(checkLogin){ %>
 							<% if(userInfo.group){ %>
 										<% if(userInfo.group.group_acp === 'yes' && userInfo.group.status === 'active'){ %>
-												<li class="nav-item" style="font-size:14px; line-height: 100%; padding: 4px 5px; border-radius: 15px;background-color: beige; vertical-align: middle;"><a class="nav-link position-relative" data-bs-custom-class="custom-tooltip" href="/admin" data-toggle="tooltip" data-placement="bottom" title="Admin"><i class="far fa-user-circle"></i><span style="color: #5ba515; font-weight:700">ADMIN</span></a></li>
-										<% } %>
+											<li class="nav-item"><a class="nav-link position-relative"  data-bs-custom-class="custom-tooltip" href="/admin" data-toggle="tooltip" data-placement="bottom" title="Trang Admin"><i class="fa-solid fa-users"></i></a></li>
+											<% } %>
 							<% } %>						
 						<li class="nav-item"><a class="nav-link position-relative"  data-bs-custom-class="custom-tooltip" href="/trang-ca-nhan" data-toggle="tooltip" data-placement="bottom" title="Trang Cá Nhân"><i class="far fa-user-circle"></i></a></li>
 						<li class="nav-item"><a class="nav-link position-relative"  data-bs-custom-class="custom-tooltip" href="/dang-xuat" data-toggle="tooltip" data-placement="bottom" title="Đăng Xuất"><i class="fa-solid fa-right-from-bracket"></i></a></li>
-						<li class="nav-item" style="font-size:14px; line-height: 100%; padding: 4px 5px; border-radius: 15px;background-color: beige; vertical-align: middle;">Chào bạn, <span style="color: #5ba515; font-weight:700"><%= userInfo.name%></span></li>
 					 <% }else{ %>
 						<li class="nav-item"><a class="nav-link position-relative"  data-bs-custom-class="custom-tooltip" href="/dang-nhap" data-toggle="tooltip" data-placement="bottom" title="Đăng Nhập"><i class="fa-solid fa-arrow-right-to-bracket"></i></a></li>
 						<li class="nav-item"><a class="nav-link position-relative"  data-bs-custom-class="custom-tooltip" href="/dang-ky" data-toggle="tooltip" data-placement="bottom" title="Đăng Ký"><i class="far fa-registered mr-1"></i></a></li>
@@ -23,7 +22,7 @@
 				</div>
 				<div class="col-12 col-sm-6 col-lg-8 static-block">
 					<div class="nav-item logocenter">
-						<a class="nLogo" href="/index"><img src="/uploads/setting/<%=settingPage.logolarge%>" alt="Botanical" class="img-fluid"></a>
+						<a class="nLogo" href="/"><img src="/uploads/setting/<%=settingPage.logolarge%>" alt="Botanical" class="img-fluid"></a>
 					</div>
 					<!-- mainHolder -->
 					<div class="mainHolder justify-content-center">
@@ -41,7 +40,7 @@
 								</ul>
 						</nav>
 						<div class="logo">
-							<a href="/index"><img src="/uploads/setting/<%=settingPage.logosmall%>" alt="Botanical" class="img-fluid"></a>
+							<a href="/"><img src="/uploads/setting/<%=settingPage.logosmall%>" alt="Botanical" class="img-fluid"></a>
 						</div>
 					</div>
 
@@ -49,9 +48,9 @@
 				<div class="col-6 col-sm-3 col-lg-2 order-sm-3 order-md-0 dis-none">
 					<!-- wishList -->
 					<ul class="nav nav-tabs wishList pt-xl-5 pt-lg-4 pt-3 mr-xl-3 mr-0 justify-content-end border-bottom-0">
-						<li class="nav-item"><a class="nav-link icon-search search-btn" href="javascript:void(0);"></a></li>
-						<li class="nav-item"><a class="nav-link position-relative icon-heart" href="/yeu-thich"><span class="num rounded d-block">1</span></a></li>
-						<li class="nav-item"><a class="nav-link position-relative icon-cart" href="javascript:void(0);"><span class="num rounded d-block">2</span></a></li>
+						<li class="nav-item"><a class="nav-link icon-search search-btn" style="font-weight: 900;" href="javascript:void(0);" data-bs-custom-class="custom-tooltip" data-toggle="tooltip" data-placement="bottom" title="Tìm Kiếm"></a></li>
+						<li class="nav-item"><a class="nav-link position-relative icon-heart" style="font-weight: 900;" href="/yeu-thich" data-bs-custom-class="custom-tooltip" data-toggle="tooltip" data-placement="bottom" title="Yêu Thích"><span class="num rounded d-block">1</span></a></li>
+						<li class="nav-item"><a class="nav-link position-relative icon-cart" style="font-weight: 900;" href="/gio-hang" data-bs-custom-class="custom-tooltip" data-toggle="tooltip" data-placement="bottom" title="Giỏ Hàng" ><span class="num rounded d-block">2</span></a></li>
 					</ul>
 				</div>
 			</div>

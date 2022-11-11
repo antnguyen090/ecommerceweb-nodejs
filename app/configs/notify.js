@@ -84,5 +84,12 @@ module.exports = {
     ERROR_OTP_OUTTIME: "Mã OTP đã quá hạn.",
     ERROR_OTP_WRONG: "Mã OTP không chính xác.",
     SUCCESS_PASSWORD_CHANGE:"Bạn đã đổi mật khẩu thành công.",
-
+    ERROR_COUPON_CODE: "Mã Giảm Giá Không Hợp Lệ.",
+    ERROR_COUPON_CODE_PRICE: "Không đủ điều kiện áp dụng mã giảm giá.",
+    ERROR_PROVINCE:"Vui lòng chọn tỉnh",
+    ERROR_PROVINCE_INVALID:"Tỉnh không hợp lệ",
+    ERROR_PHONENUMBER_INVALID:"Số điện thoại không hợp lệ",
+    ERROR_PROFILE_NAME:"Tên phải có độ dài từ %d đến %d.",
+    ERROR_PROFILE_ADDRESS: "Địa chỉ phải có độ dài từ %d đến %d.",
+    ERROR_PASS_CHANGE:"Mật Khẩu mới không được trùng với mật khẩu cũ"
 };

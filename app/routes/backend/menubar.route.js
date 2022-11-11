@@ -105,9 +105,8 @@ router.post('/save/(:id)?',
 				return
 		}),
 	body('slug')
-		.isSlug()
-		.withMessage(notify.ERROR_SLUG)
 		.custom(async (val, {req}) => {
+			if(!val) return
 			let paramId = await(req.params.id != undefined) ? req.params.id : 0
 			let data		= await serviceMenubar.checkDuplicated({slug: val})
 			let length = data.length

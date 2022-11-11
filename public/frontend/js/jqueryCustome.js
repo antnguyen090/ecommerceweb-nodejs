@@ -17400,7 +17400,9 @@ $(function() {
             fakeStructure: '<span class="jcf-number"><span class="jcf-btn-inc"></span><span class="jcf-btn-dec"></span></span>',
             btnIncSelector: '.jcf-btn-inc',
             btnDecSelector: '.jcf-btn-dec',
-            pressInterval: 150
+            pressInterval: 150,
+            minValue: 0,
+            maxValue: 99,
         },
         matchElement: function(element) {
             return element.is(this.selector);
@@ -17424,8 +17426,8 @@ $(function() {
             this.stepValue = parseFloat(this.realElement.attr('step')) || 1;
 
             // check attribute values
-            this.minValue = isNaN(this.minValue) ? -Infinity : this.minValue;
-            this.maxValue = isNaN(this.maxValue) ? Infinity : this.maxValue;
+            this.minValue = 1
+            this.maxValue = 99
 
             // handle range
             if (isFinite(this.maxValue)) {

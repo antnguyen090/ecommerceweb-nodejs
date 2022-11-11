@@ -110,12 +110,27 @@ module.exports = {
         return data
     },
     getUserById: async (id) =>{
-        let data = await modelManageUser.findOne({_id: id}).select('-password').populate('group',['group_acp', 'status'])
+        let data = await modelManageUser.findOne({_id: id}).select('-password').populate('address',['province'],'group',['group_acp', 'status'])
         return data
     },
     saveUser: async (obj) =>{
         let data = await modelManageUser(obj).save()
         return data
+    },
+    updatePasswordUser: async (obj) =>{
+        let email = obj.email
+        let newPassword = obj.password
+        let user  = await modelManageUser.findOne({email: email})
+        let oldPassword = user.password
+        let CheckPassNew = await bcrypt.compare(newPassword,oldPassword);
+        if(CheckPassNew){
+            return {success: false, errors: [{msg: notify.ERROR_PASS_CHANGE}]}
+        } else{
+            let salt = await bcrypt.genSalt(saltRounds);
+            let hashPassword = await bcrypt.hash(newPassword, salt);
+            let data = await modelManageUser.updateOne({email: email}, {password: hashPassword})
+            return {success: true}
+        }
     },
     sendMailRegisterSuccess: async (email)=>{
                 // Generate test SMTP service account from ethereal.email
@@ -144,6 +159,15 @@ module.exports = {
           `, // html body
         });
     },
+    updateInfoUser: async (obj)=>{
+        let result = await modelManageUser.updateOne({email: obj.email}, {
+            name: obj.name, 
+            address: {info: obj.addressInfo, 
+                      province: obj.province},
+            phonenumber: obj.phonenumber})
+        return result
+      }
+    ,
     checkExitEmail: async(email) =>{
         let checkExit = await module.exports.getUserByEmail(email).then(async user=>{
                 if(!user){
@@ -187,7 +211,7 @@ module.exports = {
                 } else{
                     let otpCode = user.otp.code
                     if(otpCode === otp ){
-                        const salt = await bcrypt.genSalt(saltRounds);
+                        let salt = await bcrypt.genSalt(saltRounds);
                         user.password = await bcrypt.hash(password, salt);
                         await modelManageUser.updateOne({email: email},user).then(async obj=>{
                             let setting = await serviceSetting.getOne()

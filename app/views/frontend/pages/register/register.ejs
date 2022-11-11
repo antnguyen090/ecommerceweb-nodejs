@@ -25,7 +25,7 @@
       <div class="row">
           <div class="col-12 pt-lg-23 pt-md-15 pt-sm-10 pt-6 text-center">
               <ul class="list-unstyled breadCrumbs d-flex justify-content-center" style="margin-top: 12%; font-size: 15px;">
-                  <li class="mr-2"><a href="/index">Trang Chủ</a></li>
+                  <li class="mr-2"><a href="/">Trang Chủ</a></li>
                   <li class="mr-2">/</li>
                   <li class="active"><%= pageTitle %></li>
               </ul>
@@ -47,7 +47,7 @@
                   <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5">Tạo Tài Khoản</h2>
                     <%- showErrorRegister(error) %>
-                    <form id="formRegister" action="/dang-ky" method="post">
+                    <form class="formAuth" id="formRegister" action="/dang-ky" method="post">
                       <div class="form-outline mb-4">
                         <input type="text" id="form3Example1cg" name="name" class="form-control form-control-lg" value='<%= userRegister.name %>' required/>
                         <label class="form-label" for="form3Example1cg">Tên của bạn</label>
@@ -75,7 +75,7 @@
                         </label>
                       </div>
       
-                      <div class="d-flex justify-content-center">
+                      <div class="d-flex justify-content-center spinner">
                         <button type="submit"
                           class="btn btn-success btn-block btn-lg gradient-custom-4 ">Đăng Ký</button>
                       </div>

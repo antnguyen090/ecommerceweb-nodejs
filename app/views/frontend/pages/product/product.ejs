@@ -78,9 +78,8 @@
 							<ul class="list-unstyled productInfoDetail mb-5 overflow-hidden">
 								<li class="mb-2">Số Lượng: <span><%= product.quantity %></span></li>
 							</ul>
-							<div class="holder overflow-hidden d-flex flex-wrap mb-6">
-								<input type="number" placeholder="1">
-								<a href="javascript:void(0);" class="btn btnTheme btnShop fwEbold text-white md-round py-3 px-4 py-md-3 px-md-4">Add To Cart <i class="fas fa-arrow-right ml-2"></i></a>
+							<div data-product="product-<%= product.id %>" class="holder overflow-hidden d-flex flex-wrap mb-6 includeButtonCart">
+							
 							</div>
 							<ul class="list-unstyled productInfoDetail mb-0">
 								<li class="mb-2">Danh Mục: <a href="/<%=categoryObj.slug%>"><span><%=categoryObj.name%></span></a></li>

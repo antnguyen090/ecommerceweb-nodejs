@@ -8,13 +8,11 @@ var fs = require('fs')
 const passport = require('passport')
 
 // const helmet = require("helmet");
-const { body, validationResult } = require('express-validator');
 const session = require('express-session');
 const dotenv = require("dotenv");
 const  mongoose = require('mongoose');
 const expressLayouts = require('express-ejs-layouts');
 const pathConfig = require('./path');
-const { Dropzone } = require("dropzone");
 
 
 // Define Path

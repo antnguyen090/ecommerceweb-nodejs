@@ -8,9 +8,8 @@ var schema = new mongoose.Schema({
     name: String, 
     status: {
         type: String,
-        default: 'inactive'
+        default: 'active'
     },
-    content: String,
     avatar: String,
     password: String,
     email: String,
@@ -19,6 +18,7 @@ var schema = new mongoose.Schema({
       info: String,
       province:{type: Schema.Types.ObjectId, ref: 'delivery'} 
     },
+    phonenumber: String,
     otp: {
       code: {
           type: String,

@@ -13,50 +13,6 @@ let pageTitle = "Trang Chủ"
 /* GET home page. */
 router.get('/(:slug)?', async function(req, res, next) {
     try {
-    if(req.params.slug === 'admin') {
-        next()
-        return
-    } else if(req.params.slug === 'lien-he'){
-        next()
-        return
-    } else if(req.params.slug === 'yeu-thich'){
-        next()
-        return
-    } else if(req.params.slug === 'lay-lai-mat-khau'){
-        next()
-        return
-    } else if(req.params.slug === 'index'){
-        next()
-        return
-    } else if(req.params.slug === 'tin-tuc'){
-        next()
-        return
-    } else if(req.params.slug === 've-chung-toi'){
-        next()
-        return
-    } else if(req.params.slug === 'dang-ky'){
-        next()
-        return
-    } else if(req.params.slug === 'dang-nhap'){
-        next()
-        return
-    } else if(req.params.slug === 'trang-ca-nhan'){
-        next()
-        return
-    } else if(req.params.slug === 'trang-chu'){
-        next()
-        return
-    } else if(req.params.slug === 'dang-xuat'){
-        if(req.isAuthenticated()) {
-            req.logout(function(err) {
-                if (err) { return next(err); }
-                res.redirect('/');
-              });
-        } else{
-            res.redirect('/');
-        }
-        return
-    }
     let listCategory = await res.locals.listCategory
     if(req.params.slug){
         let category = await FrontEndHelpers.checkCategoryExits({slug: req.params.slug})
@@ -84,17 +40,22 @@ router.get('/(:slug)?', async function(req, res, next) {
             });   
             return
         } else{
-            let product = await FrontEndHelpers.getOneProduct({status: 'active',slug: req.params.slug})
-            let categoryObj = await listCategory.find(item => item.id == product.category);
-            let productRelated = await FrontEndHelpers.getProductRelated(categoryObj.slug)
-            res.render(`${folderViewProduct}product`, {
-                pageTitle: product.name,
-                layout,
-                product,
-                categoryObj,
-                productRelated,
-             });
-         return   
+            let checkProduct =  await FrontEndHelpers.checkProductExits({slug: req.params.slug})
+            if(checkProduct){
+                let product = await FrontEndHelpers.getOneProduct({status: 'active',slug: req.params.slug})
+                let categoryObj = await listCategory.find(item => item.id == product.category);
+                let productRelated = await FrontEndHelpers.getProductRelated(categoryObj.slug)
+                res.render(`${folderViewProduct}product`, {
+                    pageTitle: product.name,
+                    layout,
+                    product,
+                    categoryObj,
+                    productRelated,
+                });
+                return   
+            } else{
+                next()
+            }
         }
     } else{
         let slider = await FrontEndHelpers.getSlider()
@@ -106,7 +67,6 @@ router.get('/(:slug)?', async function(req, res, next) {
     }     
     } catch (error) {
         console.log(error)
-        res.redirect("/error")
     }
     
 });

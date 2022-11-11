@@ -53,13 +53,6 @@
                                 <img style="width: 40%; padding: 10px" src="<%= linkThumb %><%= item.thumb%>" alt="thumb" onerror="this.onerror=null;this.src='<%= linkThumb %>/no-image-found.jpg'">
                                 <%}  %>
                             </div>
-                            <div class="form-group row ckeditor">
-                                <label for="content" class="col-sm-2 col-form-label text-sm-right">Content</label>
-                                <div class="product-cdk">
-                                  <textarea id="summernote" name="content" > 
-                                  </textarea>
-                                </div>
-                              </div>
                         </div>
                         <div class="card-footer">
                             <div class="col-12 col-sm-8 offset-sm-2">
@@ -81,8 +74,6 @@
 <!-- Summernote -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>        
 <script>
-        var editorData = `<%- item.content %>`;
-        $('#summernote').summernote('code', editorData);
         ImageMediasArticle.onchange = evt => {
 			const [file] = ImageMediasArticle.files
 			if (file) {

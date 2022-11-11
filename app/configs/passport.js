@@ -15,7 +15,6 @@ module.exports = function(passport){
                 if(checkUser){
                     let checkPassword = await bcrypt.compare(password,checkUser.password);
                     if(checkPassword){
-                        console.log(checkUser)
                         if(checkUser.status === 'active'){
                             return done(null, checkUser);
                         }else{

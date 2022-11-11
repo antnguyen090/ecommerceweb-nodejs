@@ -1,14 +1,18 @@
 <%
   showDeliveryList = (data, current) =>{
-    console.log(data)
     if(!data) return
+    let currentId
     let select = ''
-    if(!current) select = 'selected'
-    let html='<option ${select}>Chọn Tỉnh Của Bạn</option>'
+    if(!current) {
+      select = 'selected'
+    } else{
+      currentId = current.toString()
+    }
+    let html=`<option ${select} >Chọn Tỉnh Của Bạn</option>`
     data.forEach(item=>{
-      select = (current == item.id) ? 'selected' : ''
+      select = (currentId == item.id) ? 'selected' : ''
       html += `
-      <option value="${item}" ${select}>${item.province}</option>
+      <option value="${item.id}" ${select} >${item.province}</option>
       `
     })
     return html

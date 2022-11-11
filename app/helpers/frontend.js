@@ -8,6 +8,8 @@ const serviceContact  = require(__path_services_backend + `contact.service`);
 const serviceNewsletter  = require(__path_services_backend + `newsletter.service`);
 const serviceCoupon = require(__path_services_backend + `coupon.service`);
 const serviceDelivery = require(__path_services_backend + `delivery.service`);
+const serviceManageUser = require(__path_services_backend + `manageuser.service`);
+
 
 let getSlider = async () => {
     let data = await serviceSlider.getListByStatus('active')
@@ -85,8 +87,8 @@ let getListCoupon = async () =>{
   return data
 }
 
-let getProductByLove = async (data)=>{
-  let result = await serviceProduct.getProductByLove(data)
+let getProductByIds = async (data)=>{
+  let result = await serviceProduct.getProductByIds(data)
   return result
 }
 
@@ -94,6 +96,26 @@ let getDeliveryList = async () =>{
   let result = await serviceDelivery.getCategoryList('active')
   return result
 }
+let checkProductExits = async (obj) =>{
+  let result = await serviceProduct.checkProductExits(obj)
+  return result
+}
+
+let getCodeCoupon = async (obj)=>{
+  let result = await serviceCoupon.getCodeCoupon(obj)
+  return result
+}
+
+let updateInfoUser = async (obj)=>{
+  let result = await serviceManageUser.updateInfoUser(obj)
+  return result
+}
+
+let updatePasswordUser = async (obj)=>{
+  let result = await serviceManageUser.updatePasswordUser(obj)
+  return result
+}
+
 module.exports = {
   getSlider,
   getMenuBar,
@@ -109,6 +131,10 @@ module.exports = {
   checkCategoryExits,
   getProductRelated,
   getListCoupon,
-  getProductByLove,
+  getProductByIds,
   getDeliveryList,
+  checkProductExits,
+  getCodeCoupon,
+  updateInfoUser,
+  updatePasswordUser,
 }
