@@ -44,9 +44,6 @@ router.get('(/status/:status)?', async (req, res, next) => {
 												pagination.totalItemsPerPage,
 												{updatedAt: 'desc'},
 												)
-												data.forEach(item=>{
-													console.log(item.discountProduct)
-												})
 	res.render(`${folderView}list`, {
 				layout,
 				pageTitle: pageTitle,

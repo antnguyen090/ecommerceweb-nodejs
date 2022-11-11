@@ -22,6 +22,23 @@ module.exports = {
                                                     .sort(updatedAt)
                         return data;
     },
+    getAllProduct: async (objWhere,
+        currentPage,
+        totalItemsPerPage,
+        sort
+        ) => {
+            console.log(objWhere)
+            let data = await modelProduct.find(objWhere)
+                                        .skip((currentPage-1) * totalItemsPerPage)
+                                        .limit(totalItemsPerPage)
+                                        .sort(sort)
+                                        .select('-content')
+                                        .populate({
+                                            path: 'discountProduct',
+                                            populate: 'discountValue'
+                                        })
+            return data;
+    },
     deleteItem: async (id) =>{
         let removeObject = await modelProduct.findOne({_id: id}).then( async (obj)=>{
             let productArr = await modelCategory.findById({_id: obj.category})

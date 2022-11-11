@@ -16,6 +16,7 @@ router.use('/', middlewareListProductionOption,
                 middlewareListCoupon,
                 middlewareGetUser,
                 require('./home.route'));
+router.use('/tat-ca-cay', require('./allproduct.route'));
 router.use('/trang-loi', require('./error.route'));
 router.use('/yeu-thich', require('./love.route'));
 router.use('/gio-hang', require('./cart.route'));

@@ -1,5 +1,7 @@
 <%
-    paginationHelper = (paginationObj, type, keyword) => {
+    paginationHelper = (paginationObj, type, keyword,filter,sort) => {
+        console.log(paginationObj)
+        console.log(type)
         let totalItems          = paginationObj.totalItems;
         let totalItemsPerPage   = paginationObj.totalItemsPerPage;
         let totalPages          = Math.ceil(totalItems/totalItemsPerPage);
@@ -11,10 +13,11 @@
         if(to > totalItems) to  = totalItems;
         if(totalPages > 1) {
             let xhtmlStart = '', xhtmlPrevious = '', xhtmlPages = '', xhtmlNext = '' , xhtmlEnd = '';
-            let link       =   type  ;
-            if(keyword !== '') link += '?keyword=' + keyword + '&page=';
-            else link += '?page=';
-
+            let link       =   type + '?all=true';
+            if(keyword !== '') link += '&keyword=' + keyword
+            if(filter !== '') link  +=  "&" + filter;
+            if(sort !== '') link  +=   "&" +  sort;
+            link += '&page=';
                 if(currentPage > 1) {
                         xhtmlStart = `
                             <li class="pager__item pager__item--prev"><a class="pager__link" href="/${link}1"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewbox="0 0 8 12">

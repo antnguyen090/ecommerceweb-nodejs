@@ -14,6 +14,10 @@ let pageTitle = "Trang Chủ"
 router.get('/(:slug)?', async function(req, res, next) {
     try {
     let listCategory = await res.locals.listCategory
+    if(req.params.slug == 'tat-ca-cay') {
+        next()
+        return 
+    }
     if(req.params.slug){
         let category = await FrontEndHelpers.checkCategoryExits({slug: req.params.slug})
         if(category){

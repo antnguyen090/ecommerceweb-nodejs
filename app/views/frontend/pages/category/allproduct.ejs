@@ -1,0 +1,105 @@
+<%- include('./../../helpers/showfeaturedproduct'); -%>
+<%- include('./../../helpers/showcategoryfilter'); -%>
+<%- include('./../../helpers/showproductbycategory'); -%>
+<%- include('./../../helpers/pagination'); -%>
+
+
+<% 
+    const type = 'tat-ca-cay'
+	const collectionProduct = "product";
+	const linkThumbProduct = "/" + "uploads" + `/${collectionProduct}/`;
+    const unit = ' VND'
+	const linkThumbSetting = "/" + "uploads" + `/setting/`;
+    let paramPrice = (objRangePrice.maxPrice && objRangePrice.minPrice) ? `minPrice=${objRangePrice.minPrice}&maxPrice=${objRangePrice.maxPrice}&` : ''
+    let paramSort = (sortObj.price== 'asc' || sortObj.price=='desc') ? `sort=price%2c${sortObj.price}` : ''
+    let paramSortInFilter = (sortObj.price== 'asc' || sortObj.price=='desc') ? `price%2c${sortObj.price}` : ''
+
+%>
+
+<!-- introBannerHolder -->
+<section class="introBannerHolder d-flex w-100 bgCover" style="background-image: url(<%= linkThumbSetting + settingPage.logobanner%>);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 pt-lg-23 pt-md-15 pt-sm-10 pt-6 text-center">
+                <ul class="list-unstyled breadCrumbs d-flex justify-content-center" style="margin-top: 12%; font-size: 15px;"> 
+                    <li class="mr-2"><a href="/">Trang Chủ</a></li>
+                    <li class="mr-2">/</li>
+                    <li class="active"><%= pageTitle %></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- twoColumns -->
+<div class="twoColumns container pt-xl-5 pb-xl-5 pt-lg-5 pb-lg-5 py-md-8 py-5">
+    <div class="row">
+        <div class="col-12 col-lg-9 order-lg-3">
+            <!-- content -->
+            <article id="content">
+                <!-- show-head -->
+                <header class="show-head d-flex flex-row-reverse flex-wrap justify-content-between mb-7">
+                    <!-- sortGroup -->
+                    <div class="sortGroup">
+                        <div class="d-flex flex-nowrap align-items-center">
+                            <strong class="groupTitle mr-2">Sắp xếp theo:</strong>
+                            <div class="dropdown">
+                                <button class="dropdown-toggle buttonReset" type="button" id="sortGroup"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span id="showSortText">Mặc định</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="sortGroup">
+                                    <li><a href="/<%=routerName%>?<%=paramPrice%>sort=price%2casc" data-type="price,asc">Giá từ thấp đến cao</a></li>
+                                    <li><a href="/<%=routerName%>?<%=paramPrice%>sort=price%2cdesc" data-type="price,desc">Giá từ cao đến thấp</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div class="row">
+                        <%- showProductByCategory(listProductByCategory, linkThumbProduct, unit) %>
+                        <div class="col-12">
+                            <ul class="pager">
+                                <%- paginationHelper(pagination, type, keyword, paramPrice, paramSort) %>
+                            </ul>
+                        </div>
+
+                </div>
+            </article>
+        </div>
+        <div class="col-12 col-lg-3 order-lg-1">
+            <!-- sidebar -->
+            <aside id="sidebar">
+                <!-- widget -->
+                <section class="widget overflow-hidden mb-9">
+                    <h3 class="headingVII fwEbold text-uppercase mb-5">DANH MỤC SẢN PHẨM</h3>
+                    <ul class="list-unstyled categoryList mb-0">
+                        <%- showCategoryFilter(listCategory, listProductByCategory.slug) %>
+                    </ul>
+                </section>
+                <!-- widget -->
+                <section class="widget mb-9">
+                    <h3 class="headingVII fwEbold text-uppercase mb-6">Lọc Theo Giá</h3>
+                    <!-- filter ranger form -->
+                    <form id="filterForm" action="/<%=routerName%>" method="get" class="filter-ranger-form">
+                        <div id="slider-range"></div>
+                        <input type="hidden" id="amount1" name="minPrice">
+                        <input type="hidden" id="amount2" name="maxPrice">
+                        <div class="get-results-wrap d-flex align-items-center justify-content-between">
+                            <button type="submit"
+                                class="btn btnTheme btn-shop fwEbold md-round px-3 pt-1 pb-2 text-uppercase">Lọc</button>
+                            <p id="amount" class="mb-0"></p>
+                        </div>
+                    </form>
+                </section>
+                <!-- widget -->
+                <section class="widget mb-9">
+                    <h3 class="headingVII fwEbold text-uppercase mb-6">Nổi Bật</h3>
+                    <ul class="list-unstyled recentListHolder mb-0 overflow-hidden">
+                             <%- showFeaturedProduct(listProductOption, linkThumbProduct, unit, 'category') %>
+                    </ul>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+<%- include('./../../elements/subscribe'); -%>

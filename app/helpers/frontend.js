@@ -116,6 +116,26 @@ let updatePasswordUser = async (obj)=>{
   return result
 }
 
+let getAllProduct = async (objWhere,
+  currentPage,
+  totalItemsPerPage,
+  filter,
+  sort
+  )=>{
+  let result = await serviceProduct.getAllProduct(objWhere,
+    currentPage,
+    totalItemsPerPage,
+    filter,
+    sort
+    )
+  return result
+}
+
+let countProduct = async (objWhere)=>{
+  let result = await serviceProduct.countItem(objWhere)
+  return result
+}
+
 module.exports = {
   getSlider,
   getMenuBar,
@@ -137,4 +157,6 @@ module.exports = {
   getCodeCoupon,
   updateInfoUser,
   updatePasswordUser,
+  getAllProduct,
+  countProduct,
 }
