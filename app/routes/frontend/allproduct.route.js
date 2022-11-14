@@ -15,7 +15,6 @@ router.get('/', async function(req, res, next) {
             let sort     = decodeURIComponent(req.query.sort).split(',')   
             let valueSort     = (sort[1]=='asc'||sort[1]=='desc') ? sort[1] : undefined
             let keySort      = (sort[0]=='price' && valueSort) ? sort[0] : undefined
-            let limit   = 9
             let sortObj = {}
             sortObj[`${keySort}`]  = valueSort
             let objRangePrice = {minPrice: minPrice, maxPrice: maxPrice}

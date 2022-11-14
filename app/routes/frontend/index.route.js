@@ -17,6 +17,7 @@ router.use('/', middlewareListProductionOption,
                 middlewareGetUser,
                 require('./home.route'));
 router.use('/tat-ca-cay', require('./allproduct.route'));
+router.use('/xem-nhanh', require('./viewproduct.route'));
 router.use('/trang-loi', require('./error.route'));
 router.use('/yeu-thich', require('./love.route'));
 router.use('/gio-hang', require('./cart.route'));

@@ -12,8 +12,6 @@
 	const linkThumbSetting = "/" + "uploads" + `/setting/`;
     let paramPrice = (objRangePrice.maxPrice && objRangePrice.minPrice) ? `minPrice=${objRangePrice.minPrice}&maxPrice=${objRangePrice.maxPrice}&` : ''
     let paramSort = (sortObj.price== 'asc' || sortObj.price=='desc') ? `sort=price%2c${sortObj.price}` : ''
-    let paramSortInFilter = (sortObj.price== 'asc' || sortObj.price=='desc') ? `price%2c${sortObj.price}` : ''
-
 %>
 
 <!-- introBannerHolder -->

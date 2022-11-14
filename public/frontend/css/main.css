@@ -430,3 +430,13 @@ a.icon-heart.d-block.active, a.icon-cart.d-block.active{
     position: initial;
     top: initial;
     left: initial; } }
+
+.mfp-close-btn-in .mfp-close {
+      background-color: #5ba515;
+      color: white;
+      font-size: 50px;
+      position: fixed;
+      right: 50%;
+      top: 2%;
+      transform: translateX(50%);
+  }

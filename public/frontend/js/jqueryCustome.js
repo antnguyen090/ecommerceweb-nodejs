@@ -16897,12 +16897,14 @@ $(function() {
     }
     let minPrice      = 0
     let maxPrice      = 500000
-    if(paramMinPrice && paramMaxPrice && (paramMinPrice < paramMaxPrice)){
+    if(paramMinPrice < paramMaxPrice){
+        console.log("ádjakdjạdk")
         $("input[name='minPrice']").val(paramMinPrice)
         $("input[name='maxPrice']").val(paramMaxPrice)
         minPrice      = paramMinPrice
         maxPrice      = paramMaxPrice
     }
+
     $( "#slider-range" ).slider({
         range: true,
         step: 50000,

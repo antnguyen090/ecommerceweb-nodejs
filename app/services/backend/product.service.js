@@ -138,7 +138,11 @@ module.exports = {
         return data
     },
     getProductByIds: async(data)=>{
-        let result = await modelProduct.find({ '_id': { $in: data } }).select('-content').populate('discountProduct');
+        let result = await modelProduct.find({ '_id': { $in: data} , status: 'active'}).select('-content').populate('discountProduct');
+        return result
+    },
+    getProductById: async(data)=>{
+        let result = await modelProduct.findOne({ '_id': data, status: 'active'}).populate('discountProduct');
         return result
     },
     checkProductExits: async (obj) =>{

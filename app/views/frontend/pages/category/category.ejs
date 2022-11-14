@@ -1,14 +1,16 @@
 <%- include('./../../helpers/showfeaturedproduct'); -%>
 <%- include('./../../helpers/showcategoryfilter'); -%>
 <%- include('./../../helpers/showproductbycategory'); -%>
-
+<%- include('./../../helpers/pagination'); -%>
 
 <% 
+    const type = listProductByCategory.slug
 	const collectionProduct = "product";
 	const linkThumbProduct = "/" + "uploads" + `/${collectionProduct}/`;
     const unit = ' VND'
 	const linkThumbSetting = "/" + "uploads" + `/setting/`;
     let paramPrice = (objRangePrice.maxPrice && objRangePrice.minPrice) ? `minPrice=${objRangePrice.minPrice}&maxPrice=${objRangePrice.maxPrice}&` : ''
+    let paramSort = (sortObj.price== 'asc' || sortObj.price=='desc') ? `sort=price%2c${sortObj.price}` : ''
 %>
 
 <!-- introBannerHolder -->
@@ -52,6 +54,11 @@
                 </header>
                 <div class="row">
                     <%- showProductByCategory(listProductByCategory.productList, linkThumbProduct, unit) %>
+                    <div class="col-12">
+                        <ul class="pager">
+                            <%- paginationHelper(pagination, type, '', paramPrice, paramSort) %>
+                        </ul>
+                    </div>
                 </div>
             </article>
         </div>
@@ -71,8 +78,8 @@
                     <!-- filter ranger form -->
                     <form id="filterForm" action="/<%=listProductByCategory.slug%>" method="get" class="filter-ranger-form">
                         <div id="slider-range"></div>
-                        <input type="hidden" id="amount1" name="minPrice">
-                        <input type="hidden" id="amount2" name="maxPrice">
+                        <input type="hidden" id="amount1">
+                        <input type="hidden" id="amount2">
                         <div class="get-results-wrap d-flex align-items-center justify-content-between">
                             <button type="submit"
                                 class="btn btnTheme btn-shop fwEbold md-round px-3 pt-1 pb-2 text-uppercase">Lọc</button>

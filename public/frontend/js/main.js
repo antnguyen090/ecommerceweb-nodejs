@@ -49,7 +49,7 @@ $(document).ready(function() {
       if(checkExitCart.length>0){
         return items
       } else{
-        itemNew = {id: id, quanity: 1}
+        itemNew = {id: id, quantity: 1}
         items.push(itemNew);
       }
     }
@@ -69,13 +69,13 @@ $(document).ready(function() {
     return items;
   }
 
-  let editItem = (id, local, quanity) => {
+  let editItem = (id, local, quantity) => {
     let items = listItems(local);
     let itemEditedIndex
     if(localCart == local){
       itemEditedIndex = items.findIndex((obj => obj.id == id));
     }
-    items[itemEditedIndex].quanity = quanity
+    items[itemEditedIndex].quantity = quantity
     saveStorage(local, items);
     return items;
   }
@@ -96,13 +96,13 @@ $(document).ready(function() {
     }
   }
 
-  let totalPrice = (id, price, unit, discount, quanity) =>{
+  let totalPrice = (id, price, unit, discount, quantity) =>{
     let total
-    let quanityObjById = quanity.find(item=> item.id == id)
-    let quanityValueById = quanityObjById.quanity
+    let quantityObjById = quantity.find(item=> item.id == id)
+    let quantityValueById = quantityObjById.quantity
     if(!price || !unit) return
     if(!discount){
-      return formatPrice(quanityValueById*price, unit)
+      return formatPrice(quantityValueById*price, unit)
     } else {
       if(discount.discountValue.unit == 'money'){
         let newPriceMoney = price - discount.discountValue.value
@@ -112,7 +112,7 @@ $(document).ready(function() {
         money = parseInt(newPricePercent/1000)*1000
       }
     }
-    total= quanityValueById*money
+    total= quantityValueById*money
     return formatPrice(total, unit)
   }
   
@@ -202,13 +202,13 @@ $(document).ready(function() {
     return html
   }
 
-  let showListCart = (data, link, unit, quanity ) =>{
-    let getValueQuanity = (quanitybyid) =>{
-      if(quanitybyid == undefined) return 
-      let data = quanity.find(obj=>{
-        return obj.id === quanitybyid
+  let showListCart = (data, link, unit, quantity ) =>{
+    let getValueQuanity = (quantitybyid) =>{
+      if(quantitybyid == undefined) return 
+      let data = quantity.find(obj=>{
+        return obj.id === quantitybyid
       })
-      return data.quanity
+      return data.quantity
     }
     let html=`
     <table class="table cartTable">
@@ -240,7 +240,7 @@ $(document).ready(function() {
           </td>
           <td class="fwEbold border-top-0 border-bottom px-0 py-6" data-product="priceProduct-${item._id}">${formatPrice(item.price, unit, dataSale)}</td>
           <td class="border-top-0 border-bottom px-0 py-6"><input type="number" data-product="product-${item._id}" value='${getValueQuanity(item._id)}' placeholder="1"></td>
-          <td class="fwEbold border-top-0 border-bottom px-0 py-6" data-product="priceProductTotal-${item._id}">${totalPrice(item._id, item.price, unit, dataSale, quanity)} <a href="javascript:void(0);" class="fas fa-times float-right"data-product="product-${item._id}" ></a></td>
+          <td class="fwEbold border-top-0 border-bottom px-0 py-6" data-product="priceProductTotal-${item._id}">${totalPrice(item._id, item.price, unit, dataSale, quantity)} <a href="javascript:void(0);" class="fas fa-times float-right"data-product="product-${item._id}" ></a></td>
       </tr>
       `
   })
@@ -756,18 +756,18 @@ if(arrayPath=='gio-hang'){
     $(document).on('change', "input[data-product*='product-']", function(e) {
       let dataCurrent = $(e.target).attr('data-product').split("-")
       let idCurrent = dataCurrent[1]
-      let quanityCurrent = $(e.target).val()
-      editItem(idCurrent, localCart, quanityCurrent)
+      let quantityCurrent = $(e.target).val()
+      editItem(idCurrent, localCart, quantityCurrent)
       let priceProduct = $(`td[data-product=priceProduct-${idCurrent}]`)
       let priceProductTotal = $(`td[data-product=priceProductTotal-${idCurrent}]`)
       let totalValue
       let priceValue
       if(priceProduct.find('del').length>0){
         priceValue = priceProduct.text().split("VND")[1].replaceAll(",","")
-        totalValue = parseInt(priceValue)*quanityCurrent
+        totalValue = parseInt(priceValue)*quantityCurrent
       } else{
         priceValue = priceProduct.text().replaceAll(",","")
-        totalValue = parseInt(priceValue)*quanityCurrent
+        totalValue = parseInt(priceValue)*quantityCurrent
       }
       priceProductTotal.html(totalValue.toLocaleString() + "VND" + `<a href="javascript:void(0);" class="fas fa-times float-right" data-product="product-${idCurrent}"></a>`)
       showSumPrice()

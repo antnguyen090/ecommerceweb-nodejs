@@ -80,7 +80,7 @@ module.exports = {
          return data
     }
     ,
-    getProductByCategory: async (slug, rangePrice,sort) =>{
+    getProductByCategory: async (slug, currentPage, totalItemsPerPage, rangePrice, sort) =>{
         let checkSortPrice = (data) =>{
             if(!data.minPrice || !data.maxPrice){
                 return false
@@ -88,42 +88,33 @@ module.exports = {
                 return true
             }
         }
-        if(checkSortPrice(rangePrice)){
-            let data = await modelCategory.findOne({slug: slug}).populate({ 
-                path: 'productList',
-                match:{
-                    $and: [
-                        {
-                            price : { $gte : rangePrice.minPrice }
-                        },
-                        {
-                            price : { $lte : rangePrice.maxPrice }
-                        }
-                    ]
-                },
-                options: {
-                        sort: sort,
-                        limit: 9,
-                },
-                populate: {
-                  path: 'discountProduct',
-                } 
-             })
-            return data
-        } else{
-            let data = await modelCategory.findOne({slug: slug}).populate({ 
-                path: 'productList',
-                options: {
-                        sort: sort,
-                        limit: 9,
-                },
-                populate: {
-                  path: 'discountProduct',
-                } 
-             })
-            return data
+        let objWherePopulate = { 
+            path: 'productList',
+            populate: {
+              path: 'discountProduct',
+            } 
         }
-
+        objMatch = {
+            status :'active'
+        }
+        if(checkSortPrice(rangePrice)) objMatch.$and =  
+           [
+                {
+                    price : { $gte : rangePrice.minPrice }
+                },
+                {
+                    price : { $lte : rangePrice.maxPrice }
+                }
+            ]
+        objWherePopulate.match = objMatch
+        let countData = await modelCategory.findOne({slug: slug, status: 'active'}).populate(objWherePopulate)
+        objWherePopulate.options =  {
+            sort: sort,
+            limit: totalItemsPerPage,
+            skip: (currentPage-1) * totalItemsPerPage,
+        }
+        let data = await modelCategory.findOne({slug: slug, status: 'active'}).populate(objWherePopulate)
+        return {data: data, countData: countData.productList.length}
     },
     checkExits: async (obj) =>{
         let data = await modelCategory.exists(obj)

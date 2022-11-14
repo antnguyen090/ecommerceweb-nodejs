@@ -42,8 +42,8 @@ let getOneProduct = async (obj) =>{
   return data
 }
 
-let getProductByCategory = async (slug, rangePrice, sort) =>{
-  let data = await serviceCategory.getProductByCategory(slug, rangePrice, sort)
+let getProductByCategory = async (slug, currentPage, totalItemsPerPage,rangePrice, sort) =>{
+  let data = await serviceCategory.getProductByCategory(slug,currentPage, totalItemsPerPage, rangePrice, sort)
   return data
 }
 
@@ -89,6 +89,11 @@ let getListCoupon = async () =>{
 
 let getProductByIds = async (data)=>{
   let result = await serviceProduct.getProductByIds(data)
+  return result
+}
+
+let getProductById = async (data)=>{
+  let result = await serviceProduct.getProductById(data)
   return result
 }
 
@@ -159,4 +164,5 @@ module.exports = {
   updatePasswordUser,
   getAllProduct,
   countProduct,
+  getProductById,
 }

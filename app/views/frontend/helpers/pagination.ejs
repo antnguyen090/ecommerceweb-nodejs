@@ -1,7 +1,5 @@
 <%
     paginationHelper = (paginationObj, type, keyword,filter,sort) => {
-        console.log(paginationObj)
-        console.log(type)
         let totalItems          = paginationObj.totalItems;
         let totalItemsPerPage   = paginationObj.totalItemsPerPage;
         let totalPages          = Math.ceil(totalItems/totalItemsPerPage);

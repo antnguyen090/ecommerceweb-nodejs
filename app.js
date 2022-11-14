@@ -13,6 +13,7 @@ const dotenv = require("dotenv");
 const  mongoose = require('mongoose');
 const expressLayouts = require('express-ejs-layouts');
 const pathConfig = require('./path');
+const { crossOriginResourcePolicy } = require('helmet');
 
 
 // Define Path
@@ -104,6 +105,7 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   // render the error page
+  console.log(err)
   if(req._parsedOriginalUrl._raw.split("/")[1] == systemConfig.prefixAdmin){
     res.redirect(`/${systemConfig.prefixAdmin}/error`)
   } else{
