@@ -91,5 +91,11 @@ module.exports = {
     ERROR_PHONENUMBER_INVALID:"Số điện thoại không hợp lệ",
     ERROR_PROFILE_NAME:"Tên phải có độ dài từ %d đến %d.",
     ERROR_PROFILE_ADDRESS: "Địa chỉ phải có độ dài từ %d đến %d.",
-    ERROR_PASS_CHANGE:"Mật Khẩu mới không được trùng với mật khẩu cũ"
+    ERROR_PASS_CHANGE:"Mật Khẩu mới không được trùng với mật khẩu cũ",
+    ERROR_PROFILE_NOTES: "Ghi chú phải có độ dài từ %d đến %d.",
+    PRESS_F5: "Có lỗi xảy ra vui lòng F5 trang.",
+    EMAIL_ORDER_SUCCESS_SUBJECT: "BẠN ĐẶT HÀNG THÀNH CÔNG.",
+    EMAIL_ORDER_SUCCESS_CONTENT: "Bạn đã đặt hàng thành công, mã tra cứu đơn hàng là: ",
+    EMAIL_INFORM_ORDER_SUCCESS_CONTENT: "Có người đặt hàng, mã hàng là: ",
+    EMAIL_INFORM_ORDER_SUCCESS_SUBJECT: "CÓ KHÁCH ĐẶT HÀNG",
 };

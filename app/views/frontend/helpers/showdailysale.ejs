@@ -4,7 +4,7 @@
     data.forEach((item,index)=>{
       let position = (index%2 == 0) ? "" : "position-relative "
       if(item.dailydeals === true){
-        let dataSale = showSaleIcon(item.discountProduct, item.price, item.time)
+        let dataSale = showSaleIcon(item.discountProduct, item.price)
         let sale     = (dataSale) ? showSaleText(dataSale,unit) : ''
         let position = (dataSale || item.fearturedproduct == true) ? "position-relative " : ""
         let hotShow  = ''

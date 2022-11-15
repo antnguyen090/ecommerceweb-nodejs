@@ -110,7 +110,14 @@ module.exports = {
         return data
     },
     getUserById: async (id) =>{
-        let data = await modelManageUser.findOne({_id: id}).select('-password').populate('group',['group_acp', 'status'])
+        let data = await modelManageUser.findOne({_id: id}).select('-password').populate([{
+            path: 'group'
+        },{
+            path:'address',
+            populate:{
+                path:'province'
+            }
+        }])
         return data
     },
     saveUser: async (obj) =>{

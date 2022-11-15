@@ -59,4 +59,8 @@ module.exports = {
         let data = await modelDelivery.find({status: status}).sort({ordering: sort })
         return data
     },
+    getOneByID: async (id) =>{
+        let data = await modelDelivery.findOne({_id: id})
+        return data
+    },
 }

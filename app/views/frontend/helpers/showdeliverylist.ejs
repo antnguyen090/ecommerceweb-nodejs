@@ -1,18 +1,18 @@
 <%
   showDeliveryList = (data, current) =>{
     if(!data) return
-    let currentId
+    let currentId = ''
     let select = ''
-    if(!current) {
+    if(!current.province) {
       select = 'selected'
     } else{
-      currentId = current.toString()
+      currentId = current.province.id
     }
     let html=`<option ${select} >Chọn Tỉnh Của Bạn</option>`
     data.forEach(item=>{
       select = (currentId == item.id) ? 'selected' : ''
       html += `
-      <option value="${item.id}" ${select} >${item.province}</option>
+      <option value="${item.id}" data-cost="${item.cost}" ${select} >${item.province}</option>
       `
     })
     return html

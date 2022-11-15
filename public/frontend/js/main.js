@@ -440,6 +440,14 @@ $("#formChangePassword").submit(function(e) {
   });
 });
 
+$("#formFindOrder").submit(function(e) {
+  e.preventDefault(); // avoid to execute the actual submit of the form.
+  $(e.target).children('.d-flex.justify-content-center.spinner').html(spinnerCenter)
+  let code = $("input[name='codeOrder']").val()
+  window.location.replace(`/don-hang/${code}`);
+
+});
+
 $(".search-btn").click(function(){
     $(".wrapper").addClass("active");
     $(this).css("display", "none");
@@ -605,11 +613,21 @@ $(".search-btn").click(function(){
 
   let showSumPrice = () =>{
     let price = 0
+    let total = 0
     $(`td[data-product*=priceProductTotal-]`).each((index, item)=>{
       let number = $(item).text().replace(/[^0-9]/g, "")
       price += parseInt(number)
     })
-    $("div.sumPrice strong.price").text(price.toLocaleString() +" VND")
+    let costShip = parseInt($("select[name='province'] option:selected").attr('data-cost'))
+    $("div.sumPrice div.totalPrice strong.price").text(price.toLocaleString() +" VND")
+    $("div.sumPrice div.costShip strong.price").text("+ "+costShip.toLocaleString() +" VND")
+    let couponValue = ($("div.sumPrice div.priceCoupon strong.price").length > 0) ? parseInt($("div.sumPrice div.priceCoupon strong.price").text().replace(/[^0-9]/g, "")) : 0
+    if(couponValue > 0) {
+      total = price + costShip - couponValue
+    } else {
+      total = price + costShip
+    }
+    $("div.sumPrice div.totalPriceCoupon strong.price").text(total.toLocaleString() +" VND")
   }
 
   let disabledBtnOrder = () =>{
@@ -626,7 +644,6 @@ $(".search-btn").click(function(){
     $("input[name='codeCouponSuccess']").remove()
     $("fieldset > div.mt-holder div.alert").remove()
     $("div.sumPrice div.priceCoupon").remove()
-    $("div.sumPrice div.totalPriceCoupon").remove()
   }
 $(document).on('click', 'a.productAddToCart', function(e) {
   let data = $(e.target).attr('data-product').split('-')
@@ -775,7 +792,8 @@ if(arrayPath=='gio-hang'){
     })
 
     $( "input[name='couponCode']" ).keyup(function(e) {
-      let datatotalPrice = $("div.sumPrice strong.price").text().replace(/[^0-9]/g, "")
+      removeCoupon()
+      let datatotalPrice = $("div.sumPrice div.totalPrice strong.price").text().replace(/[^0-9]/g, "")
       let totalPrice     =  parseInt(datatotalPrice)
       let couponCode     = $(e.target).val()
         if(totalPrice > 0 && couponCode.length > 0){
@@ -798,7 +816,7 @@ if(arrayPath=='gio-hang'){
       $(e.target).html(spinner)
       let code     = dataCode.val().toUpperCase()
       loadListCart()
-      let datatotalPrice = $("div.sumPrice strong.price").text().replace(/[^0-9]/g, "")
+      let datatotalPrice = $("div.sumPrice div.totalPrice strong.price").text().replace(/[^0-9]/g, "")
       let totalPrice     =  parseInt(datatotalPrice)
       $("fieldset > div.mt-holder div.alert").remove()
       $.ajax({
@@ -832,7 +850,7 @@ if(arrayPath=='gio-hang'){
               </div>
               <input type="hidden" name="codeCouponSuccess" value="${data.couponcode}">
               `
-              $("fieldset > div.mt-holder").append(html)
+              $("fieldset.couponCode > div.mt-holder").append(html)
               let totalPrice  =  response.totalPrice
               let priceCoupon 
               
@@ -848,24 +866,100 @@ if(arrayPath=='gio-hang'){
                   <strong class="txt fwEbold text-uppercase mb-1">Số Tiền Được Giảm</strong>
                   <strong class="price fwEbold text-uppercase mb-1">-${priceCoupon.toLocaleString() + " VND"}</strong>
               </div>
-              <div class="d-flex justify-content-between totalPriceCoupon">
-                <strong class="txt fwEbold text-uppercase mb-1">Tổng Giá Sau Giảm</strong>
-                <strong class="price fwEbold text-uppercase mb-1"><span style="font-weight:900">${priceAfterCoupon.toLocaleString() + " VND"}</span></strong>
-              </div>
               `
-              $("div.sumPrice > a.btnTheme").before(xhtml)
+              $("div.sumPrice div.totalPriceCoupon").before(xhtml)
             } else {
               let html=`
               <div class="alert alert-danger align-bottom mt-2 mb-2 text-center" role="alert" style="width: 340px;">
                 Mã Giảm Giá Không Hợp Lệ
               </div>`
-              $("fieldset > div.mt-holder").append(html)
+              $("fieldset.couponCode > div.mt-holder").append(html)
             }
             dataCode.prop("disabled", false)
             $(e.target).html('Áp Dụng')
+            showSumPrice()
         }
     });
       
+    })
+    //select change 
+
+    $(".cartHolder select[name='province']" ).change(function(e) {
+        showSumPrice()
+    });
+
+    let getListProductOrder = () =>{
+      let list = []
+      $("tr.align-items-center").each((index,item)=>{
+        let obj  = {}
+        obj.id = $(item).attr('data-product').split('-')[1]
+        obj.quantity = $(`span.jcf-number > input[data-product="product-${obj.id}"]`).val()
+        list.push(obj)
+      })
+      return list
+    }
+    $(document).on('click','div.cartHolder a.orderComplete', (e)=>{
+      $("div.cartHolder a.orderComplete").html(spinnerCenter).addClass('disabled')
+      let name = $('input[name="name"]').val()
+      let address = $('input[name="address"]').val()
+      let province = $('select[name="province"]').val()
+      let phonenumber = $('input[name="phonenumber"]').val()
+      let couponCode = $('input[name="codeCouponSuccess"]').val()
+      let totalMoney = $('div.totalPriceCoupon').text().replace(/[^0-9]/g, "")
+      let priceProduct = $('div.totalPrice').text().replace(/[^0-9]/g, "")
+      let costShip = parseInt($("select[name='province'] option:selected").attr('data-cost'))
+      let notes    = $('textarea[name="notes"]').text()
+
+      let productOrder = JSON.stringify(getListProductOrder())
+      let urlPath = window.location.pathname.split("/")[1]
+      let data = {
+        name: name,
+        infoAddress: address,
+        province: province,
+        phoneNumber: phonenumber,
+        costShip: costShip,
+        couponCode: couponCode,
+        priceProduct: priceProduct,
+        totalMoney: totalMoney,
+        productOrder: productOrder,
+        notes: notes,
+      }
+      $.ajax({
+        type: "POST",
+        url: `/${urlPath}/dat-hang`,
+        data: data, // serializes the form's elements.
+        success: function (response) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-center",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+              }
+            if(response.success == true){
+                window.location.replace(`/don-hang/${response.trackingCode}`);
+            } else {
+              try {
+                response.errors.forEach((item)=>{
+                  toastr["error"](item.msg)
+                  })
+              } catch (error) {
+                toastr["error"]("Có lỗi xảy ra vui lòng F5 trang")
+              }
+              $("div.cartHolder a.orderComplete").html('Mua Hàng').removeClass('disabled')
+            }
+        }
+    });
     })
 })
 

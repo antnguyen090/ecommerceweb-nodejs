@@ -9,6 +9,7 @@ const serviceNewsletter  = require(__path_services_backend + `newsletter.service
 const serviceCoupon = require(__path_services_backend + `coupon.service`);
 const serviceDelivery = require(__path_services_backend + `delivery.service`);
 const serviceManageUser = require(__path_services_backend + `manageuser.service`);
+const serviceOrder = require(__path_services_backend + `order.service`);
 
 
 let getSlider = async () => {
@@ -141,6 +142,17 @@ let countProduct = async (objWhere)=>{
   return result
 }
 
+let addOrder = async (obj) =>{
+  let result = await serviceOrder.addOrder(obj)
+  return result
+}
+
+let getOrderByTrackingCode = async (code) =>{
+  let result = await serviceOrder.getOrderByTrackingCode(code)
+  return result
+}
+
+
 module.exports = {
   getSlider,
   getMenuBar,
@@ -165,4 +177,6 @@ module.exports = {
   getAllProduct,
   countProduct,
   getProductById,
+  addOrder,
+  getOrderByTrackingCode,
 }

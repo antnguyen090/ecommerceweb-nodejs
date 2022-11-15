@@ -63,7 +63,7 @@
                           <div class="col-6">
                             <div class="form-outline">
                               <select name="province" class="form-select form-control form-control-lg" aria-label="Default select example">
-                                <%- showDeliveryList(deliveryList, userInfo.address.province) %>
+                                <%- showDeliveryList(deliveryList, userInfo.address) %>
                               </select>
                               <label class="form-label" for="form3Example1cg">Tỉnh</label>
                             </div>
@@ -114,7 +114,7 @@
                 <div class="card" style="border-radius: 15px; margin-top: 2px;">
                   <div class="card-body p-5">
                     <h4 class="text-uppercase text-center mb-5">Tra Cứu Đơn Hàng</h4>
-                <form id="formFindOrder" action="" method="post">
+                <form id="formFindOrder" action="/don-hang" method="get">
                     <div class="form-outline mb-2">
                       <input type="text"  name="codeOrder" class="form-control form-control-lg" required/>
                       <label class="form-label" for="form3Example4cdg">Nhập mã đơn hàng</label>

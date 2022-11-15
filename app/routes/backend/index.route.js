@@ -13,6 +13,7 @@ router.use('/product', require('./product.route'));
 router.use('/menubar', require('./menubar.route'));
 router.use('/setting', require('./setting.route'));
 router.use('/contact', require('./contact.route'));
+router.use('/order', require('./order.route'));
 router.use('/manageuser', require('./manageuser.route'));
 router.use('/managegroup', require('./managegroup.route'));
 router.use('/blogarticle', require('.//blogarticle.route'));

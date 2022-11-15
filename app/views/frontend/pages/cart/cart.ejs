@@ -1,9 +1,13 @@
 <%- include('./../../helpers/showfeaturedproduct'); -%>
 <%- include('./../../helpers/showcategoryfilter'); -%>
 <%- include('./../../helpers/showproductbycategory'); -%>
-
+<%- include('./../../helpers/showdeliverylist'); -%>
 
 <% 
+    let userAddress
+    if(userInfo.address.info){
+        userAddress = userInfo.address.info
+    }
 	const collectionProduct = "product";
 	const linkThumbProduct = "/" + "uploads" + `/${collectionProduct}/`;
     const unit = ' VND'
@@ -39,31 +43,81 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
-            <form action="javascript:void(0);" class="cartForm mb-5">
-                <div class="form-group mb-0">
-                    <label for="note" class="fwEbold text-uppercase d-block mb-1">Ghi Chú</label>
-                    <textarea id="note" class="form-control" name="note"></textarea>
-                </div>
+        <div class="col-12 col-md-6">
+            <form action="javascript:void(0);" class="couponForm mb-md-0 mb-5">
+                <fieldset>
+                    <div class="mt-holder d-inline-block align-bottom mr-lg-5 mr-0 mb-lg-0 mb-2">
+                        <label for="code" class="fwEbold text-uppercase d-block mb-1">Tên Người Nhận</label>
+                        <input type="text" name="name" class="form-control" value="<%= userInfo.name %>">
+                    </div>
+                </fieldset>
             </form>
         </div>
         <div class="col-12 col-md-6">
             <form action="javascript:void(0);" class="couponForm mb-md-0 mb-5">
                 <fieldset>
                     <div class="mt-holder d-inline-block align-bottom mr-lg-5 mr-0 mb-lg-0 mb-2">
-                        <label for="code" class="fwEbold text-uppercase d-block mb-1">Mã Giảm Giá</label>
-                        <input type="text" id="code" name="couponCode" class="form-control" disabled>
+                        <label for="code" class="fwEbold text-uppercase d-block mb-1">Địa Chỉ Nhà</label>
+                        <input type="text" name="address" class="form-control" value="<%= userAddress %>" placeholder="Nhập địa chỉ...">
                     </div>
-                    <button type="submit" class="btn btnTheme btnCart fwEbold text-center text-white md-round py-3 px-4 py-md-3 px-md-4 submitCodeCoupon" disabled>Áp Dụng</button>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-12 col-md-6">
+            <form action="javascript:void(0);" class="couponForm mb-md-0 mb-5">
+                <fieldset>
+                    <div class="mt-holder d-inline-block align-bottom mr-lg-5 mr-0 mb-lg-0 mb-2">
+                        <label for="code" class="fwEbold text-uppercase d-block mb-1">Tỉnh</label>
+                        <select name="province" class="form-select form-control form-control-lg" aria-label="Default select example">
+                            <%- showDeliveryList(deliveryList, userInfo.address) %>
+                          </select>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-12 col-md-6">
+            <form action="javascript:void(0);" class="couponForm mb-md-0 mb-5">
+                <fieldset>
+                    <div class="mt-holder d-inline-block align-bottom mr-lg-5 mr-0 mb-lg-0 mb-2">
+                        <label for="code" class="fwEbold text-uppercase d-block mb-1">Số Điện Thoại</label>
+                        <input type="text" name="phonenumber" class="form-control" value="<%= userInfo.phonenumber %>">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-12">
+            <form action="javascript:void(0);" class="cartForm mb-5">
+                <div class="form-group mb-0">
+                    <label for="note" class="fwEbold text-uppercase d-block mb-1">Ghi Chú</label>
+                    <textarea id="note" class="form-control" name="notes"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="col-12 col-md-6">
+            <form action="javascript:void(0);" class="couponForm mb-md-0 mb-5">
+                <fieldset class="couponCode">
+                    <div class="mt-holder d-inline-block align-bottom mr-lg-5 mr-0 mb-lg-0 mb-2">
+                        <label for="code" class="fwEbold text-uppercase d-block mb-1">Mã Giảm Giá</label>
+                        <input type="text" name="couponCode" class="form-control" disabled>
+                    </div>
+                    <button type="submit" class="btn btnTheme btnCart fwEbold text-center text-white md-round py-3 px-4 py-md-3 px-md-4 mt-2 submitCodeCoupon" disabled>Áp Dụng</button>
                 </fieldset>
             </form>
         </div>
         <div class="col-12 col-md-6 sumPrice">
-            <div class="d-flex justify-content-between">
-                <strong class="txt fwEbold text-uppercase mb-1">Tổng Giá</strong>
+            <div class="d-flex justify-content-between totalPrice">
+                <strong class="txt fwEbold text-uppercase mb-1">Tổng Tiền Hàng</strong>
                 <strong class="price fwEbold text-uppercase mb-1">Đang tải...</strong>
             </div>
-            <a href="javascript:void(0);" class="btn btnTheme w-100 fwEbold text-center text-white md-round py-3 px-4 py-md-3 px-md-4 disabled">Mua Hàng</a>
+            <div class="d-flex justify-content-between costShip">
+                <strong class="txt fwEbold text-uppercase mb-1">Phí Vận Chuyển</strong>
+                <strong class="price fwEbold text-uppercase mb-1">Đang tải...</strong>
+            </div>
+            <div class="d-flex justify-content-between totalPriceCoupon">
+                <strong class="txt fwEbold text-uppercase mb-1">Tổng Thanh Toán</strong>
+                <strong class="price fwEbold text-uppercase mb-1"><span style="font-weight:900">Đang tải...</span></strong>
+              </div>
+            <a href="javascript:void(0);" class="btn btnTheme w-100 fwEbold text-center text-white md-round py-3 px-4 py-md-3 px-md-4 orderComplete disabled">Mua Hàng</a>
         </div>
     </div>
 </div>

@@ -20,13 +20,14 @@ router.use('/tat-ca-cay', require('./allproduct.route'));
 router.use('/xem-nhanh', require('./viewproduct.route'));
 router.use('/trang-loi', require('./error.route'));
 router.use('/yeu-thich', require('./love.route'));
-router.use('/gio-hang', require('./cart.route'));
 router.use('/lien-he', require('./contact.route'));
 router.use('/ve-chung-toi', require('./aboutus.route'));
 router.use('/dang-ky', require('./register.route'));
 router.use('/dang-nhap', require('./login.route'));
+router.use('/don-hang', require('./ordertracking.route'));
 router.use('/lay-lai-mat-khau', require('./forgotpassword.route'));
 router.use('/trang-ca-nhan',middlewareAuth, require('./profile.route'));
+router.use('/gio-hang',middlewareAuth, require('./cart.route'));
 router.use('/dang-xuat', require('./logout.route'));
 
 module.exports = router;

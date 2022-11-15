@@ -17,14 +17,17 @@ const folderView = __path_views_frontend + `pages/${mainName}/`;
 const FrontEndHelpers = require(__path_helpers + 'frontend');
 const linkLogin		= StringHelpers.formatLink('/dang-nhap'); 
 const linkIndex	= StringHelpers.formatLink('/'); 
+const serviceDelivery = require(__path_services_backend + `delivery.service`);
 
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
     try {
+        let deliveryList = await FrontEndHelpers.getDeliveryList()
         res.render(`${folderView}${mainName}`, {
             pageTitle,
             layout,
+            deliveryList
          });     
     } catch (error) {
         console.log(error)
@@ -79,7 +82,56 @@ router.post('/ma-giam-gia',
     }
 });
 
-
+router.post('/dat-hang', 
+    body('name')
+        .isLength({min: 2, max: 30})
+        .withMessage(util.format(notify.ERROR_PROFILE_NAME,2,30)),
+    body('infoAddress')
+        .isLength({min: 10, max: 60})
+        .withMessage(util.format(notify.ERROR_PROFILE_ADDRESS,10,60)),
+    body('notes')
+        .isLength({min: 0, max: 300})
+        .withMessage(util.format(notify.ERROR_PROFILE_NOTES,0,300)),
+    body('phoneNumber')
+        .isMobilePhone()
+        .withMessage(notify.ERROR_PHONENUMBER_INVALID),
+    body('province')
+        .custom(async (val, {req}) => {
+        if ( val == undefined) {
+        return Promise.reject(notify.ERROR_PROVINCE)
+        } else {
+        try {
+            let data = await serviceDelivery.getItemByID(val)
+            return data;
+        } catch (error) {
+            return Promise.reject(notify.ERROR_PROVINCE_INVALID)
+        }
+    }}),
+    async function(req, res, next) {
+        try {
+            let errors = validationResult(req)
+            if(req.isAuthenticated()) {
+                if(!errors.isEmpty()){
+                    res.send({success: false, errors: errors.errors})
+                    return
+                } else{
+                    req.body.userId = req.user.id
+                    req.body.email = req.user.email
+                    let processOrder = await FrontEndHelpers.addOrder(req.body)
+                    res.send(processOrder)
+                }
+            }else{
+                res.send({success: false, errors:[{
+                    msg:notify.PRESS_F5
+                }]})
+            }
+        } catch (error) {
+            console.log(error)
+            res.send({success: false,errors:[{
+                msg: notify.PRESS_F5
+            }]})
+        }
+});
 
 module.exports = router;
 

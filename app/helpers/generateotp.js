@@ -7,6 +7,18 @@ let generateOTP = (number) => {
     return OTP;
 }
 
+let generateAZ = (number) => {
+  function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  let code = ''
+  for (let i = 0; i < number; i++ ) {
+      code += String.fromCharCode(getRandomArbitrary(65, 90))
+  }
+  return code;
+}
+
 module.exports = {
-  generateOTP
+  generateOTP,
+  generateAZ,
 }
