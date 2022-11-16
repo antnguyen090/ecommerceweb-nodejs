@@ -9,24 +9,25 @@ const pageTitle ='Tra Cứu Đơn Hàng'
 const folderView = __path_views_frontend + `pages/${mainName}/`;
 const FrontEndHelpers = require(__path_helpers + 'frontend');
 
-router.get('/(:trackingCode)?', 
+router.get('/', 
     async function(req, res, next) {
         try {
-            if(req.params.trackingCode){
-                let orderData = await FrontEndHelpers.getOrderByTrackingCode(req.params.trackingCode)
-                res.render(`${folderView}ordertracking`, {
-                    pageTitle,
-                    layout,
-                    orderData,
-                 });     
-            } else{
-                throw new Error('Required')
-            }
+                let orderData = {}
+                if(req.query.trackingCode){
+                    orderData = await FrontEndHelpers.getOrderByTrackingCode(req.query.trackingCode)
+                    res.send({success: true, data: orderData})
+                } else{
+                    res.render(`${folderView}ordertracking`, {
+                        pageTitle,
+                        layout,
+                        orderData,
+                    }); 
+                }
         } catch (error) {
+            res.send({success: false, data: null})
             console.log(error)
         }
   });
-
 
 module.exports = router;
 

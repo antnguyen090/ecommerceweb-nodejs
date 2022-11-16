@@ -148,7 +148,11 @@ module.exports = {
     checkProductExits: async (obj) =>{
         let data = await modelProduct.exists(obj)
         return data
-    }
+    },
+    getProductByIdForOrder: async(data)=>{
+        let result = await modelProduct.findOne({ '_id': data, status: 'active'}).select('discountProduct name _id price').populate('discountProduct');
+        return result
+    },
 }
 
 

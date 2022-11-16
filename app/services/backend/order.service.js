@@ -75,7 +75,7 @@ module.exports = {
                     saveOrder.trackingCode = trackingCode
       let costShip = await serviceDelivery.getOneByID(obj.province)
       if(costShip.cost == obj.costShip){
-        saveOrder.costShip = JSON.stringify(costShip)
+        saveOrder.costShip = costShip.cost
       }else{
         return Promise.reject(errorObj)
       }
@@ -83,21 +83,28 @@ module.exports = {
       let listProductNews = []
       let priceProduct = 0
       let data = await Promise.all(listProduct.map(async (item,index) => {
-                let product = await serviceProduct.getProductById(item.id)
+                let product      = await serviceProduct.getProductByIdForOrder(item.id)
+                product          = JSON.parse(JSON.stringify(product))
                 let findDiscount = await CalculatorHelpers.findDiscount(product.discountProduct, product.price)
-                let price        = await CalculatorHelpers.productPrice(product.price, findDiscount)
-                priceProduct     += await price*item.quantity
-                product.quantity = item.quantity
-                listProductNews.push(product)
-         }))
+                let priceFinal   = await CalculatorHelpers.productPrice(product.price, findDiscount)
+                priceProduct       +=  priceFinal*item.quantity
+                product.quantity   =  item.quantity
+                product.priceFinal   =  priceFinal
+                return product
+         })).then((values) => {
+          saveOrder.productList = JSON.stringify(values)
+        })
         .catch((error) => {
+            console.log(error)
             return Promise.reject(errorObj)
         });
+
       if(priceProduct != obj.priceProduct) {
         return errorObj
       } else{
         saveOrder.priceProduct = priceProduct
       }
+
       if(obj.couponCode){
         let findCode = await serviceCoupon.getCodeCoupon({status:"active", couponcode: obj.couponCode})
         if(findCode) 
@@ -117,6 +124,7 @@ module.exports = {
               let priceAfterCoupon = priceProduct - couponMoney + costShip.cost
               if(priceAfterCoupon == obj.totalMoney){
                 saveOrder.totalMoney  = obj.totalMoney
+                saveOrder.couponValue = couponMoney
               } else{
                 return errorObj
               }
@@ -125,15 +133,14 @@ module.exports = {
       } else{
         let price = priceProduct + costShip.cost
         if(price == obj.totalMoney){
-          saveOrder.productList  = obj.totalMoney
+          saveOrder.totalMoney  = obj.totalMoney
         } else{
           return errorObj
         }
       }
-      saveOrder.productList = JSON.stringify(listProductNews)
       await module.exports.saveItems(saveOrder)
       await module.exports.sendMailOrderSuccess(obj, trackingCode)
-      return {success: true,trackingCode: trackingCode }
+      return {success: true, trackingCode: trackingCode }
     },
     sendMailOrderSuccess: async function (params, trackingCode) {
         // Generate test SMTP service account from ethereal.email

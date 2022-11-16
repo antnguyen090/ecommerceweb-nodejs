@@ -2,6 +2,9 @@ $(document).ready(function() {
   const localLove = "LIST_LOVE"
   const localCart = "LIST_CART"
   const notify    = listNotify() 
+  const moneyVND  = (number)=>{
+    return number.toLocaleString() +" VND"
+  }
   let loadStorage = (local) => {
       return JSON.parse(localStorage.getItem(local)) ;
   }
@@ -45,9 +48,9 @@ $(document).ready(function() {
         items.push(itemNew);
       }
     } else if(localCart == local){
-      let checkExitCart = items.filter(item=> item.id===id)
-      if(checkExitCart.length>0){
-        return items
+      let foundIndex = items.findIndex(x => x.id == id)
+      if(foundIndex>=0){
+        items[foundIndex].quantity++
       } else{
         itemNew = {id: id, quantity: 1}
         items.push(itemNew);
@@ -440,11 +443,134 @@ $("#formChangePassword").submit(function(e) {
   });
 });
 
+let showListProductTracking = (data) =>{
+  if(!data) return
+  let dataJson = JSON.parse(data)
+  let html = ''
+  let showPriceDiscount = (price, priceDiscount) =>{
+    if(price == priceDiscount){
+      return moneyVND(price)
+    } else{
+      return `${moneyVND(priceDiscount)}<del class='ml-2'>${moneyVND(price)}</del>`
+    }
+  }
+  dataJson.forEach(item=>{
+    html+= `
+    <div class="row">
+      <div class="col-6">
+          <span id="name">${item.name}</span>  
+      </div>
+      <div class="col-3">
+          <span>x${item.quantity}</span>  
+      </div>
+      <div class="col-3">
+          <span id="price">${showPriceDiscount(item.price, item.priceFinal)}</span>
+      </div>
+    </div>
+
+    `
+  })
+  return html
+}
+
+let showTrackingOrder = (data)=>{
+  let coupon = (data.couponValue)
+  ? `
+  <div class="row">
+    <div class="col-9">
+        <span id="name">Giảm Giá</span>
+    </div>
+    <div class="col-3">
+        <span id="price">-${moneyVND(data.couponValue)}</span>
+    </div>
+  </div>
+  `
+  :''
+   return `
+   <div class="card-body p-5 orderTrackingSuccess">
+   <div class="card">
+     <div class="title">Đơn Hàng Của Bạn</div>
+     <div class="info">
+         <div class="row">
+             <div class="col-7">
+                 <span id="heading">Ngày Đặt Hàng</span><br>
+                 <span id="details">${formatTime(data.createdAt)}</span>
+             </div>
+             <div class="col-5 pull-right">
+                 <span id="heading">Mã Đơn Hàng</span><br>
+                 <span class="trackingCode" id="details">${data.trackingCode}</span>
+             </div>
+         </div>      
+     </div>      
+     <div class="pricing">
+          ${showListProductTracking(data.productList)}
+     </div>
+     <div class="total">
+       <div class="row">
+         <div class="col-9">
+             <span id="name">Tiền Hàng</span>
+         </div>
+         <div class="col-3">
+             <span id="price">${moneyVND(data.priceProduct)}</span>
+         </div>
+     </div>
+       <div class="row">
+         <div class="col-9">
+             <span id="name">Tiền Ship</span>
+         </div>
+         <div class="col-3">
+             <span id="price">+${moneyVND(data.costShip)}</span>
+         </div>
+     </div>
+      ${coupon}
+         <div class="row">
+             <div class="col-9">Tiền Phải Thanh Toán</div>
+             <div class="col-3"><big>${moneyVND(data.totalMoney)}</big></div>
+         </div>
+     </div>
+     <div class="tracking">
+         <div class="title">Trạng Thái Đơn Hàng</div>
+     </div>
+     <div class="progress-track">
+         <ul id="progressbar">
+             <li class="step0" id="step1">Xác Nhận Đơn Hàng</li>
+             <li class="step0 text-center" id="step2">Đã Lấy Hàng</li>
+             <li class="step0 text-right" id="step3">Đang Giao</li>
+             <li class="step0 text-right" id="step4">Đã Giao</li>
+         </ul>
+     </div>
+   </div>
+</div>
+   `
+}
+let showStatusTracking = (status) =>{
+  $("ul#progressbar li").each((index,item)=>{
+      if (index > status) return
+      $(item).addClass('active')
+  })
+}
+
 $("#formFindOrder").submit(function(e) {
   e.preventDefault(); // avoid to execute the actual submit of the form.
+  $('div.orderTrackingSuccess').remove()
   $(e.target).children('.d-flex.justify-content-center.spinner').html(spinnerCenter)
-  let code = $("input[name='codeOrder']").val()
-  window.location.replace(`/don-hang/${code}`);
+  let codeTracking = $("input[name='codeOrder']").val()
+  $.ajax({
+    type: "get",
+    url: `/don-hang/`,
+    data: `trackingCode=${codeTracking}`, // serializes the form's elements.
+    success: async function (response) {
+        if(response.success == true && response.data != null){
+            console.log(response.data)
+            let html = showTrackingOrder(response.data)
+            $('div.trackingForm').after(html)
+            showStatusTracking(response.data.status)
+        } else{
+           toastr["error"](notify.TRACKING_ERROR)
+        }
+        $(e.target).children('.d-flex.justify-content-center.spinner').html(`<button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 ">Tra Cứu</button>`)
+    }
+});
 });
 
 $(".search-btn").click(function(){
@@ -581,33 +707,9 @@ $(".search-btn").click(function(){
   let data = $(e.target).attr('data-product').split('-')
   let id   = data[1]
   let items
-  if($(e.target).hasClass('active')){
-    items = deleteItem(id, localCart)
-    $(e.target).removeClass("active")
-    $("header#header a.icon-cart span.num").text(items.length)
-    if(arrayPath=='gio-hang'){
-      // $(`.row > div[data-product="product-${id}"]`).remove()
-      if(items.length == 0){
-        html = `
-        <div class="position-absolute text-center font-weight-bold" style="
-        color: #5ba515;
-        width: 100%; 
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);" role="status">
-            Danh Sách Giỏ Hàng Trống...
-          </div>
-        `
-        $('div.cartHolder .tableListProduct > .col-12').html(html)
-      }
-    }
-    toastr["error"](notify.REMOVE_CART_SUCCESS)
-  } else{
     items = addItem(id, localCart)
-    $(e.target).addClass("active")
     $("header#header a.icon-cart span.num").text(items.length)
     toastr["success"](notify.ADD_CART_SUCCESS)
-  }
   });
 
   let showSumPrice = () =>{
@@ -650,32 +752,13 @@ $(document).on('click', 'a.productAddToCart', function(e) {
   let items
   items = addItem(id, localCart)
   $("header#header a.icon-cart span.num").text(items.length)
-  let removeCart =`
-  <a data-product="product-${id}" href="javascript:void(0);" class="btn btnTheme btnShop fwEbold text-white md-round py-3 px-4 py-md-3 px-md-4 productRemoveToCart">Xóa Sản Phẩm Khỏi Giỏ Hàng</a>
-  `
-  $(`div.includeButtonCart`).html(removeCart)
   toastr["success"](notify.ADD_CART_SUCCESS)
-})
-
-$(document).on('click', 'a.productRemoveToCart', function(e) {
-  let data = $(e.target).attr('data-product').split('-')
-  let id   = data[1]
-  let items
-  items = deleteItem(id, localCart)
-  $("header#header a.icon-cart span.num").text(items.length)
-  let addCart =`
-  <a data-product="product-${id}" href="javascript:void(0);" class="btn btnTheme btnShop fwEbold text-white md-round py-3 px-4 py-md-3 px-md-4 productAddToCart">Thêm Vào Giỏ Hàng <i class="fas fa-arrow-right ml-2"></i></a>  `
-  $(`div.includeButtonCart`).html(addCart)
-  toastr["error"](notify.REMOVE_CART_SUCCESS)
 })
 
 let loadListCart = () =>{
   let items = listItems(localCart)
   let number = items.length
   $("header#header a.icon-cart span.num").text(number)
-  items.forEach(item=>{
-    $(`a[data-product*="product-${item.id}"].icon-cart.d-block`).addClass("active")
-  })
 }
 
 loadListCart()
@@ -705,6 +788,7 @@ if(arrayPath=='gio-hang'){
             html = await showListCart(response.data, "/uploads/product/", "VND", items)
             $('div.cartHolder .tableListProduct > .col-12').addClass('table-responsive')
             $('div.cartHolder .tableListProduct > .col-12').html(html)
+            $('#cartInfoPersonal').removeClass('d-none')
             initCustomForms();
             // initialize custom form elements
             function initCustomForms() {
@@ -742,6 +826,7 @@ if(arrayPath=='gio-hang'){
           $('div.cartHolder .tableListProduct > .col-12').removeClass('table-responsive')
           $('div.cartHolder .tableListProduct > .col-12').html(html)
           disabledBtnOrder()
+          $('#cartInfoPersonal').addClass('d-none')
         }
       }
         toastr["error"](notify.REMOVE_CART_SUCCESS)
@@ -749,26 +834,6 @@ if(arrayPath=='gio-hang'){
 
     });
 
-    let showCartButtonProduct = () =>{
-      let items = listItems(localCart)
-      let currentData = $(`div.includeButtonCart`).attr('data-product').split('-')
-      let currentId = currentData[1]
-      let checkExit = items.filter(item=> item.id == currentId)
-      let html = (checkExit.length == 0)  ? 
-      `
-      <a data-product="product-${currentId}" href="javascript:void(0);" class="btn btnTheme btnShop fwEbold text-white md-round py-3 px-4 py-md-3 px-md-4 productAddToCart">Thêm Vào Giỏ Hàng <i class="fas fa-arrow-right ml-2"></i></a>
-      `
-      :
-      `
-      <a data-product="product-${currentId}" href="javascript:void(0);" class="btn btnTheme btnShop fwEbold text-white md-round py-3 px-4 py-md-3 px-md-4 productRemoveToCart">Xóa Sản Phẩm Khỏi Giỏ Hàng</a>
-      ` 
-      $(`div.includeButtonCart`).html(html)
-    }
-    if( $('div.includeButtonCart').length ) 
-    {
-      showCartButtonProduct()
-    }
-    
     $(document).on('change', "input[data-product*='product-']", function(e) {
       let dataCurrent = $(e.target).attr('data-product').split("-")
       let idCurrent = dataCurrent[1]
@@ -899,6 +964,7 @@ if(arrayPath=='gio-hang'){
     }
     $(document).on('click','div.cartHolder a.orderComplete', (e)=>{
       $("div.cartHolder a.orderComplete").html(spinnerCenter).addClass('disabled')
+      $(".submitCodeCoupon").addClass('d-none')
       let name = $('input[name="name"]').val()
       let address = $('input[name="address"]').val()
       let province = $('select[name="province"]').val()
@@ -946,7 +1012,28 @@ if(arrayPath=='gio-hang'){
                 "hideMethod": "fadeOut"
               }
             if(response.success == true){
-                window.location.replace(`/don-hang/${response.trackingCode}`);
+                let html = `
+                <div class="orderSuccess">
+                <div class="row">
+                   <div class="col-md-6 mx-auto mt-5">
+                      <div class="payment">
+                         <div class="payment_header">
+                            <div class="check"><i class="fa fa-check" aria-hidden="true"></i></div>
+                         </div>
+                         <div class="content">
+                            <h1>Đặt Hàng Thành Công !</h1>
+                            <p>Cảm ơn bạn đã đặt hàng của chúng tôi. Mã kiểm tra đơn hàng của bạn là: 
+                            <span class="trackingCode">${response.trackingCode}</span>
+                            </p>
+                            <a href="/">Trờ Về Trang Chủ</a>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+                `
+                $(".cartHolder").html(html)
+                $('html, body').animate({scrollTop: '0px'}, 0);
             } else {
               try {
                 response.errors.forEach((item)=>{
@@ -956,6 +1043,7 @@ if(arrayPath=='gio-hang'){
                 toastr["error"]("Có lỗi xảy ra vui lòng F5 trang")
               }
               $("div.cartHolder a.orderComplete").html('Mua Hàng').removeClass('disabled')
+              $(".submitCodeCoupon").removeClass('d-none')
             }
         }
     });
@@ -966,8 +1054,9 @@ if(arrayPath=='gio-hang'){
     }
 
     $(document).keyup(function (e) {
-      if ($("div.search-data > input:focus") && (e.keyCode === 13)) {
-        let keyword = $("div.search-data > input").val()
+      let keyword = $("div.search-data > input").val()
+      if(keyword.length == 0) return
+      if ($("div.search-data > input").is(":focus")==true && (e.keyCode === 13)) {
         $("div.search-data").html(spinnerCenter)
         searchProduct(keyword)
       }
@@ -975,9 +1064,14 @@ if(arrayPath=='gio-hang'){
 
    $(document).on('click', '.search-data span', function(e) {
         let keyword = $("div.search-data > input").val()
+        if(keyword.length == 0) return
         $("div.search-data").html(spinnerCenter)
         searchProduct(keyword)
     });
+    $(document).on('click', 'div.cartLink a', function(e) {
+      $(e.target).parent().html(spinnerCenter)
+    });
+  
 
 })
 

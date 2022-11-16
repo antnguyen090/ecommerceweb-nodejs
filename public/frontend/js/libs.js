@@ -11,6 +11,7 @@ const listNotify = () => {
     REMOVE_CART_SUCCESS: "Đã Xóa Sản Phẩm Vào Giỏ Hàng.",
     ADD_CART_SUCCESS: "Đã Thêm Sản Phẩm Vào Giỏ Hàng.",
     SEND_UPDATE_INFOR_SUCCESS: "Bạn đã cập nhật thành công.",
+    TRACKING_ERROR: "Mã Đơn Hàng Không Tồn Tại",
   }
 }
 
@@ -47,7 +48,7 @@ formatTime = (time) => {
   if(second.toString().length == 1) {
       second = '0'+second;
   }   
-  var dateTime = hour+':'+minute+':'+second+' '+ day+'/'+month+'/'+year;   
+  var dateTime = day+'/'+month+'/'+year;   
   return dateTime;
 }
 

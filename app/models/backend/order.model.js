@@ -13,11 +13,12 @@ var schema = new mongoose.Schema({
     phoneNumber: String,
     couponCode: String,
     status: {
-        type: String,
-        default: 'Pending'
+        type: Number,
+        default: 0
     },
     productList: String,
-    costShip: String,
+    couponValue: Number,
+    costShip: Number,
     priceProduct: Number,
     totalMoney: Number,
     notes: String,

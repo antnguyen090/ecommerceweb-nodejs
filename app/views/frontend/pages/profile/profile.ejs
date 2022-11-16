@@ -43,7 +43,7 @@
         <div class="mask d-flex align-items-center h-100 gradient-custom-3">
           <div class="container h-100 mt-5 mb-5">
             <div class="row d-flex justify-content-center align-items-center h-100">
-              <div class="col-6 col-md-9 col-lg-7 col-xl-6">
+              <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                 <div class="card" style="border-radius: 15px;">
                   <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5">Thông Tin Tài Khoản</h2>
@@ -90,7 +90,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-6 col-md-9 col-lg-7 col-xl-6">
+              <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                   <div class="card" style="border-radius: 15px;">
                   <div class="card-body p-5">
                     <h4 class="text-uppercase text-center mb-5">Thay Đổi Mật Khẩu</h4>
@@ -111,19 +111,14 @@
                   </form>
                   </div>
                 </div>
-                <div class="card" style="border-radius: 15px; margin-top: 2px;">
-                  <div class="card-body p-5">
-                    <h4 class="text-uppercase text-center mb-5">Tra Cứu Đơn Hàng</h4>
-                <form id="formFindOrder" action="/don-hang" method="get">
-                    <div class="form-outline mb-2">
-                      <input type="text"  name="codeOrder" class="form-control form-control-lg" required/>
-                      <label class="form-label" for="form3Example4cdg">Nhập mã đơn hàng</label>
+                <div class="card cartLink" style="border-radius: 15px; margin-top: 2px; min-height: 225px; position: relative;">
+                  <div class="card-body p-5" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);">
+                    <div class="d-flex justify-content-center spinner" >
+                      <a href="/gio-hang" data-name='cart' class="btn btn-success btn-block btn-lg gradient-custom-4" style="min-width:300px; padding:20px; font-size:20px">Vào Giỏ Hàng Của Bạn</a>
                     </div>
-                    <div class="d-flex justify-content-center spinner">
-                      <button type="submit"
-                        class="btn btn-success btn-block btn-lg gradient-custom-4 ">Tra Cứu</button>
+                    <div class="d-flex justify-content-center spinner mt-4">
+                      <a href="/don-hang" data-name='tracking' class="btn btn-success btn-block btn-lg gradient-custom-4" style="min-width:300px; padding:20px; font-size:20px">Tra Cứu Đơn Hàng</a>
                     </div>
-                  </form>
                   </div>
                 </div>
               </div>
