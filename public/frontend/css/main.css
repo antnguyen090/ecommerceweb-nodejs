@@ -440,3 +440,8 @@ a.icon-heart.d-block.active, a.icon-cart.d-block.active{
       top: 2%;
       transform: translateX(50%);
   }
+
+  span.highlight{
+    color: white;
+    background-color: #5ba515;
+  }

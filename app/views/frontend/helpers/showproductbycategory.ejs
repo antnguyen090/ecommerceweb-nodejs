@@ -1,5 +1,7 @@
+<%- include('./highlight'); -%>
+
 <%
-   showProductByCategory = (data, link, unit) =>{
+   showProductByCategory = (data, link, unit, keyword) =>{
         if(!data || data.length == 0) return '<p class="font-italic text-center">Không có sản phẩm phù hợp.</p>'
         let html=''
         data.forEach((item)=>{
@@ -24,7 +26,7 @@
                                               </ul>
                                           </div>
                                           <div class="text-center py-5 px-4">
-                                              <span class="title d-block mb-2"><a href="/${item.slug}">${item.name}</a></span>
+                                              <span class="title d-block mb-2"><a href="/${item.slug}">${highlightHelper(item.name, keyword)}</a></span>
                                               <span class="price d-block fwEbold">${formatPrice(item.price, unit, dataSale)}</span>
                                              ${hotShow}
                                              ${sale}

@@ -960,5 +960,24 @@ if(arrayPath=='gio-hang'){
         }
     });
     })
+
+    let searchProduct = (keyword) =>{
+      window.location.replace(`/tat-ca-cay?keyword=${keyword}`);
+    }
+
+    $(document).keyup(function (e) {
+      if ($("div.search-data > input:focus") && (e.keyCode === 13)) {
+        let keyword = $("div.search-data > input").val()
+        $("div.search-data").html(spinnerCenter)
+        searchProduct(keyword)
+      }
+   });
+
+   $(document).on('click', '.search-data span', function(e) {
+        let keyword = $("div.search-data > input").val()
+        $("div.search-data").html(spinnerCenter)
+        searchProduct(keyword)
+    });
+
 })
 
