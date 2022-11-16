@@ -78,8 +78,8 @@
                     <!-- filter ranger form -->
                     <form id="filterForm" action="/<%=listProductByCategory.slug%>" method="get" class="filter-ranger-form">
                         <div id="slider-range"></div>
-                        <input type="hidden" id="amount1">
-                        <input type="hidden" id="amount2">
+                        <input type="hidden" id="amount1" name="minPrice">
+                        <input type="hidden" id="amount2" name="maxPrice">
                         <div class="get-results-wrap d-flex align-items-center justify-content-between">
                             <button type="submit"
                                 class="btn btnTheme btn-shop fwEbold md-round px-3 pt-1 pb-2 text-uppercase">Lọc</button>

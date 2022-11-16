@@ -445,7 +445,6 @@ $("#formFindOrder").submit(function(e) {
   $(e.target).children('.d-flex.justify-content-center.spinner').html(spinnerCenter)
   let code = $("input[name='codeOrder']").val()
   window.location.replace(`/don-hang/${code}`);
-
 });
 
 $(".search-btn").click(function(){

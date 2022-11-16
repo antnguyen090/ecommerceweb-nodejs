@@ -16897,8 +16897,7 @@ $(function() {
     }
     let minPrice      = 0
     let maxPrice      = 500000
-    if(paramMinPrice < paramMaxPrice){
-        console.log("ádjakdjạdk")
+    if(paramMinPrice <= paramMaxPrice){
         $("input[name='minPrice']").val(paramMinPrice)
         $("input[name='maxPrice']").val(paramMaxPrice)
         minPrice      = paramMinPrice
@@ -16907,7 +16906,7 @@ $(function() {
 
     $( "#slider-range" ).slider({
         range: true,
-        step: 50000,
+        step: 5000,
         min: 0,
         max: 1900000,
         values: [ minPrice, maxPrice ],

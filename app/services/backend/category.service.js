@@ -97,7 +97,9 @@ module.exports = {
         objMatch = {
             status :'active'
         }
-        if(checkSortPrice(rangePrice)) objMatch.$and =  
+        if(checkSortPrice(rangePrice)){
+            if(rangePrice.maxPrice > rangePrice.minPrice){
+                objMatch.$and =  
            [
                 {
                     price : { $gte : rangePrice.minPrice }
@@ -106,6 +108,10 @@ module.exports = {
                     price : { $lte : rangePrice.maxPrice }
                 }
             ]
+            } else if(rangePrice.maxPrice == rangePrice.minPrice){
+                objMatch.price = rangePrice.maxPrice
+            }
+        } 
         objWherePopulate.match = objMatch
         let countData = await modelCategory.findOne({slug: slug, status: 'active'}).populate(objWherePopulate)
         objWherePopulate.options =  {

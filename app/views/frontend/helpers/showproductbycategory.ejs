@@ -1,6 +1,6 @@
 <%
    showProductByCategory = (data, link, unit) =>{
-        if(!data) return
+        if(!data || data.length == 0) return '<p class="font-italic text-center">Không có sản phẩm phù hợp.</p>'
         let html=''
         data.forEach((item)=>{
             let dataSale = showSaleIcon(item.discountProduct, item.price, item.time)
