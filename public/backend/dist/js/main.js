@@ -1,6 +1,10 @@
 $(document).ready(async function () {
-  const linkAdmin = "admin/"
+  const linkAdmin = "/admin/"
   const currency = 'VND';
+
+      $('.simple-ajax-popup').magnificPopup({
+        type: 'ajax'
+      });
 
       // save storeage
 
@@ -32,7 +36,7 @@ $(document).ready(async function () {
     "positionClass": "toast-top-right",
     "preventDuplicates": false,
     "onclick": null,
-    "showDuration": "200",
+    "showDuration": "1000",
     "hideDuration": "200",
     "timeOut": "2000",
     "extendedTimeOut": "1000",
@@ -179,7 +183,7 @@ $(document).ready(async function () {
       if(id){
         $.ajax({
           type: "post",
-          url: `/admin/product/deletephoto/`,
+          url: `${linkAdmin}product/deletephoto/`,
           data: `thumb=${valueArr}&id=${id}&delete=${name}`,
           dataType: "json",
           success: function (response) {
@@ -468,7 +472,7 @@ $(document).ready(async function () {
           $('button[data-dismiss="modal"]').click()
           $.each(arrItems, async (index, id) => {
             let html = await `
-                                <a href="javascript:" onclick="changeStatus('${updateStatus}','${id}', '/${linkAdmin}items/change-status/')" id="change-status-${id}" class="rounded-circle btn btn-sm ${updateBtn}">
+                                <a href="javascript:" onclick="changeStatus('${updateStatus}','${id}', '${linkAdmin}items/change-status/')" id="change-status-${id}" class="rounded-circle btn btn-sm ${updateBtn}">
                                 <i class="fas ${updateIcon}"></i></a>
                                 `
             $(`#status-item-${id}`).html(html)
@@ -633,7 +637,7 @@ $(document).ready(async function () {
     let newParent = $(this).find(":selected").val()
     $.ajax({
       type: "post",
-      url: `/${linkAdmin}menubar/changeparentmenu`,
+      url: `${linkAdmin}menubar/changeparentmenu`,
       data: `id=${id}&newParent=${newParent}`,
       dataType: "json",
       success: function (response) {
@@ -655,7 +659,7 @@ $(document).ready(async function () {
     
     $.ajax({
       type: "post",
-      url: `/${linkAdmin}${name}/changecategory/`,
+      url: `${linkAdmin}${name}/changecategory/`,
       data: `id=${id}&newCategory=${newCategory}`,
       dataType: "json",
       success: function (response) {
@@ -690,7 +694,7 @@ $(document).ready(async function () {
 
   $("div.option input:checkbox").change(function (value) {
     let data = value.target.getAttribute('id')
-    let link = `/${linkAdmin}product/option/`
+    let link = `${linkAdmin}product/option/`
     if (this.checked) {
       changeOption(data, true, link)
     } else {
@@ -926,8 +930,13 @@ $(document).ready(async function () {
   });
 
   $('form input').on('keypress', function(e) {
-    return e.which !== 13;
-});
+    if($(e.target).attr('name') == 'keyword'){
+      $(e.target).submit()
+    } else{
+      return e.which !== 13;
+    }
+  });
+  
     let showSubEmail = (value) =>{
         let arrEmail = value.split(",")
         let xhtml =''
@@ -1370,7 +1379,7 @@ $(document).ready(async function () {
       let idd =  $("input[name='id']").val()
       $.ajax({
         type: "post",
-        url: `/admin/product/sortable/`,
+        url: `${linkAdmin}product/sortable/`,
         data: `thumb=${valueArr}&id=${idd}`,
         dataType: "json",
         success: function (response) {
@@ -1388,6 +1397,48 @@ $(document).ready(async function () {
     update: function(event, ui) {
       getArrPhoto('imageMediaPreviewProductUploaded')
    }
+  })
+
+  var previousOrderSelect
+  // change status order
+$(document)
+  .on('focus',"select[data-id*='orders-']",function (e) {
+    // Store the current value on focus and on change
+    let oldStatus = $(e.target).find(":selected").val()
+    previousOrderSelect = oldStatus
+    console.log(previousOrderSelect)
+  })
+  .on('change',"select[data-id*='orders-']",(e)=>{
+    let newStatus = $(e.target).find(":selected").val()
+    let id        = $(e.target).attr('data-id').split('-')[1]
+    if(newStatus > 2){
+        if (confirm("Are you sure change? Note: Status 'Deliveried, Cancel, Return' can't be changed") == false) {
+        }
+    }
+    $.ajax({
+      type: "post",
+      url: `${linkAdmin}order/change-status/`,
+      data: `status=${newStatus}&id=${id}`,
+      dataType: "json",
+      success: function (response) {
+        if (response.success == true) {
+          let data = response.data
+          toastr["success"](notify.CHANGE_ORDER_STATUS_SUCCESS)
+          if(data.status > 2){
+            $(e.target).prop('disabled', true)
+          }
+        } else {
+          let msg = response.errors[0].msg
+          toastr["error"](msg)
+          console.log(previousOrderSelect)
+          $(`select[data-id='orders-${id}'] option[value='${previousOrderSelect}']`).prop('selected', true)
+        }
+      }
+    })
+    .fail(function() {
+      alert( "Have error, Please press F5." );
+      $(`select[data-id='orders-${id}'] option[value='${previousOrderSelect}']`).prop('selected', true)
+    })
   })
 });
 

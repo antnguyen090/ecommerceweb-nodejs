@@ -74,6 +74,10 @@ module.exports = {
         let data = await modelCoupon.findOne(obj)
         return data
     },
+    editTurnUsed: async (filter, newturnused) =>{
+        let data = await modelCoupon.findOneAndUpdate(filter, {turnused : newturnused})
+        return data
+    },
 }
 
 

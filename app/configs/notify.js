@@ -98,4 +98,6 @@ module.exports = {
     EMAIL_ORDER_SUCCESS_CONTENT: "Bạn đã đặt hàng thành công, mã tra cứu đơn hàng là: ",
     EMAIL_INFORM_ORDER_SUCCESS_CONTENT: "Có người đặt hàng, mã hàng là: ",
     EMAIL_INFORM_ORDER_SUCCESS_SUBJECT: "CÓ KHÁCH ĐẶT HÀNG",
+    PRESS_F5_BE: "Have problem please Press F5!",
+    ERROR_ORDER_STATUS_CHANGE: "Order Status is Cancel Or Deliveried can't be change."
 };

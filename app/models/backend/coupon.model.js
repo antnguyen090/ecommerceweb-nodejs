@@ -14,6 +14,10 @@ var schema = new mongoose.Schema({
     },
     ordering: Number,
     status: String,
+    turnused: {
+        type: Number,
+        default: 0,
+    },
     time: String,
 },
 { timestamps: true }

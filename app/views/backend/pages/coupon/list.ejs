@@ -93,10 +93,11 @@
 						</th>
 						<th class="text-center">#</a></th>
 						<th class="text-center">Name</a></th>
+						<th class="text-center">Coupon Code</a></th>
+						<th class="text-center">Turn Used</a></th>
 						<th class="text-center">Date Range</a></th>
 						<th class="text-center">Process</a></th>
 						<th class="text-center">Status</a></th>
-						<th class="text-center">Ordering</a></th>
 						<th class="text-center">Action</th>
 					</tr>
 				</thead>
@@ -114,6 +115,12 @@
 							<td class="text-center name text-wrap" id="name-item-<%= item.id%>">
 								<%- highlightHelper(item.name, keyword) %>
 							</td>
+							<td class="text-center name text-wrap" id="coupon-item-<%= item.id%>">
+								<%= item.couponcode %>
+							</td>
+							<td class="text-center name text-wrap" id="turnused-item-<%= item.id%>">
+								<%= item.turnused %>
+							</td>
 							<td class="text-center position-relative" id="daterange-item-<%= item.id%>">
 								<div class="input-group">
 									<div class="input-group-prepend">
@@ -129,9 +136,6 @@
 							</td>
 							<td class="text-center position-relative" id="status-item-<%= item.id %>">
 									<%- statusHelper(collection, item.status, item.id)  %>
-							</td>
-							<td class="text-center position-relative" >
-								<input type="number" class="ordering" id="change-ordering-<%= item.id%>" name="items-ordering" data-router="<%= linkPrefix+'change-ordering'%>" data-id="<%= item.id%>"  value="<%= item.ordering%>" class="text-center ordering">
 							</td>
 							<td class="text-center">
 								<a href="<%= linkPrefix %>form/<%= item.id %>" class="rounded-circle btn btn-sm btn-info" title="Edit">

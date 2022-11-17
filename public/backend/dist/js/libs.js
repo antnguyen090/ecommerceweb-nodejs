@@ -26,6 +26,7 @@ listNotify = () => {
     CHANGE_LINK_SUCCESS: 'Change Link SuccessfulLy',
     ERROR_EMAIL: 'Please Enter a valid email address',
     ERROR_EMAIL_DUPLICATED: 'Email is duplicated',
+    CHANGE_ORDER_STATUS_SUCCESS: 'Change Status SuccessfulLy'
   }
 }
 

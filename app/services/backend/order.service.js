@@ -30,13 +30,14 @@ module.exports = {
     },
 
     changeStatus: async (id, status) =>{
-        let data = await modelOrder.findOneAndUpdate({_id: id}, {status: status})
-        return data
+        let data = await modelOrder.findOne({_id: id})
+        if(data.status > 2) return
+        data.status = status
+        let updateData = await modelOrder.findOneAndUpdate({_id: id},data,{
+          new: true
+        })
+        return updateData
       },
-    changeOrdering: async (id, ordering) =>{
-            let data = await modelOrder.updateOne({_id: id}, {ordering: ordering})
-            return
-            },
     getItemByID: async (id) =>{
         let data = await modelOrder.findOne({_id: id})
         return data
@@ -55,6 +56,10 @@ module.exports = {
     },
     getOrderByTrackingCode: async (code) =>{
       let result = await modelOrder.findOne({trackingCode: code})
+      return result
+    },
+    getOrderById: async (id) =>{
+      let result = await modelOrder.findOne({_id: id})
       return result
     }
     ,
@@ -104,11 +109,13 @@ module.exports = {
       } else{
         saveOrder.priceProduct = priceProduct
       }
-
+      let newturnused
       if(obj.couponCode){
         let findCode = await serviceCoupon.getCodeCoupon({status:"active", couponcode: obj.couponCode})
         if(findCode) 
-        {
+        {   
+            let turnused = findCode.turnused || 0
+            newturnused = turnused + 1
             let minTotal = findCode.couponValue.minTotal
             if(!obj.priceProduct >= minTotal && !CheckTimeInRangeHelper.checkTimeInRange(findCode.time)){
                 return errorObj
@@ -138,6 +145,7 @@ module.exports = {
           return errorObj
         }
       }
+      await serviceCoupon.editTurnUsed({status:"active", couponcode: obj.couponCode}, newturnused)
       await module.exports.saveItems(saveOrder)
       await module.exports.sendMailOrderSuccess(obj, trackingCode)
       return {success: true, trackingCode: trackingCode }
