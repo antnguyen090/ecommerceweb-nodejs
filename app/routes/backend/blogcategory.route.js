@@ -59,20 +59,18 @@ router.get('(/status/:status)?', async (req, res, next) => {
 // access FORM
 router.get('/form/(:id)?',  async function (req, res, next) {
 	try {
-		let inform = req.flash()
-		let main = {pageTitle: pageTitle,
-			inform: inform
-		}
 		if (req.params.id != undefined) {
 			let item = await serviceBlogCategory.getItemByID(req.params.id)
 			res.render(`${folderView}form`, {
-				main: main,
+				pageTitle: pageTitle,
+				errors: [],
 				item: item,
 				layout,
-			});s
+			});
 			} else {
 					res.render(`${folderView}form`, {
-				main: main,
+				pageTitle: pageTitle,
+				errors: [],
 				item: [],
 				layout
 					});
@@ -113,19 +111,18 @@ router.post('/save/(:id)?',
 			}
 			let errors = await validationResult(req)
 			if(!errors.isEmpty()) {
-				let main = {pageTitle: pageTitle,
-							showError: errors.errors,
-							}
 				if (req.params.id !== undefined){
 						res.render(`${folderView}form`, {
-							main: main,
+							pageTitle: pageTitle,
+							errors: errors.errors,
 							item: itemData,
 							id: req.params.id,
 							layout,
 						})
 				} else {
 					res.render(`${folderView}form`, {
-						main: main,
+						pageTitle: pageTitle,
+						errors: errors.errors,
 						item: req.body,
 						layout
 					})

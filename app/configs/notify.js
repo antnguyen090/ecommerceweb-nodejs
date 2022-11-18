@@ -21,6 +21,7 @@ module.exports = {
     ERROR_FILE_EXTENSION: 'Invalid Type File',
     ERROR_FILE_EMPTY: 'Must upload photo',
     ERROR_DESCRIPTION: 'Description must be non-empty',
+    ERROR_CONTENT: 'Content must be non-empty',
     ERROR_DETAIL: 'Detail must be non-empty',
     ERROR_SOURCE: 'Source must be non-empty',
     ERROR_SETTING_TITLEPAGE: 'Please input Title Page',

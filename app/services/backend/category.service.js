@@ -125,6 +125,10 @@ module.exports = {
     checkExits: async (obj) =>{
         let data = await modelCategory.exists(obj)
         return data
+    },
+    getForDashboard: async (obj) =>{
+        let data = await modelCategory.find({})
+        return data
     }
 }
 

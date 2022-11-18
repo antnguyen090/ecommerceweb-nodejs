@@ -41,21 +41,16 @@ module.exports = {
     },
     deleteItem: async (id) =>{
         let removeObject = await modelProduct.findOne({_id: id}).then( async (obj)=>{
-            let productArr = await modelCategory.findById({_id: obj.category})
-            productArr.productList.remove(id)
-            await modelCategory(productArr).save()
+            let update  = await modelCategory.updateOne({_id: obj.category},
+                {$pull: {productList: id}})
             let data = await modelProduct.deleteOne({_id: id})
         })
         return
     },
     deleteItemsMulti: async (arrId) =>{
         await Promise.all(arrId.map(async (id,index) => {
-            let removeObject = await modelProduct.findOne({_id: id}).then( async (obj)=>{
-            let productArr = await modelCategory.findById({_id: obj.category})
-            productArr.productList.remove(id)
-            await modelCategory(productArr).save()
-            let data = await modelProduct.deleteOne({_id: id})
-            })
+            let data = await module.exports.deleteItem(id)
+            return data
              }))
             .catch((error) => {
                 console.error(error.message)

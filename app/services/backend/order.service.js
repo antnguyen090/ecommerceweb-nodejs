@@ -59,7 +59,12 @@ module.exports = {
       return result
     },
     getOrderById: async (id) =>{
-      let result = await modelOrder.findOne({_id: id})
+      let result = await modelOrder.findOne({_id: id}).populate({
+        path:'address',
+        populate:{
+          path: 'province'
+        }
+      })
       return result
     }
     ,
@@ -183,7 +188,11 @@ module.exports = {
           subject: notify.EMAIL_INFORM_ORDER_SUCCESS_SUBJECT, // Subject line
           html: notify.EMAIL_INFORM_ORDER_SUCCESS_CONTENT + trackingCode, // html body
         });
-      }
+      },
+    lastestOrder: async (number) =>{
+        let data = await modelOrder.find({}).sort({createdAt: 'desc'}).limit(number)
+        return data
+    }
 }
 
 

@@ -38,8 +38,8 @@ module.exports = {
                     modelProduct.countDocuments({_id: idProduct}, async function (err, count){ 
                             if(count>0){
                                 let findObject = await modelProduct.findOne({_id: idProduct}).then( async (objProduct)=>{
-                                    await objProduct.discountProduct.remove(id)
-                                    await modelProduct(objProduct).save()
+                                    let update  = await modelProduct.updateOne({_id: idProduct},
+                                        {$pull: {discountProduct: id}})
                                 })
                             }
                             return

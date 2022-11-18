@@ -342,7 +342,7 @@ a.simple-ajax-popup-align-top.d-block {
   transform: translateX(50%);
 }
 
-.mfp-content{
+div.mfp-container .mfp-content{
   background-color: #ddd;
   width: 80%;
 }
@@ -538,4 +538,13 @@ td > a > i.fa-solid.fa-circle-info{
   display: block;
   font-size: 35px;
   line-height: 50px;
+}
+
+div.lastestuser .users-list>li img{
+    height: 100px;
+    width: 100px;
+}
+
+div.lastestuser ul.users-list.clearfix{
+  margin-top: 10px;
 }

@@ -8,11 +8,11 @@
 	const linkThumb = "/" + "uploads" + `/${collection}/`;
 %>
 
-<%- showError(main.showError) %>
+<%- showError(errors) %>
 <div class="card card-info card-outline">
     <form action="<%= linkPrefix %>save/<%= item.id %>" method="POST" class="mb-0" enctype="multipart/form-data">
         <div class="card-body">
-            <%= main.pageTitle %>
+            <%= pageTitle %>
             <div class="form-group row">
                 <label for="name" class="col-sm-2 col-form-label text-sm-right required">Name</label>
                 <div class="col-xs-12 col-sm-8">
@@ -22,7 +22,7 @@
                     <label for="categoryId" class="col-sm-2 col-form-label text-sm-right required">Category</label>
                     <div class="col-xs-12 col-sm-8">
                         <select name="categoryId" id="input-category" class="form-control form-control-sm">
-                            <%- showCategoryList(main.categoryList, item.category) %>
+                            <%- showCategoryList(categoryList, item.category) %>
                         </select>
                     </div>
                 </div>
@@ -48,6 +48,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-2 col-form-label text-sm-right required">Description</label>
+                                <div class="col-xs-12 col-sm-8">
+                                    <textarea type="text" name="description" id="description-input-form" class="form-control form-control-sm"><%= item.description %></textarea>
+                                    </div>
+                                </div>
                             <div class="form-group row uploadImage">
                                 <label for="thumb" class="col-sm-2 col-form-label text-sm-right">Upload Image</label>
                                 <div class="col-xs-12 col-sm-8">
@@ -64,10 +70,11 @@
                             </div>
                             <div class="form-group row ckeditor">
                                 <label for="description" class="col-sm-2 col-form-label text-sm-right">Content</label>
-                                <textarea id="summernote" name="editordata">
-                                </textarea>
+                                <div class="col-sm-8">
+                                    <textarea id="summernote" name="editordata">
+                                    </textarea>
+                                </div>
                             </div>
-
                         </div>
                         <div class="card-footer">
                             <div class="col-12 col-sm-8 offset-sm-2">

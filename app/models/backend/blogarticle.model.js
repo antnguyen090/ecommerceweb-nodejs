@@ -8,11 +8,13 @@ var schema = new mongoose.Schema({
     status: String,
     ordering: Number,
     thumb: String,
+    description: String,
     editordata: String,
     category: { type: Schema.Types.ObjectId, ref: 'blogcategory' },
 },
 { timestamps: true }
 );
+
 
 module.exports = mongoose.model(databaseConfig.col_blogarticle, schema );
 

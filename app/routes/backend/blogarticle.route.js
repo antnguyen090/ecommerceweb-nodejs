@@ -74,24 +74,24 @@ router.post('(/option)', async (req, res, next) => {
 // access FORM
 router.get('/form/(:id)?', async function (req, res, next) {
 	try {
-		let inform = req.flash()
 		let category = await serviceBlogCategory.getCategoryList({status: 'active'})
-		let main = {pageTitle: pageTitle,
-								categoryList: category,
-								inform: inform
-								}
+
 		if (req.params.id != undefined) {
 			let item = await serviceBlogArticle.getItemByID(req.params.id)
 			res.render(`${folderView}form`, {
-				main: main,
+				pageTitle: pageTitle,
+				categoryList: category,
 				item: item,
 				layout,
+				errors:[]
 			});
 			} else {
 					res.render(`${folderView}form`, {
-						main: main,
+						pageTitle: pageTitle,
+						categoryList: category,
 						item: [],
 						layout,
+						errors: []
 					});
 			}
 	} catch (error) {
@@ -137,6 +137,10 @@ router.post('/save/(:id)?',
 	body('editordata')
 		.not()
 		.isEmpty()
+		.withMessage(notify.ERROR_CONTENT),
+	body('description')
+		.not()
+		.isEmpty()
 		.withMessage(notify.ERROR_DESCRIPTION),
 	body('categoryId')
 		.custom(async (val, {req}) => {
@@ -175,21 +179,21 @@ router.post('/save/(:id)?',
 			let errors = validationResult(req)
 			if(!errors.isEmpty()) {
 				let category = await serviceBlogCategory.getCategoryList({status: 'active'})
-				let main = {pageTitle: pageTitle,
-							showError: errors.errors,
-							categoryList: category,
-						}
 				if(req.file != undefined) FileHelpers.remove(`public/uploads/${mainName}/`, req.file.filename); // xóa tấm hình khi form không hợp lệ
 				if (req.params.id !== undefined){
 						res.render(`${folderView}form`, {
-							main: main,
+							pageTitle: pageTitle,
+							errors: errors.errors,
+							categoryList: category,
 							item: itemData,
 							id: req.params.id,
 							layout,
 						})
 				} else {
 					res.render(`${folderView}form`, {
-						main: main,
+						pageTitle: pageTitle,
+						errors: errors.errors,
+						categoryList: category,
 						item: req.body,
 						layout,
 					})
@@ -228,9 +232,9 @@ router.post('/delete/(:status)?', async (req, res, next) => {
 		if (req.params.status === 'multi') {
 			let arrId = req.body.id.split(",")
 			let arrPhoto = req.body.img.split(",")
-			let deletePhoto = await arrPhoto.forEach((value)=>{
-				FileHelpers.remove(`public/uploads/${mainName}/`, value)
-			})
+			// let deletePhoto = await arrPhoto.forEach((value)=>{
+			// 	FileHelpers.remove(`public/uploads/${mainName}/`, value)
+			// })
 			let data = await serviceBlogArticle.deleteItemsMulti(arrId);
 			res.send({success: true})
 	} else {
@@ -312,7 +316,6 @@ body('id')
 		try {
 			let {id, newCategory} = req.body
 			let errors = validationResult(req)
-			console.log(errors)
 			if(!errors.isEmpty()) {
 				res.send({success: false})
 			}else{

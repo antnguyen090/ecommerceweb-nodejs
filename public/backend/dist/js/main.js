@@ -3,7 +3,20 @@ $(document).ready(async function () {
   const currency = 'VND';
 
       $('.simple-ajax-popup').magnificPopup({
-        type: 'ajax'
+        type: 'ajax',
+        callbacks: {
+          parseAjax: function(mfpResponse) {
+            // mfpResponse.data is a "data" object from ajax "success" callback
+            // for simple HTML file, it will be just String
+            // You may modify it to change contents of the popup
+            // For example, to show just #some-element:
+            if($(mfpResponse.data).find('.registerSec').length > 0) mfpResponse.data = $(mfpResponse.data).find('.registerSec')
+          },
+          ajaxContentAdded: function() {
+            // Ajax content is loaded and appended to DOM
+            console.log(this.content);
+          }
+        }
       });
 
       // save storeage
@@ -1409,11 +1422,16 @@ $(document)
     console.log(previousOrderSelect)
   })
   .on('change',"select[data-id*='orders-']",(e)=>{
+    let elmNumberPrevious = $(`#count-items-${previousOrderSelect} span`)
+    let numberPrevious = parseInt(elmNumberPrevious.text()) - 1
+
     let newStatus = $(e.target).find(":selected").val()
     let id        = $(e.target).attr('data-id').split('-')[1]
     if(newStatus > 2){
         if (confirm("Are you sure change? Note: Status 'Deliveried, Cancel, Return' can't be changed") == false) {
-        }
+          $(`select[data-id='orders-${id}'] option[value='${previousOrderSelect}']`).prop('selected', true)
+          return
+        } 
     }
     $.ajax({
       type: "post",
@@ -1427,10 +1445,13 @@ $(document)
           if(data.status > 2){
             $(e.target).prop('disabled', true)
           }
+          let elmNumberNew = $(`#count-items-${data.status} span`)
+          let numberNew = parseInt(elmNumberNew.text()) + 1
+          elmNumberNew.text(numberNew)
+          elmNumberPrevious.text(numberPrevious)
         } else {
           let msg = response.errors[0].msg
           toastr["error"](msg)
-          console.log(previousOrderSelect)
           $(`select[data-id='orders-${id}'] option[value='${previousOrderSelect}']`).prop('selected', true)
         }
       }

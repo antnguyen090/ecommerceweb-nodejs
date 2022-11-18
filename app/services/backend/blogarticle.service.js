@@ -24,24 +24,20 @@ module.exports = {
                         return data;
     },
     deleteItem: async (id) =>{
-                let removeObject = await modelBlogArticle.findOne({_id: id}).then( async (obj)=>{
-                let userArr = await modelBlogCategory.findById({_id: obj.category})
-                userArr.articleList.remove(id)
-                await modelBlogCategory(userArr).save()
-                let data = await modelBlogArticle.deleteOne({_id: id})
+                    let removeObject = await modelBlogArticle.findOne({_id: id}).exec( async (error, obj)=>{
+                    let update  = await modelBlogCategory.updateOne({_id: obj.category},
+                                                                    {$pull: {articleList: id}})
+                    let data = await modelBlogArticle.deleteOne({_id: id})
                 })
-        return
+        return 
     },
     deleteItemsMulti: async (arrId) =>{
             await Promise.all(arrId.map(async (id,index) => {
-                    let removeObject = await modelBlogArticle.findOne({_id: id}).then( async (obj)=>{
-                    let userArr = await modelBlogCategory.findById({_id: obj.category})
-                    userArr.articleList.remove(id)
-                    await modelBlogCategory(userArr).save()
-                    let data = await modelBlogArticle.deleteOne({_id: id})
-                    })
+                    let data = await module.exports.deleteItem(id)
+                    return data
               }))
               .catch((error) => {
+                console.log(error)
                 return Promise.reject()
               });
             return
@@ -53,7 +49,7 @@ module.exports = {
         },
     changeStatusItemsMulti: async (arrId, status) =>{
         let data = await modelBlogArticle.updateMany({_id: {$in: arrId}}, {status: status})
-
+        return data
     }
     ,
     changeOrdering: async (id, ordering) =>{
@@ -73,6 +69,20 @@ module.exports = {
         return
     },
     changeCategory: async (id, newCategory) =>{
+        let data = await modelBlogArticle.updateOne({_id: id}, {category: newCategory})
+        return
+    },
+    changeCategory: async (id, newCategory) =>{
+        let updateOldCategory = await modelBlogArticle.findOne({_id: id}).then(async item=>{
+            await modelBlogCategory.findOne({_id: item.category}).then( async oldItem=>{
+                await oldItem.articleList.remove(id)
+                await modelBlogCategory(oldItem).save()
+            })
+            await modelBlogCategory.findOne({_id: newCategory}).then( async newItem=>{
+                await newItem.articleList.push(id)
+                await modelBlogCategory(newItem).save()
+            })
+        })
         let data = await modelBlogArticle.updateOne({_id: id}, {category: newCategory})
         return
     },

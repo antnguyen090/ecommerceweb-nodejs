@@ -34,9 +34,8 @@ module.exports = {
     deleteItem: async (id) =>{
         let removeObject = await modelManageUser.findOne({_id: id}).then( async (obj)=>{
             if(obj.group){
-            let productArr = await modelManageGroup.findById({_id: obj.group})
-            productArr.usersList.remove(id)
-            await modelManageGroup(productArr).save()
+                let update  = await modelManageGroup.updateOne({_id: obj.group},
+                    {$pull: {usersList: id}})
             }
             let data = await modelManageUser.deleteOne({_id: id})
         })
@@ -44,14 +43,8 @@ module.exports = {
     },
     deleteItemsMulti: async (arrId) =>{
         await Promise.all(arrId.map(async (id,index) => {
-            let removeObject = await modelManageUser.findOne({_id: id}).then( async (obj)=>{
-            if(obj.group){
-                let productArr = await modelManageGroup.findById({_id: obj.group})
-                productArr.usersList.remove(id)
-                await modelManageGroup(productArr).save()
-            }
-            let data = await modelManageUser.deleteOne({_id: id})
-            })
+            let data = await module.exports.deleteItem(id)
+            return data
              }))
             .catch((error) => {
                 console.error(error.message)
@@ -246,6 +239,10 @@ module.exports = {
             }
         })
         return result
+    },
+    lastestUsers: async (number) =>{
+        let data = await modelManageUser.find({}).sort({createdAt: 'desc'}).limit(number)
+        return data
     }
 }
 

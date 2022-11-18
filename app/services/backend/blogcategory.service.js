@@ -6,7 +6,7 @@ module.exports = {
             let data = await modelBlogCategory(params).save()
             return
         },
-        listItems: async (objWhere,
+    listItems: async (objWhere,
             currentPage,
             totalItemsPerPage,
             updatedAt
@@ -63,6 +63,10 @@ module.exports = {
         let data = await modelBlogCategory.findOne({_id: val, status:'active'})
         return data
     },
+    getForDashboard: async (obj) =>{
+        let data = await modelBlogCategory.find({})
+        return data
+    }
 }
 
 
