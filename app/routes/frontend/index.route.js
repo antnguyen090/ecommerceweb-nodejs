@@ -3,6 +3,7 @@ var router = express.Router();
 
 const middlewareListProductionOption = require(__path_middleware + 'get-list-production-option')
 const middlewareListCategory = require(__path_middleware + 'get-list-category')
+const middlewareListBlogCategory = require(__path_middleware + 'get-list-blog-category')
 const middlewareListMenu = require(__path_middleware + 'get-list-menu')
 const middlewareSettingPage= require(__path_middleware + 'get-setting-page')
 const middlewareListCoupon= require(__path_middleware + 'get-list-coupon')
@@ -11,11 +12,13 @@ const middlewareGetUser    = require(__path_middleware + 'get-user-info')
 
 router.use('/', middlewareListProductionOption, 
                 middlewareListCategory,
+                middlewareListBlogCategory,
                 middlewareListMenu,
                 middlewareSettingPage,
                 middlewareListCoupon,
                 middlewareGetUser,
                 require('./home.route'));
+router.use('/tin-tuc', require('./blog.route'));
 router.use('/tat-ca-cay', require('./allproduct.route'));
 router.use('/xem-nhanh', require('./viewproduct.route'));
 router.use('/trang-loi', require('./error.route'));

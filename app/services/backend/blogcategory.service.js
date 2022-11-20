@@ -55,8 +55,8 @@ module.exports = {
         let data = await modelBlogCategory.count(objWhere)
         return data
     },
-    getCategoryList: async (val) =>{
-        let data = await modelBlogCategory.find(val)
+    getCategoryList: async (status, sort = 'asc') =>{
+        let data = await modelBlogCategory.find({status: status}).sort({ordering: sort })
         return data
     },
     getCategoryById: async (val) =>{
@@ -66,6 +66,37 @@ module.exports = {
     getForDashboard: async (obj) =>{
         let data = await modelBlogCategory.find({})
         return data
+    },
+    checkExits: async (obj) =>{
+        let data = await modelBlogCategory.exists(obj)
+        return data
+    },
+    getArticleByBlogCategory: async (slug, currentPage, totalItemsPerPage) =>{
+        let data = await modelBlogCategory.findOne({slug: slug, status: 'active'}).populate({
+                    path: 'articleList',
+                    select: '-editordata',
+                    populate: {
+                        path: 'category'
+                    }
+                }).exec()
+        let totalItem = data.articleList.length
+        let name = data.name
+        let sliceIndex = (currentPage-1)*totalItemsPerPage
+        let arrArticle = data.articleList.slice(sliceIndex, totalItemsPerPage*currentPage)
+        return {totalItem, arrArticle, name}
+    },
+    getArticleRelated: async (slug) =>{
+        let data = await modelBlogCategory.findOne({slug: slug, status: 'active'}).populate({ 
+            path: 'articleList',
+            options: {
+                    limit: 3,
+                    select: '-editordata'
+            },
+            populate: {
+              path: 'category',
+            } 
+         })
+         return data
     }
 }
 

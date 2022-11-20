@@ -1,0 +1,76 @@
+<%- include('./../../helpers/showblogcategory'); -%>
+<%- include('./../../helpers/showcategoryfilter'); -%>
+<%- include('./../../helpers/showfeaturedproduct'); -%>
+<%- include('./../../helpers/showlistarticle'); -%>
+<%- include('./../../helpers/pagination'); -%>
+
+<%
+  const link = 'tin-tuc/'
+  let type   = (!slug) ? link : (link + slug)
+  const linkThumbSetting = "/" + "uploads" + `/setting/`;
+  const collectionArticle = "blogarticle";
+  const linkThumbArticle = "/" + "uploads" + `/${collectionArticle}/`;
+  const collectionProduct = "product";
+	const linkThumbProduct = "/" + "uploads" + `/${collectionProduct}/`;
+  const unit = ' VND'
+%>
+<section class="introBannerHolder d-flex w-100 bgCover" style="background-image: url(<%= linkThumbSetting + settingPage.logobanner%>);">
+  <div class="container">
+      <div class="row">
+          <div class="col-12 pt-lg-23 pt-md-15 pt-sm-10 pt-6 text-center">
+              <ul class="list-unstyled breadCrumbs d-flex justify-content-center" style="margin-top: 12%; font-size: 15px;">
+                  <li class="mr-2"><a href="/">Trang Chủ</a></li>
+                  <% if(pageTitle != 'Tất Cả Bài Viết'){ %>
+                    <li class="mr-2">/</li>
+                    <li class="mr-2"><a href="/tin-tuc">Tất Cả Bài Viết</a></li>
+                 <% } %>
+                  <li class="mr-2">/</li>
+                  <li class="active"><%= pageTitle %></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+</section>
+
+			<!-- twoColumns -->
+			<div class="twoColumns container pt-5">
+				<div class="row">
+					<div class="col-12 col-lg-9 order-lg-3">
+						<!-- content -->
+						<article class="row" id="content">
+              <%- showListArticle(listArticle,linkThumbArticle) %>
+              <div class="col-12">
+                <ul class="pager mb-0">
+                    <%- paginationHelper(pagination, type, '','','') %>
+                </ul>
+            </div>
+						</article>
+					</div>
+					<div class="col-12 col-lg-3 order-lg-1">
+						<!-- sidebar -->
+						<aside id="sidebar">
+							<!-- widget -->
+							<section class="widget overflow-hidden mb-4">
+								<h3 class="headingVII fwEbold text-uppercase mb-5">Thể Loại</h3>
+								<ul class="list-unstyled categoryList mb-0">
+                  <%- showBlogCategory(listBlogCategory, slug,totalArticle) %>
+								</ul>
+							</section>
+              <section class="widget overflow-hidden mb-4">
+                <h3 class="headingVII fwEbold text-uppercase mb-5">DANH MỤC SẢN PHẨM</h3>
+                <ul class="list-unstyled categoryList mb-0">
+                    <%- showCategoryFilter(listCategory) %>
+                </ul>
+            </section>
+            <section class="widget mb-9">
+              <h3 class="headingVII fwEbold text-uppercase mb-6">Nổi Bật</h3>
+              <ul class="list-unstyled recentListHolder mb-0 overflow-hidden">
+                       <%- showFeaturedProduct(listProductOption, linkThumbProduct, unit, 'category') %>
+              </ul>
+          </section>
+						</aside>
+					</div>
+				</div>
+			</div>
+        <%- include('./../../elements/dealproduct'); -%>
+

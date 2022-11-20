@@ -1,0 +1,14 @@
+<%
+showBlogCategory = (collection, slug, totalArticle) =>{
+        if(!collection) return
+        let html = ""
+        collection.forEach((val, index)=>{
+            let active = (slug == val.slug) ? 'active' : ''
+            let number = (val.slug != '') ? val.articleList.length : totalArticle
+            html += `   <li class="mb-5 overflow-hidden ${active}"><a href="/tin-tuc/${val.slug}">${val.name}</a><span class="num border float-right">${number}</span></li>
+            `
+            })
+            return html
+    }
+%>
+

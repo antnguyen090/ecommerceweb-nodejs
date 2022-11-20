@@ -1,11 +1,19 @@
 <%
-    showMenuBar = (menu, listCategory) =>{
+    showMenuBar = (menu, listCategory, listBlogCategory) =>{
         if (!listCategory) listCategory = []
         let showCategory =''
         listCategory.forEach((category) =>{
                 showCategory +=`
                         <li class="d-block mx-0">
                                 <a class="d-block" href='/${category.slug}'>${category.name}</a>
+                        </li>
+                `
+        })
+        let showBlogCategory =''
+        listBlogCategory.forEach((category) =>{
+            showBlogCategory +=`
+                        <li class="d-block mx-0">
+                                <a class="d-block" href='/tin-tuc/${category.slug}'>${category.name}</a>
                         </li>
                 `
         })
@@ -31,7 +39,7 @@
                         hadChild = idExists(id, isChild)
                         let level = (stt <= 0) ? '' : 'menu-level-2'
                         let classChild = (stt > 0) ? "d-block mx-0 dropdown" : "nav-item dropdown"
-                        if(hadChild == true){
+                        if(hadChild == true || slug == 'category' || slug == 'tin-tuc'){
                             xhtml += `
                             <li class="${classChild}">
                                 <a class="dropdown-toggle d-block" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="/${parent.slug}">
@@ -42,6 +50,9 @@
                             let htmlCategoryLevelTwo = ''
                             if(slug == 'category') {
                                 htmlCategoryLevelTwo = showCategory
+                            }
+                            if(slug == 'tin-tuc') {
+                                htmlCategoryLevelTwo = showBlogCategory
                             }
                             xhtml += htmlCategoryLevelTwo
                             xhtml += ` </ul>
@@ -62,6 +73,15 @@
                                         htmlCategory =`
                                             <ul class="list-unstyled text-capitalize border-right border-bottom border-left dropdown-menu mt-0 py-0 ">
                                                 ${showCategory}
+                                            </ul>
+                                        `
+                                        isDropDown = "dropdown"
+                                        btnDisabled = 'onclick="return false;"'
+                                    }
+                                    if(slug == 'tin-tuc'){
+                                        htmlCategory =`
+                                            <ul class="list-unstyled text-capitalize border-right border-bottom border-left dropdown-menu mt-0 py-0 ">
+                                                ${showBlogCategory}
                                             </ul>
                                         `
                                         isDropDown = "dropdown"

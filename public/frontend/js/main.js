@@ -1071,7 +1071,13 @@ if(arrayPath=='gio-hang'){
     $(document).on('click', 'div.cartLink a', function(e) {
       $(e.target).parent().html(spinnerCenter)
     });
-  
+    // active blog 
+
+  let newsPath = window.location.pathname.split("/")
+  if(newsPath[1] == 'tin-tuc'){
+      $(`li > a[href="/tin-tuc/${newsPath[2]}"]`).parent().addClass("active")
+  }
+
 
 })
 

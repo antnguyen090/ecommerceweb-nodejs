@@ -10,6 +10,8 @@ const serviceCoupon = require(__path_services_backend + `coupon.service`);
 const serviceDelivery = require(__path_services_backend + `delivery.service`);
 const serviceManageUser = require(__path_services_backend + `manageuser.service`);
 const serviceOrder = require(__path_services_backend + `order.service`);
+const serviceBlogCategory = require(__path_services_backend + `blogcategory.service`);
+const serviceBlogArticle = require(__path_services_backend + `blogarticle.service`);
 
 
 let getSlider = async () => {
@@ -152,6 +154,46 @@ let getOrderByTrackingCode = async (code) =>{
   return result
 }
 
+let checkCategoryBlogExits   = async (obj) =>{
+  let result = await serviceBlogCategory.checkExits(obj)
+  return result
+}
+
+let checkArticleExits = async (obj) =>{
+  let result = await serviceBlogArticle.checkExits(obj)
+  return result
+}
+
+let getAllArticle = async (obj, currentPage, totalItemsPerPage)=>{
+  let result = await serviceBlogArticle.getAllArticle(obj, currentPage, totalItemsPerPage)
+  return result
+}
+
+let getListBlogCategory = async () => {
+  let data = await serviceBlogCategory.getCategoryList('active','asc')
+  return data
+}
+
+let getArticleByBlogCategory = async (slug, currentPage, totalItemsPerPage) =>{
+  let data = await serviceBlogCategory.getArticleByBlogCategory(slug,currentPage, totalItemsPerPage)
+  return data
+}
+
+let getLastestArticle = async (obj, limit) => {
+  let data = await serviceBlogArticle.getLastestArticle(obj, limit)
+  return data
+}
+
+let getOneArticle = async (obj) =>{
+  let data = await serviceBlogArticle.getOneArticle(obj)
+  return data
+}
+
+let getArticleRelated   = async (slug) =>{
+  let data = await serviceBlogCategory.getArticleRelated(slug)
+  if (!data) return
+  return data
+}
 
 module.exports = {
   getSlider,
@@ -179,4 +221,12 @@ module.exports = {
   getProductById,
   addOrder,
   getOrderByTrackingCode,
+  checkCategoryBlogExits,
+  checkArticleExits,
+  getAllArticle,
+  getListBlogCategory,
+  getArticleByBlogCategory,
+  getLastestArticle,
+  getOneArticle,
+  getArticleRelated,
 }

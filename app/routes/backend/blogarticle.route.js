@@ -24,7 +24,7 @@ const uploadThumb	 = FileHelpers.upload('thumb', `${mainName}`);
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
 	try {
-		let category = await serviceBlogCategory.getCategoryList({status: 'active'})
+		let category = await serviceBlogCategory.getCategoryList('active')
     let inform = req.flash()
     let objWhere = {};
     let keyword = ParamsHelpers.getParam(req.query, 'keyword', '');
@@ -74,7 +74,7 @@ router.post('(/option)', async (req, res, next) => {
 // access FORM
 router.get('/form/(:id)?', async function (req, res, next) {
 	try {
-		let category = await serviceBlogCategory.getCategoryList({status: 'active'})
+		let category = await serviceBlogCategory.getCategoryList('active')
 
 		if (req.params.id != undefined) {
 			let item = await serviceBlogArticle.getItemByID(req.params.id)
@@ -178,7 +178,7 @@ router.post('/save/(:id)?',
 			}
 			let errors = validationResult(req)
 			if(!errors.isEmpty()) {
-				let category = await serviceBlogCategory.getCategoryList({status: 'active'})
+				let category = await serviceBlogCategory.getCategoryList('active')
 				if(req.file != undefined) FileHelpers.remove(`public/uploads/${mainName}/`, req.file.filename); // xóa tấm hình khi form không hợp lệ
 				if (req.params.id !== undefined){
 						res.render(`${folderView}form`, {

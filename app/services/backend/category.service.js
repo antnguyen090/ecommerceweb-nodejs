@@ -68,7 +68,7 @@ module.exports = {
         return data
     },
     getProductRelated: async (slug) =>{
-        let data = await modelCategory.findOne({slug: slug}).populate({ 
+        let data = await modelCategory.findOne({slug: slug, status:'active'}).populate({ 
             path: 'productList',
             options: {
                     limit: 9,
@@ -98,7 +98,7 @@ module.exports = {
             status :'active'
         }
         if(checkSortPrice(rangePrice)){
-            if(rangePrice.maxPrice > rangePrice.minPrice){
+            if(Number(rangePrice.maxPrice) > Number(rangePrice.minPrice)){
                 objMatch.$and =  
            [
                 {
@@ -108,7 +108,7 @@ module.exports = {
                     price : { $lte : rangePrice.maxPrice }
                 }
             ]
-            } else if(rangePrice.maxPrice == rangePrice.minPrice){
+            } else if(Number(rangePrice.maxPrice) == Number(rangePrice.minPrice)){
                 objMatch.price = rangePrice.maxPrice
             }
         } 

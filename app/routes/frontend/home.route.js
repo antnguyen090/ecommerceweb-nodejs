@@ -16,10 +16,7 @@ let pageTitle = "Trang Chủ"
 router.get('/(:slug)?', async function(req, res, next) {
     try {
     let listCategory = await res.locals.listCategory
-    if(req.params.slug == 'tat-ca-cay') {
-        next()
-        return 
-    }
+
     if(req.params.slug){
         let category = await FrontEndHelpers.checkCategoryExits({status: 'active', slug: req.params.slug})
         if(category){
@@ -75,10 +72,12 @@ router.get('/(:slug)?', async function(req, res, next) {
         }
     } else{
         let slider = await FrontEndHelpers.getSlider()
+        let getLastestArticle = await FrontEndHelpers.getLastestArticle({status: 'active'}, 3)
         res.render(`${folderView}home`, {
             pageTitle,
             layout,
             slider,
+            getLastestArticle
          });   
     }     
     } catch (error) {

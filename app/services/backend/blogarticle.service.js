@@ -94,6 +94,29 @@ module.exports = {
         let data = await modelBlogArticle.count(objWhere)
         return data
     },
+    checkExits: async (obj) =>{
+        let data = await modelBlogArticle.exists(obj)
+        return data
+    },
+    getAllArticle: async (obj, currentPage, totalItemsPerPage)=>{
+        let data = await modelBlogArticle.find(obj)
+                                        .populate('category')
+                                        .sort({createdAt: 'desc'})     
+                                        .skip((currentPage-1) * totalItemsPerPage)
+                                        .limit(totalItemsPerPage)
+        return data
+    },
+    getLastestArticle: async (obj,limit)=>{
+        let data = await modelBlogArticle.find(obj)
+                                            .populate('category')
+                                            .sort({createdAt: 'desc'})     
+                                            .limit(limit)
+        return data
+    },
+    getOneArticle : async (obj) =>{
+        let data = await modelBlogArticle.findOne(obj)
+        return data
+    },
 }
 
 
